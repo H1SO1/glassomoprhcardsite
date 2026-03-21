@@ -157,62 +157,90 @@
     </div>
 
     <script>
-        // ДАННЫЕ (Вставь свои)
+        // --- КОНФИГУРАЦИЯ SUPABASE ---
         const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
-        const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F';
+        const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        let allPosts = [];
+        let cachedPosts = [];
 
-        // Переключение страниц
-        function showPage(pageId) {
+        // Переключение вкладок (SPA)
+        function switchTab(tabId, btn) {
+            // Убираем активные классы
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
-            document.getElementById(pageId).classList.add('active');
-            event.target.classList.add('active');
+            // Активируем нужную
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
 
-            // Рикролл-логика
-            const rickFrame = document.getElementById('rick-video');
-            if(pageId === 'rick') {
-                rickFrame.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+            // Рикролл-контроль
+            const rick = document.getElementById('rick-iframe');
+            if(tabId === 'secret') {
+                rick.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
             } else {
-                rickFrame.src = "";
+                rick.src = "";
             }
 
-            if(pageId === 'forum') fetchForum();
+            // Грузим форум если надо
+            if(tabId === 'forum') loadForum();
         }
 
-        // Загрузка форума
-        async function fetchForum() {
+        // Загрузка данных с выводом картинок
+        async function loadForum() {
             const feed = document.getElementById('forum-feed');
-            const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
-            
-            if (error) return;
-            allPosts = data;
+            const { data, error } = await supabaseClient
+                .from('projects')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if(error) {
+                feed.innerHTML = `<p style="color: var(--accent)">ERROR_AUTH: ${error.message}</p>`;
+                return;
+            }
+
+            cachedPosts = data;
             feed.innerHTML = '';
-            
+
             data.forEach((post, i) => {
                 feed.innerHTML += `
                     <div class="post-card" onclick="openFullPost(${i})">
-                        <div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">#${post.id}</div>
+                        <div class="post-meta">ID_REF: #${post.id} // STATUS: ACTIVE</div>
                         <h3>${post.name}</h3>
-                        <p style="color: var(--text-dim); margin-top: 10px; font-size: 14px;">${post.desc.substring(0, 100)}...</p>
+                        <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 120) : 'Нет описания...'}...</p>
                     </div>
                 `;
             });
         }
 
-        function openFullPost(i) {
-            const post = allPosts[i];
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <h1 style="font-size: 2.5rem; margin-bottom: 20px;">${post.name}</h1>
-                <div style="white-space: pre-wrap; line-height: 1.8; color: #ccc;">${post.content || post.desc}</div>
-                <button onclick="document.getElementById('modal').style.display='none'" style="margin-top: 30px; background: var(--accent); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;">Закрыть</button>
+        // Открытие поста с картинкой и форматированием
+        function openFullPost(index) {
+            const post = cachedPosts[index];
+            const container = document.getElementById('modal-content');
+            
+            container.innerHTML = `
+                ${post.image_url ? `<img src="${post.image_url}" class="modal-img">` : ''}
+                
+                <div class="post-meta" style="margin-bottom: 15px;">POST_INDEX: ${post.id}</div>
+                <h1 style="font-size: 2.5rem; line-height: 1.1; margin-bottom: 30px;">${post.name}</h1>
+                
+                <div class="rich-content">
+                    ${post.content || post.desc}
+                </div>
+
+                <button onclick="closeFullPost()" style="margin-top: 40px; background: var(--accent); border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; color: #000;">
+                    CLOSE_ARCHIVE
+                </button>
             `;
+
             document.getElementById('modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
-    </script>
+
+        function closeFullPost() {
+            document.getElementById('modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+         <script>
 </body>
 </html>
