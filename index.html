@@ -3,193 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H1SO1 // DIGITAL_OBSIDIAN</title>
+    <title>H1SO1 // FORUM</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0b0e;
+            --bg: #0f1014;
+            --card: #191a1f;
             --accent: #00ffaa;
-            --border: #1a1a1f;
-            --text-main: #d1d1d1;
-            --text-dim: #666;
-            --font: 'JetBrains Mono', monospace;
+            --text-main: #f0f0f0;
+            --text-dim: #888;
+            --radius: 24px;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: var(--bg);
+            background: var(--bg);
             color: var(--text-main);
-            font-family: var(--font);
-            display: flex; justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 40px 20px;
+            line-height: 1.6;
         }
 
-        .layout {
-            width: 100%; max-width: 1000px;
-            display: grid; grid-template-columns: 280px 1fr;
-            min-height: 100vh; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+        .container { max-width: 850px; margin: 0 auto; }
+
+        /* --- Header --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 60px; background: var(--glass);
+            padding: 20px 30px; border-radius: var(--radius);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+
+        /* --- Nav Tags --- */
+        .nav-tags { display: flex; gap: 10px; margin-bottom: 40px; overflow-x: auto; padding-bottom: 10px; }
+        .tag {
+            background: var(--card); padding: 10px 20px; border-radius: 50px;
+            font-size: 13px; font-weight: 600; color: var(--text-dim);
+            text-decoration: none; border: 1px solid transparent; transition: 0.3s;
+            white-space: nowrap;
+        }
+        .tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,170,0.05); }
+
+        /* --- Feed --- */
+        #feed { display: grid; gap: 20px; }
+
+        .post-card {
+            background: var(--card); padding: 30px; border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer; position: relative; overflow: hidden;
+        }
+        .post-card:hover { transform: scale(1.01); background: #212228; border-color: rgba(255,255,255,0.1); }
+
+        .post-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 12px; color: var(--text-dim); }
+        .post-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+        .post-preview { color: var(--text-dim); font-size: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* --- Full Post Overlay (Modal) --- */
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+            display: none; justify-content: center; z-index: 1000;
+            padding: 40px 20px; overflow-y: auto;
+        }
+        .modal-content {
+            background: var(--card); width: 100%; max-width: 700px;
+            height: fit-content; border-radius: var(--radius);
+            padding: 50px; position: relative; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .close-btn {
+            position: absolute; top: 25px; right: 25px; width: 40px; height: 40px;
+            background: var(--bg); border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border);
         }
 
-        /* Sidebar (Obsidian Style) */
-        aside {
-            padding: 40px 25px; border-right: 1px solid var(--border);
-            background: rgba(255,255,255,0.01);
-        }
+        /* Форматирование внутри поста */
+        .rich-content img { width: 100%; border-radius: var(--radius); margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .rich-content b { color: var(--accent); }
+        .rich-content p { margin-bottom: 15px; }
 
-        .brand { font-weight: 700; font-size: 1.2rem; color: #fff; margin-bottom: 50px; }
-        .brand span { color: var(--accent); }
+        /* Loader */
+        .shimmer { height: 100px; background: linear-gradient(90deg, #191a1f 25%, #212228 50%, #191a1f 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: var(--radius); }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        .nav-section { margin-bottom: 30px; }
-        .nav-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-        
-        .nav-link {
-            display: block; color: var(--text-main); text-decoration: none;
-            padding: 8px 0; font-size: 13px; transition: 0.2s;
-        }
-        .nav-link:hover { color: var(--accent); padding-left: 5px; }
-
-        /* Main Feed */
-        main { padding: 40px 50px; background: #08080a; }
-        
-        .bio { margin-bottom: 60px; max-width: 500px; }
-        .bio p { font-size: 14px; color: #aaa; margin-top: 10px; }
-
-        .section-header {
-            font-size: 14px; font-weight: 700; color: #fff;
-            padding-bottom: 10px; border-bottom: 1px solid var(--border);
-            margin-bottom: 30px; display: flex; align-items: center; gap: 10px;
-        }
-
-        /* Project Nodes */
-        .node {
-            margin-bottom: 40px; position: relative;
-            padding-left: 20px; border-left: 1px solid var(--border);
-            transition: 0.3s;
-        }
-        .node:hover { border-left-color: var(--accent); }
-
-        .node-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .node-title { font-size: 18px; color: #fff; font-weight: 700; }
-        .node-id { font-size: 10px; color: var(--text-dim); }
-
-        .node-content { font-size: 14px; color: #888; margin-bottom: 20px; line-height: 1.8; }
-
-        /* Reveal Button */
-        .btn {
-            display: inline-block; padding: 10px 20px;
-            border: 1px solid var(--accent); color: var(--accent);
-            text-decoration: none; font-size: 12px; font-weight: 700;
-            position: relative; overflow: hidden; z-index: 1;
-        }
-        .btn::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 0; height: 0; background: var(--accent);
-            border-radius: 50%; transform: translate(-50%, -50%);
-            transition: 0.4s; z-index: -1;
-        }
-        .btn:hover { color: #000; }
-        .btn:hover::after { width: 300px; height: 300px; }
-
-        .error-msg { color: #ff4757; border: 1px dashed #ff4757; padding: 20px; font-size: 12px; }
-
-        @media (max-width: 800px) {
-            .layout { grid-template-columns: 1fr; }
-            aside { border-right: none; border-bottom: 1px solid var(--border); }
-        }
     </style>
 </head>
 <body>
 
-    <div class="layout">
-        <aside>
-            <div class="brand">FERUM<span>.sys</span></div>
-            
-            <div class="nav-section">
-                <div class="nav-label">Identity</div>
-                <a href="https://github.com/H1SO1" class="nav-link" target="_blank">> GitHub</a>
-                <a href="https://t.me/rh1so" class="nav-link" target="_blank">> Telegram</a>
-                <a href="https://steamcommunity.com/id/rh1so" class="nav-link" target="_blank">> Steam</a>
-            </div>
+<div class="container">
+    <header>
+        <div class="logo">FERUM<span>HUB</span></div>
+        <div style="font-size: 12px; opacity: 0.5;">[ VERSION_12.0 ]</div>
+    </header>
 
-            <div class="nav-section" style="margin-top: 200px">
-                <div class="nav-label">System</div>
-                <div id="uptime" style="font-size: 11px; color: var(--text-dim);">Uptime: 00:00:00</div>
-            </div>
-        </aside>
-
-        <main>
-            <section class="bio">
-                <h1 style="color:#fff">H1SO1_</h1>
-                <p>Digital architect & content creator. Исследую ARG, пишу код и страдаю над Вариантом 7. Больше текста — больше смысла.</p>
-            </section>
-
-            <div class="section-header"># PROJECTS_FEED</div>
-
-            <div id="feed">
-                <p style="color: var(--text-dim)">[ Инициализация потока данных... ]</p>
-            </div>
-        </main>
+    <div class="nav-tags">
+        <a href="https://github.com/H1SO1" class="tag" target="_blank">GITHUB</a>
+        <a href="https://t.me/rh1so" class="tag" target="_blank">TELEGRAM</a>
+        <a href="https://steamcommunity.com/id/rh1so" class="tag" target="_blank">STEAM</a>
+        <a href="#" class="tag" onclick="alert('Это мой форум, Ярик!')">RULES</a>
     </div>
 
-    <script>
-        // ТВОИ ДАННЫЕ
-        const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
-        const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; // Используем PUBLISHABLE
+    <div id="feed">
+        <div class="shimmer"></div>
+        <div class="shimmer"></div>
+    </div>
+</div>
 
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+<div id="modal" onclick="closePost(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="close-btn" onclick="document.getElementById('modal').style.display='none'">×</div>
+        <div id="modal-body"></div>
+    </div>
+</div>
 
-        async function getProjects() {
-            const feed = document.getElementById('feed');
-            
-            try {
-                const { data, error } = await supabaseClient
-                    .from('projects')
-                    .select('*')
-                    .order('id', { ascending: false });
+<script>
+    const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
+    const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-                if (error) throw error;
+    let allPosts = [];
 
-                if (!data || data.length === 0) {
-                    feed.innerHTML = `
-                        <div class="error-msg">
-                            [WARNING]: Данные не получены. <br>
-                            1. Проверь таблицу 'projects' в Supabase. <br>
-                            2. Убедись, что создана политика RLS (Read Access).
-                        </div>`;
-                    return;
-                }
+    async function fetchPosts() {
+        const feed = document.getElementById('feed');
+        try {
+            const { data, error } = await supabaseClient
+                .from('projects') // Используем твою таблицу
+                .select('*')
+                .order('id', { ascending: false });
 
-                feed.innerHTML = '';
-                data.forEach(item => {
-                    feed.innerHTML += `
-                        <div class="node">
-                            <div class="node-header">
-                                <span class="node-title">${item.name}</span>
-                                <span class="node-id">PROJECT_REF_${item.id}</span>
-                            </div>
-                            <div class="node-content">${item.desc || 'Нет описания.'}</div>
-                            <a href="${item.link}" class="btn" target="_blank">EXECUTE_URL</a>
+            if (error) throw error;
+            allPosts = data;
+
+            feed.innerHTML = '';
+            data.forEach((post, index) => {
+                feed.innerHTML += `
+                    <div class="post-card" onclick="openPost(${index})">
+                        <div class="post-header">
+                            <span>ID: #${post.id}</span>
+                            <span>${new Date().toLocaleDateString()}</span>
                         </div>
-                    `;
-                });
-
-            } catch (e) {
-                console.error(e);
-                feed.innerHTML = `<div class="error-msg">[CRITICAL_ERROR]: ${e.message}</div>`;
-            }
+                        <h2 class="post-title">${post.name}</h2>
+                        <div class="post-preview">${post.desc}</div>
+                    </div>
+                `;
+            });
+        } catch (e) {
+            feed.innerHTML = `<p style="color: #ff4757">Ошибка загрузки: ${e.message}</p>`;
         }
+    }
 
-        // Счетчик аптайма (просто для вайба)
-        let seconds = 0;
-        setInterval(() => {
-            seconds++;
-            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-            const s = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('uptime').innerText = `Uptime: ${h}:${m}:${s}`;
-        }, 1000);
+    function openPost(index) {
+        const post = allPosts[index];
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
 
-        getProjects();
-    </script>
+        // Вставляем контент. Если в базе есть колонка 'content', используем её, иначе 'desc'
+        const fullContent = post.content || post.desc;
+
+        body.innerHTML = `
+            <h1 style="font-size: 2.5rem; margin-bottom: 20px; line-height: 1.1;">${post.name}</h1>
+            <div class="post-header" style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;">
+                <span>AUTHOR: H1SO1</span>
+                <span>REF_TYPE: FORUM_POST</span>
+            </div>
+            <div class="rich-content">
+                ${post.image_url ? `<img src="${post.image_url}">` : ''}
+                <div style="white-space: pre-wrap;">${fullContent}</div>
+            </div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Запрет прокрутки фона
+    }
+
+    function closePost(e) {
+        document.getElementById('modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    fetchPosts();
+</script>
+
 </body>
 </html>
