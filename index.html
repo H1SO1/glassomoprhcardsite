@@ -58,7 +58,7 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* --- ГЛАВНАЯ: BENTO-ВИЗИТКА --- */
+        
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
         .bento-card {
             background: var(--card); border: 1px solid var(--border);
@@ -135,7 +135,7 @@
                 <p style="color: var(--accent); font-weight: 800; font-size: 12px; margin-bottom: 10px;">// SYSTEM_STATUS: STABLE</p>
                 <h1>FERUM<span>.HUB</span></h1>
                 <p style="color: var(--text-dim); max-width: 600px; font-size: 18px;">
-                    Привет. Я <b>H1SO1</b> (или просто Ferum). <br>
+                    Привет. Я <b>rh1so</b> (или просто Ferum, сеня, еблан, как угодно))))). <br>
                     Цифровой архитектор, любитель длинных текстов. 
                     Этот хаб — мое личное пространство.
                 </p>
@@ -145,13 +145,13 @@
                 </div>
             </div>
             <div class="bento-card">
-                <h3>Vibe Check</h3>
+                <h3>Вайб чек</h3>
                 <p style="color: var(--text-dim); font-size: 14px; margin-top: 15px;">
                     Скругленные углы, много текста и минимум лишнего шума.
                 </p>
             </div>
             <div class="bento-card">
-                <h3>Projects</h3>
+                <h3>Проекты</h3>
                 <p style="color: var(--text-dim); font-size: 14px; margin-top: 15px;">
                     Все мои наработки и мысли собраны во второй вкладке. Загляни туда, если ищешь что-то конкретное.
                 </p>
@@ -171,7 +171,7 @@
 
     <div id="secret" class="page">
         <div class="bento-card" style="text-align: center;">
-            <h2 style="margin-bottom: 25px;">Classified Information</h2>
+            <h2 style="margin-bottom: 25px;">Зашифрованная информация</h2>
             <div class="video-wrapper">
                 <iframe id="rick-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
@@ -193,13 +193,13 @@
 
         let cachedPosts = [];
 
-        // Переключение вкладок (SPA)
+        
         function switchTab(tabId, btn) {
-            // Убираем активные классы
+            
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
-            // Активируем нужную
+           
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
 
@@ -215,7 +215,7 @@
             if(tabId === 'forum') loadForum();
         }
 
-        // Загрузка данных с выводом картинок
+        
         async function loadForum() {
             const feed = document.getElementById('forum-feed');
             const { data, error } = await supabaseClient
@@ -234,7 +234,7 @@
             data.forEach((post, i) => {
                 feed.innerHTML += `
                     <div class="post-card" onclick="openFullPost(${i})">
-                        <div class="post-meta">ID_REF: #${post.id} // STATUS: ACTIVE</div>
+                        <div class="post-meta">ID_REF: #${post.id}</div>
                         <h3>${post.name}</h3>
                         <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 120) : 'Нет описания...'}...</p>
                     </div>
@@ -242,7 +242,7 @@
             });
         }
 
-        // Открытие поста с картинкой и форматированием
+        
         function openFullPost(index) {
             const post = cachedPosts[index];
             const container = document.getElementById('modal-content');
@@ -258,7 +258,7 @@
                 </div>
 
                 <button onclick="closeFullPost()" style="margin-top: 40px; background: var(--accent); border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; color: #000;">
-                    CLOSE_ARCHIVE
+                    Закрыть
                 </button>
             `;
 
@@ -271,7 +271,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Инициализация
+        
         console.log("ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА. ПРИВЕТ, H1SO.");
     </script>
 </body>
