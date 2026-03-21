@@ -3,240 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H1SO1 // Terminal</title>
+    <title>H1SO1 // DIGITAL_OBSIDIAN</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #08080a;
+            --bg: #0b0b0e;
             --accent: #00ffaa;
-            --accent-dim: rgba(0, 255, 170, 0.15);
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #d1d1d1;
+            --border: #1a1a1f;
+            --text-main: #d1d1d1;
+            --text-dim: #666;
             --font: 'JetBrains Mono', monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
             font-family: var(--font);
-            line-height: 1.7;
-            overflow-x: hidden;
-            /* Скан-линии как на старых мониторах */
-            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
+            display: flex; justify-content: center;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
-
-        /* --- UI Elements --- */
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 20px; margin-bottom: 40px;
+        .layout {
+            width: 100%; max-width: 1000px;
+            display: grid; grid-template-columns: 280px 1fr;
+            min-height: 100vh; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
         }
 
-        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: #fff; }
-        .logo span { color: var(--accent); }
-
-        /* --- Bio Section --- */
-        .bio-box {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 40px;
-            border-radius: 2px;
-            margin-bottom: 40px;
-            position: relative;
-            backdrop-filter: blur(10px);
+        /* Sidebar (Obsidian Style) */
+        aside {
+            padding: 40px 25px; border-right: 1px solid var(--border);
+            background: rgba(255,255,255,0.01);
         }
 
-        .bio-box::before {
-            content: "USER_INFO"; position: absolute; top: -10px; left: 20px;
-            background: var(--bg); padding: 0 10px; font-size: 0.7rem; color: var(--accent);
+        .brand { font-weight: 700; font-size: 1.2rem; color: #fff; margin-bottom: 50px; }
+        .brand span { color: var(--accent); }
+
+        .nav-section { margin-bottom: 30px; }
+        .nav-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        
+        .nav-link {
+            display: block; color: var(--text-main); text-decoration: none;
+            padding: 8px 0; font-size: 13px; transition: 0.2s;
+        }
+        .nav-link:hover { color: var(--accent); padding-left: 5px; }
+
+        /* Main Feed */
+        main { padding: 40px 50px; background: #08080a; }
+        
+        .bio { margin-bottom: 60px; max-width: 500px; }
+        .bio p { font-size: 14px; color: #aaa; margin-top: 10px; }
+
+        .section-header {
+            font-size: 14px; font-weight: 700; color: #fff;
+            padding-bottom: 10px; border-bottom: 1px solid var(--border);
+            margin-bottom: 30px; display: flex; align-items: center; gap: 10px;
         }
 
-        /* --- Links Grid --- */
-        .nav-links {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; margin-bottom: 60px;
-        }
-
-        .link-card {
-            background: var(--accent-dim);
-            border: 1px solid var(--accent);
-            padding: 15px;
-            text-decoration: none;
-            color: var(--accent);
-            text-align: center;
-            font-weight: 500;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .link-card:hover {
-            background: var(--accent);
-            color: #000;
-            box-shadow: 0 0 20px var(--accent-dim);
-        }
-
-        /* --- Projects Loading Area --- */
-        .section-title {
-            font-size: 1.2rem; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;
-        }
-        .section-title::after { content: ""; flex-grow: 1; height: 1px; background: var(--border); }
-
-        #projects-container {
-            display: grid; grid-template-columns: 1fr; gap: 30px;
-        }
-
-        .project-item {
-            display: grid; grid-template-columns: 200px 1fr;
-            border: 1px solid var(--border);
+        /* Project Nodes */
+        .node {
+            margin-bottom: 40px; position: relative;
+            padding-left: 20px; border-left: 1px solid var(--border);
             transition: 0.3s;
         }
+        .node:hover { border-left-color: var(--accent); }
 
-        .project-item:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.02); }
+        .node-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .node-title { font-size: 18px; color: #fff; font-weight: 700; }
+        .node-id { font-size: 10px; color: var(--text-dim); }
 
-        .project-meta {
-            padding: 20px; border-right: 1px solid var(--border);
-            font-size: 0.8rem; color: #666;
+        .node-content { font-size: 14px; color: #888; margin-bottom: 20px; line-height: 1.8; }
+
+        /* Reveal Button */
+        .btn {
+            display: inline-block; padding: 10px 20px;
+            border: 1px solid var(--accent); color: var(--accent);
+            text-decoration: none; font-size: 12px; font-weight: 700;
+            position: relative; overflow: hidden; z-index: 1;
         }
-
-        .project-content { padding: 20px; position: relative; }
-        .project-content h3 { color: #fff; margin-bottom: 10px; }
-        .project-content p { font-size: 0.95rem; color: #aaa; margin-bottom: 20px; }
-
-        /* Кнопка с Circular Reveal */
-        .reveal-btn {
-            display: inline-block; padding: 10px 25px;
-            background: transparent; border: 1px solid var(--accent);
-            color: var(--accent); text-decoration: none; font-size: 0.8rem;
-            position: relative; z-index: 1; overflow: hidden;
-        }
-
-        .reveal-btn::after {
+        .btn::after {
             content: ''; position: absolute; top: 50%; left: 50%;
             width: 0; height: 0; background: var(--accent);
             border-radius: 50%; transform: translate(-50%, -50%);
-            transition: 0.5s ease-out; z-index: -1;
+            transition: 0.4s; z-index: -1;
         }
+        .btn:hover { color: #000; }
+        .btn:hover::after { width: 300px; height: 300px; }
 
-        .reveal-btn:hover { color: #000; border-color: #fff; }
-        .reveal-btn:hover::after { width: 350px; height: 350px; }
+        .error-msg { color: #ff4757; border: 1px dashed #ff4757; padding: 20px; font-size: 12px; }
 
-        /* Loader Animation */
-        .loader { width: 20px; height: 20px; border: 2px solid var(--accent); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        footer { margin-top: 80px; padding: 40px 0; border-top: 1px solid var(--border); font-size: 0.7rem; opacity: 0.4; }
+        @media (max-width: 800px) {
+            .layout { grid-template-columns: 1fr; }
+            aside { border-right: none; border-bottom: 1px solid var(--border); }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="top-bar">
-        <div class="logo">FERUM<span>.LOG</span></div>
-        <div id="clock">00:00:00</div>
+    <div class="layout">
+        <aside>
+            <div class="brand">FERUM<span>.sys</span></div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Identity</div>
+                <a href="https://github.com/H1SO1" class="nav-link" target="_blank">> GitHub</a>
+                <a href="https://t.me/rh1so" class="nav-link" target="_blank">> Telegram</a>
+                <a href="https://steamcommunity.com/id/rh1so" class="nav-link" target="_blank">> Steam</a>
+            </div>
+
+            <div class="nav-section" style="margin-top: 200px">
+                <div class="nav-label">System</div>
+                <div id="uptime" style="font-size: 11px; color: var(--text-dim);">Uptime: 00:00:00</div>
+            </div>
+        </aside>
+
+        <main>
+            <section class="bio">
+                <h1 style="color:#fff">H1SO1_</h1>
+                <p>Digital architect & content creator. Исследую ARG, пишу код и страдаю над Вариантом 7. Больше текста — больше смысла.</p>
+            </section>
+
+            <div class="section-header"># PROJECTS_FEED</div>
+
+            <div id="feed">
+                <p style="color: var(--text-dim)">[ Инициализация потока данных... ]</p>
+            </div>
+        </main>
     </div>
 
-    <div class="bio-box">
-        <p>> Привет. Я <strong>H1SO1</strong> (aka Ferum). </p>
-        <p>> Контент-мейкер, фронтенд-энтузиаст и человек, который потратил слишком много времени на Вариант 7. </p>
-        <p>> Это мой цифровой хаб. Здесь всё, что я делаю, когда мне лень учить матан или играть в DayZ.</p>
-    </div>
+    <script>
+        // ТВОИ ДАННЫЕ
+        const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
+        const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; // Используем PUBLISHABLE
 
-    <div class="nav-links">
-        <a href="https://github.com/H1SO1" class="link-card" target="_blank">GITHUB / H1SO1</a>
-        <a href="https://t.me/rh1so" class="link-card" target="_blank">TELEGRAM / rh1so</a>
-        <a href="https://steamcommunity.com/id/rh1so" class="link-card" target="_blank">STEAM / rh1so</a>
-    </div>
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    <div class="section-title">REPOSITORY_DATA</div>
+        async function getProjects() {
+            const feed = document.getElementById('feed');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('projects')
+                    .select('*')
+                    .order('id', { ascending: false });
 
-    <div id="projects-container">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="loader"></div> <span>Подключение к Supabase...</span>
-        </div>
-    </div>
+                if (error) throw error;
 
-    <footer>
-        [SESSION_STARTED: 2026] // NO_AI_TEMPLATE_USED // BUILT_FOR_THE_VOID
-    </footer>
-</div>
+                if (!data || data.length === 0) {
+                    feed.innerHTML = `
+                        <div class="error-msg">
+                            [WARNING]: Данные не получены. <br>
+                            1. Проверь таблицу 'projects' в Supabase. <br>
+                            2. Убедись, что создана политика RLS (Read Access).
+                        </div>`;
+                    return;
+                }
 
-<script>
-    // --- КОНФИГУРАЦИЯ SUPABASE ---
-    
-    const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co'; 
-    const SB_KEY = 'sb_secret_hW7SHR0S3jguqCz5LCpoog_1IeXNLuS';
+                feed.innerHTML = '';
+                data.forEach(item => {
+                    feed.innerHTML += `
+                        <div class="node">
+                            <div class="node-header">
+                                <span class="node-title">${item.name}</span>
+                                <span class="node-id">PROJECT_REF_${item.id}</span>
+                            </div>
+                            <div class="node-content">${item.desc || 'Нет описания.'}</div>
+                            <a href="${item.link}" class="btn" target="_blank">EXECUTE_URL</a>
+                        </div>
+                    `;
+                });
 
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
-    async function fetchProjects() {
-        const container = document.getElementById('projects-container');
-        
-        try {
-            const { data, error } = await supabaseClient
-                .from('projects')
-                .select('*')
-                .order('id', { ascending: false });
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
-                container.innerHTML = `
-                    <div class="bio-box" style="border-color: #ff4757; color: #ff4757;">
-                        [!] Внимание: База данных пуста или RLS заблокировал доступ. 
-                        Проверь таблицу 'projects' в Supabase.
-                    </div>`;
-                return;
+            } catch (e) {
+                console.error(e);
+                feed.innerHTML = `<div class="error-msg">[CRITICAL_ERROR]: ${e.message}</div>`;
             }
-
-            container.innerHTML = ''; // Чистим лоадер
-
-            data.forEach(item => {
-                const projectHtml = `
-                    <div class="project-item">
-                        <div class="project-meta">
-                            ID: #${item.id}<br>
-                            TYPE: SOURCE_CODE<br>
-                            STATUS: DEPLOYED
-                        </div>
-                        <div class="project-content">
-                            <h3>${item.name}</h3>
-                            <p>${item.desc || 'Описание отсутствует. Видимо, автор был слишком занят.'}</p>
-                            <a href="${item.link}" class="reveal-btn" target="_blank">OPEN_PROJECT</a>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += projectHtml;
-            });
-
-        } catch (err) {
-            console.error('Ошибка:', err.message);
-            container.innerHTML = `<p style="color: #ff4757;">[CRITICAL_ERROR]: ${err.message}</p>`;
         }
-    }
 
-    // Часы для атмосферы
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('ru-RU');
-    }
+        // Счетчик аптайма (просто для вайба)
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('uptime').innerText = `Uptime: ${h}:${m}:${s}`;
+        }, 1000);
 
-    // Запуск
-    setInterval(updateClock, 1000);
-    updateClock();
-    fetchProjects();
-
-    // Шуточка в коде
-    console.log("%c Ярик, если ты это читаешь, значит я всё-таки починил фронтенд. ", "color: #00ffaa; background: #111; padding: 10px; border-radius: 5px;");
-</script>
-
+        getProjects();
+    </script>
 </body>
 </html>
