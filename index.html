@@ -22,61 +22,57 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
-        /* NAVIGATION */
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px);
             padding: 8px; border-radius: 20px; border: 1px solid var(--border);
             display: flex; gap: 5px; z-index: 1000;
         }
-        .nav-btn { padding: 12px 24px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; position: relative; }
+        .nav-btn { padding: 12px 24px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* DROP THEME LIST */
-        .theme-dropdown { position: relative; display: inline-block; }
+        /* FIXED THEME DROPDOWN */
+        .theme-dropdown { position: relative; }
         .theme-list { 
-            position: absolute; top: 60px; left: 0; background: var(--card); 
-            border: 1px solid var(--border); border-radius: 16px; padding: 10px;
-            display: none; flex-direction: column; gap: 8px; min-width: 120px; z-index: 1001;
+            position: absolute; top: 65px; left: 50%; transform: translateX(-50%); 
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
+            padding: 10px; display: none; flex-direction: column; gap: 5px; min-width: 140px; z-index: 1001;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .theme-dropdown:hover .theme-list { display: flex; }
-        .t-opt { padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; text-align: center; }
+        .theme-list.show { display: flex; }
+        .t-opt { padding: 10px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: var(--font-mono); transition: 0.2s; text-align: center; text-transform: uppercase; }
         .t-opt:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
 
         .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s ease; }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BENTO (ТВОЙ ОРИГИНАЛ) */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; transition: 0.3s; }
+        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
         .hero-card h1 { font-size: 4.5rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
         .hero-card span { color: var(--accent); }
 
         .social-links { display: flex; gap: 12px; margin-top: 30px; }
-        .social-btn {
-            background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px;
-            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
-            transition: 0.3s; font-weight: 600;
-        }
-        .social-btn:hover { background: #fff; color: #000; }
+        .social-btn { background: rgba(255,255,255,0.02); padding: 14px 28px; border-radius: 18px; text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border); transition: 0.3s; font-weight: 700; }
+        .social-btn:hover { background: var(--text-main); color: #000; }
 
-        /* TERMINAL PAGE */
-        #term-body { background: #000; border: 1px solid var(--border); border-radius: 24px; padding: 30px; font-family: var(--font-mono); height: 500px; overflow-y: auto; color: var(--accent); }
-        .term-input-line { display: flex; gap: 10px; margin-top: 15px; }
-        .term-input-line input { background: transparent; border: none; color: #fff; outline: none; flex: 1; font-family: var(--font-mono); }
-
-        /* FORUM */
-        #forum-feed { display: grid; gap: 20px; }
-        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; cursor: pointer; transition: 0.3s; }
-        .post-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        /* FORUM FIX */
+        #forum-feed { display: grid; gap: 25px; }
+        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; cursor: pointer; transition: 0.3s; }
+        .post-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .post-content-preview { padding: 40px; }
+        .post-img { width: 100%; height: 350px; object-fit: cover; border-top: 1px solid var(--border); background: #000; }
 
         /* MODAL */
         #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
-        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); color: #fff; cursor: pointer; }
+        .modal-inner { max-width: 800px; margin: 0 auto; }
+        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 12px 24px; border-radius: 14px; border: 1px solid var(--border); color: #fff; cursor: pointer; font-weight: 800; }
 
-        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 3rem; } }
+        /* TERMINAL */
+        #term-body { background: #000; border: 1px solid var(--border); border-radius: 24px; padding: 30px; font-family: var(--font-mono); height: 450px; overflow-y: auto; color: var(--accent); font-size: 13px; }
+
+        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
     </style>
 </head>
 <body>
@@ -85,14 +81,14 @@
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
     <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
     <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
-    <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
     <div class="theme-dropdown">
-        <button class="nav-btn">Theme</button>
-        <div class="theme-list">
+        <button class="nav-btn" onclick="toggleThemes()">Design</button>
+        <div class="theme-list" id="themeList">
             <div class="t-opt" onclick="setTheme('#00ffa3')">Emerald</div>
             <div class="t-opt" onclick="setTheme('#ff0055')">Arsenic</div>
             <div class="t-opt" onclick="setTheme('#0088ff')">Cobalt</div>
             <div class="t-opt" onclick="setTheme('#ffaa00')">Amber</div>
+            <div class="t-opt" onclick="setTheme('#ffffff')">Pure</div>
         </div>
     </div>
 </nav>
@@ -100,61 +96,55 @@
 <div id="home" class="page active">
     <div class="bento-grid">
         <div class="bento-card hero-card">
-            <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v4.2</p>
+            <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 800;">// RH1SO_CORE_STABLE</p>
             <h1>FERUM<span>.OS</span></h1>
-            <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Архитектор цифровых интерфейсов и любитель лонгридов.</p>
-            
+            <p style="color: var(--text-dim); margin-top: 15px; font-size: 19px; max-width: 600px;">
+                Много текста, скругленные углы и немного цифрового мышьяка. Добро пожаловать.
+            </p>
             <div class="social-links">
                 <a href="https://github.com/H1SO1" target="_blank" class="social-btn">GitHub</a>
                 <a href="https://t.me/rh1so" target="_blank" class="social-btn">Telegram</a>
             </div>
-
-            <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px;">
-                <button onclick="playMusic()" id="pBtn" style="background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-weight: 800;">▶</button>
-                <div style="font-size: 13px;">
-                    <b>Lofi_Girl_Radio</b><br>
-                    <span style="color: var(--text-dim); font-size: 11px;">Current stream: Chill beats to code/relax to</span>
-                </div>
+            
+            <div style="margin-top: 40px; padding: 25px; background: rgba(255,255,255,0.01); border-radius: 24px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px; width: fit-content;">
+                <button onclick="toggleAudio()" id="pBtn" style="background: var(--accent); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px;">▶</button>
+                <div><b style="font-size: 14px;">Lofi_Radio_System</b><br><span style="color: var(--text-dim); font-size: 11px;">Status: Connected</span></div>
             </div>
         </div>
 
         <div class="bento-card">
-            <h3>Support</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Оставь сообщение в истории этой системы.</p>
-            <button onclick="openSupport()" style="margin-top: 20px; background: var(--accent); color: #000; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%;">WRITE_LOG</button>
+            <h3>Support_DB</h3>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Пиши напрямую в базу данных. Твое сообщение увидят все.</p>
+            <button onclick="sendSupport()" style="margin-top: 25px; background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 16px; font-weight: 800; cursor: pointer; width: 100%;">PUSH_TO_DB</button>
         </div>
 
         <div class="bento-card">
-            <h3>Identity</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Status: Online<br>Mode: Development<br>Build: 2026.03</p>
+            <h3>Status</h3>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Build: 2026.03.22<br>Env: Production<br>Uptime: Nominal</p>
         </div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -2px;">Local_Forum</h2>
+    <h2 style="font-size: 3rem; margin-bottom: 40px; letter-spacing: -3px;">File_Archive</h2>
     <div id="forum-feed"></div>
 </div>
 
 <div id="terminal" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -2px;">System_Console</h2>
-    <div id="term-body">Welcome, Ferum. Type 'help' to start.</div>
-    <div class="term-input-line">
+    <h2 style="font-size: 3rem; margin-bottom: 40px; letter-spacing: -3px;">Root_Shell</h2>
+    <div id="term-body">Type 'help' for instructions...</div>
+    <div style="display: flex; gap: 10px; margin-top: 20px; background: #111; padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
         <span style="color: var(--accent)">$</span>
-        <input type="text" id="t-in" onkeydown="runCmd(event)" placeholder="...">
+        <input type="text" id="t-in" onkeydown="runCmd(event)" style="background:transparent; border:none; color:#fff; outline:none; flex:1; font-family:var(--font-mono);">
     </div>
 </div>
 
-<div id="secret" class="page">
-    <iframe id="rick" width="100%" height="500" src="" frameborder="0" style="border-radius: 32px; border: 1px solid var(--accent);"></iframe>
-</div>
-
 <div id="modal">
-    <div class="close-btn" onclick="closeM()">[ CLOSE ]</div>
-    <div id="mContent"></div>
+    <div class="close-btn" onclick="closeM()">[ CLOSE_FILE ]</div>
+    <div class="modal-inner" id="mContent"></div>
 </div>
 
-<audio id="audioTrack" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="player" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
@@ -162,18 +152,30 @@
     const sb = supabase.createClient(SB_URL, SB_KEY);
     let cachedPosts = [];
 
-    // ТВОЙ РОДНОЙ ФОРУМ (БЕЗ ГЛЮКОВ)
+    // THEMES
+    function toggleThemes() { document.getElementById('themeList').classList.toggle('show'); }
+    function setTheme(c) { 
+        document.documentElement.style.setProperty('--accent', c); 
+        localStorage.setItem('f-theme', c);
+        document.getElementById('themeList').classList.remove('show');
+    }
+    if(localStorage.getItem('f-theme')) setTheme(localStorage.getItem('f-theme'));
+
+    // FORUM & IMAGES
     async function loadForum() {
         const feed = document.getElementById('forum-feed');
-        feed.innerHTML = '<p style="color: var(--accent); font-family: var(--font-mono);">DATABASE_LOADING...</p>';
+        feed.innerHTML = '<p style="color:var(--accent); font-family:var(--font-mono);">SYNCING_FILES...</p>';
         const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
-        if(error) return feed.innerHTML = 'Error loading feed.';
+        if(error) return feed.innerHTML = 'DB_ERROR';
         cachedPosts = data;
         feed.innerHTML = data.map((p, i) => `
             <div class="post-card" onclick="openP(${i})">
-                <div style="font-size: 10px; color: var(--accent); font-family: var(--font-mono);">#${p.id} // LOG_FILE</div>
-                <h3 style="font-size: 1.8rem; margin: 10px 0;">${p.name}</h3>
-                <p style="color: var(--text-dim); font-size: 14px;">${p.desc?.slice(0, 150)}...</p>
+                <div class="post-content-preview">
+                    <div style="font-size: 10px; color: var(--accent); font-family: var(--font-mono); margin-bottom: 10px;">ID: #${p.id} // LOG_ENTRY</div>
+                    <h3 style="font-size: 2rem; margin-bottom: 15px;">${p.name}</h3>
+                    <p style="color: var(--text-dim); font-size: 15px;">${p.desc?.slice(0, 180)}...</p>
+                </div>
+                ${p.image_url ? `<img src="${p.image_url}" class="post-img" loading="lazy">` : ''}
             </div>
         `).join('');
     }
@@ -181,9 +183,10 @@
     function openP(i) {
         const p = cachedPosts[i];
         document.getElementById('mContent').innerHTML = `
-            <div style="font-family: var(--font-mono); color: var(--accent); font-size: 12px;">ID: #${p.id}</div>
-            <h1 style="font-size: 3.5rem; letter-spacing: -3px; margin: 20px 0;">${p.name}</h1>
-            <div style="white-space: pre-wrap; font-size: 17px; color: #ccc; line-height: 1.8;">${p.content || p.desc}</div>
+            ${p.image_url ? `<img src="${p.image_url}" style="width:100%; border-radius:24px; margin-bottom:40px; border: 1px solid var(--border);">` : ''}
+            <div style="font-family: var(--font-mono); color: var(--accent); font-size: 12px;">ENTRY_ID: #${p.id}</div>
+            <h1 style="font-size: 4rem; letter-spacing: -4px; margin: 20px 0; line-height: 1;">${p.name}</h1>
+            <div style="white-space: pre-wrap; font-size: 18px; color: #ccc; line-height: 1.8; margin-top: 30px;">${p.content || p.desc}</div>
         `;
         document.getElementById('modal').style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -191,53 +194,51 @@
 
     function closeM() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-    // НАВИГАЦИЯ
+    // TABS
     function switchTab(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-        document.getElementById('rick').src = (id === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
         if(id === 'forum') loadForum();
     }
 
-    // ТЕМЫ
-    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); localStorage.setItem('f-theme', c); }
-    if(localStorage.getItem('f-theme')) setTheme(localStorage.getItem('f-theme'));
-
-    // МУЗЫКА (РЕАЛЬНОЕ LOFI)
-    let isPlaying = false;
-    function playMusic() {
-        const a = document.getElementById('audioTrack');
-        const b = document.getElementById('pBtn');
-        if(!isPlaying) { a.play(); b.innerText = '■'; } else { a.pause(); b.innerText = '▶'; }
-        isPlaying = !isPlaying;
-    }
-
-    // ТЕРМИНАЛ
-    function runCmd(e) {
-        if(e.key === 'Enter') {
-            const val = e.target.value.toLowerCase().trim();
-            const out = document.getElementById('term-body');
-            let res = '';
-            
-            if(val === 'help') res = 'AVAILABLE: status, whoami, matrix, win98, clear, version';
-            else if(val === 'status') res = 'SYSTEM: ACTIVE | ACCENT: ' + getComputedStyle(document.documentElement).getPropertyValue('--accent');
-            else if(val === 'matrix') { res = 'Following the white rabbit...'; document.body.style.textShadow = '0 0 8px #00ff00'; }
-            else if(val === 'win98') { setTheme('#008080'); res = 'Microsoft Windows 98 Theme Loaded.'; }
-            else if(val === 'whoami') res = 'User: Ferum_Guest // Permissions: Restricted';
-            else if(val === 'clear') { out.innerHTML = ''; e.target.value = ''; return; }
-            else res = 'Command not found. Type "help".';
-
-            out.innerHTML += `<div><span style="color: #666;">> ${val}</span><br>${res}</div>`;
-            out.scrollTop = out.scrollHeight;
-            e.target.value = '';
+    // SUPPORT DB
+    async function sendSupport() {
+        const name = prompt("Enter your handle:");
+        const msg = prompt("Enter your message to DB:");
+        if(name && msg) {
+            const { error } = await sb.from('guestbook').insert([{ name: name, message: msg }]);
+            if(error) {
+                alert("Table 'guestbook' not found! Create it in Supabase first.");
+                console.error(error);
+            } else {
+                alert("Data pushed successfully to the core.");
+            }
         }
     }
 
-    function openSupport() {
-        const msg = prompt("Log entry message:");
-        if(msg) alert("Log saved. Thanks for support, Ferum.");
+    // AUDIO
+    let playing = false;
+    function toggleAudio() {
+        const a = document.getElementById('player'), b = document.getElementById('pBtn');
+        if(!playing) { a.play(); b.innerText = '■'; } else { a.pause(); b.innerText = '▶'; }
+        playing = !playing;
+    }
+
+    // TERMINAL
+    function runCmd(e) {
+        if(e.key === 'Enter') {
+            const cmd = e.target.value.toLowerCase().trim(), out = document.getElementById('term-body');
+            let r = '';
+            if(cmd === 'help') r = 'List: status, matrix, clear, system, whoami';
+            else if(cmd === 'status') r = 'ALL SYSTEMS NOMINAL. ACCENT: ' + getComputedStyle(document.documentElement).getPropertyValue('--accent');
+            else if(cmd === 'matrix') { r = 'Wake up...'; document.body.style.filter = 'hue-rotate(90deg) brightness(1.2)'; }
+            else if(cmd === 'clear') { out.innerHTML = ''; e.target.value = ''; return; }
+            else r = 'Unknown command.';
+            out.innerHTML += `<div><span style="color: #444;">> ${cmd}</span><br>${r}</div>`;
+            out.scrollTop = out.scrollHeight; e.target.value = '';
+        }
     }
 </script>
 </body>
