@@ -21,7 +21,14 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
@@ -35,184 +42,320 @@
             background: transparent; color: var(--text-dim);
             font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s;
         }
+
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s ease; }
+        .page {
+            display: none; padding: 140px 20px 80px;
+            max-width: 1000px; margin: 0 auto;
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
         .page.active { display: block; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        /* Bento Grid */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
         .bento-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--radius-card); padding: 40px;
             display: flex; flex-direction: column; justify-content: center;
+            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
+        .bento-card:hover { border-color: rgba(0, 255, 163, 0.3); transform: translateY(-5px); }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
         .hero-card h1 { font-size: 4rem; letter-spacing: -4px; margin-bottom: 15px; font-weight: 800; line-height: 1; }
         .hero-card h1 span { color: var(--accent); }
-
-        /* Games Layout */
-        .games-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .game-card { 
-            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); 
-            padding: 30px; text-align: center; display: flex; flex-direction: column; align-items: center;
+        .social-links { display: flex; gap: 12px; margin-top: 30px; }
+        .social-btn {
+            background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px;
+            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
+            transition: 0.3s; font-weight: 600;
         }
-        canvas { background: #000; border: 1px solid var(--border); border-radius: 12px; margin: 20px 0; max-width: 100%; }
-        .game-btn { 
-            background: var(--accent); color: #000; border: none; padding: 12px 30px; 
-            border-radius: 12px; font-family: var(--font-mono); font-weight: 800; cursor: pointer; width: 100%;
-        }
+        .social-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* Forum */
         #forum-feed { display: grid; gap: 20px; }
-        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; cursor: pointer; }
+        .post-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius-card); margin-bottom: 25px;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow: hidden; position: relative; display: flex; flex-direction: column;
+        }
+        .post-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .post-card-text { padding: 40px; }
-        .post-meta { font-size: 11px; color: var(--accent); font-family: var(--font-mono); margin-bottom: 10px; }
+        .post-card h3 { font-size: 1.8rem; margin: 10px 0; font-weight: 800; line-height: 1.2; color: #fff; }
+        .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; font-family: var(--font-mono); }
+        .post-img-preview { width: 100%; max-height: 300px; object-fit: cover; border-top: 1px solid var(--border); }
 
-        /* Modal */
-        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 20px; overflow-y: auto; }
-        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); color: #888; cursor: pointer; z-index: 2001; }
+        .secret-container {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius-card); padding: 50px; text-align: center;
+        }
+        .video-wrapper {
+            width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-ui);
+            overflow: hidden; margin-top: 25px; border: 1px solid var(--accent);
+            box-shadow: 0 0 30px rgba(0, 255, 163, 0.2);
+        }
 
-        @media (max-width: 768px) { .bento-grid, .games-container { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            display: none; flex-direction: column; z-index: 2000;
+            overflow-y: auto; padding: 100px 40px 60px;
+            animation: fadeInModal 0.4s ease-out;
+        }
+
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-body {
+            width: 100%; max-width: 1000px;
+            margin: 0 auto;
+            color: #ccc;
+            font-size: 17px;
+            line-height: 1.9;
+        }
+
+        .modal-body img { width: 100%; max-height: 500px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .modal-body b { color: var(--accent); }
+        .modal-body ul { margin-left: 20px; list-style: '> '; }
+
+        .close-btn {
+            position: fixed; top: 30px; right: 30px;
+            background: var(--card); padding: 10px 20px; border-radius: 12px;
+            border: 1px solid var(--border); color: #888; cursor: pointer;
+            transition: 0.3s; font-size: 12px; font-weight: 700; text-transform: uppercase;
+        }
+        .close-btn:hover { background: #222; color: #fff; border-color: #555; }
+
+        .shimmer { height: 100px; background: linear-gradient(90deg, #111 25%, #19191c 50%, #111 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: var(--radius-card); }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .hero-card h1 { font-size: 2.8rem; }
+            #modal { padding: 80px 20px 40px; }
+            .modal-body { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
 
-<nav>
-    <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
-    <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
-    <button class="nav-btn" onclick="switchTab('games', this)">Games</button>
-    <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
-</nav>
+<div class="container">
+    <nav>
+        <button class="nav-btn" onclick="switchTab('home', this)">Home</button>
+        <button class="nav-btn active" onclick="switchTab('forum', this)">Forum</button>
+        <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
+    </nav>
 
-<div id="home" class="page active">
-    <div class="bento-grid">
-        <div class="bento-card hero-card">
-            <p style="color: var(--accent); font-weight: 800; font-size: 11px;">// SYSTEM_STATUS: ONLINE</p>
-            <h1>FERUM<span>.OS</span></h1>
-            <p style="color: var(--text-dim); max-width: 600px; font-size: 18px; margin-top: 10px;">
-                Привет. Я <b>H1SO1</b>. <br>
-                Цифровой архитектор, любитель лонгридов. В процессе REACT и вечного самокопания.
-            </p>
-            <div style="display: flex; gap: 12px; margin-top: 30px;">
-                <a href="https://github.com/H1SO1" target="_blank" style="text-decoration:none; color:#fff; border:1px solid var(--border); padding:10px 20px; border-radius:12px;">GitHub</a>
-                <a href="https://t.me/rh1so" target="_blank" style="text-decoration:none; color:#fff; border:1px solid var(--border); padding:10px 20px; border-radius:12px;">Telegram</a>
+    <div id="home" class="page active">
+        <div class="bento-grid">
+            <div class="bento-card hero-card">
+                <p style="color: var(--accent); font-weight: 800; font-size: 11px;">// SYSTEM_STATUS: ONLINE</p>
+                <h1>FERUM<span>.OS</span></h1>
+                <p style="color: var(--text-dim); max-width: 600px; font-size: 18px; margin-top: 10px;">
+                    Привет. Я <b>H1SO</b>. <br>
+                    Цифровой архитектор, любитель длинных текстов, пишу код и страдаю хз чем, аутизмом, долбоебизмом?))).
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com/H1SO1" class="social-btn" target="_blank">GitHub</a>
+                    <a href="https://t.me/rh1so" class="social-btn" target="_blank">Telegram</a>
+                </div>
+            </div>
+            <div class="bento-card">
+                <h3 style="color:#fff; font-weight: 800;">Skills</h3>
+                <p style="color: var(--text-dim); font-size: 13px; margin-top: 15px;">Supabase, HTML, JS, C#, CSS, Видео/фоторедакторы, Игры, Давление на Андрея. В процессе REACT</p>
+            </div>
+            <div class="bento-card">
+                <h3 style="color:#fff; font-weight: 800;">Motto</h3>
+                <p style="color: var(--text-dim); font-size: 13px; margin-top: 15px;">Много текста, скругленные углы.</p>
             </div>
         </div>
-        <div class="bento-card">
-            <h3 style="color:#fff;">Skills</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Supabase, C#, JS, CSS, React(loading...).</p>
+    </div>
+
+    <div id="forum" class="page">
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 2.5rem; letter-spacing: -2px;">Local_Forum</h2>
+            <p style="color: var(--text-dim);">Данные из Supabase. Кликни, чтобы развернуть.</p>
         </div>
-        <div class="bento-card">
-            <h3 style="color:#fff;">Motto</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Много текста, скругленные углы.</p>
+        <div id="forum-feed">
+            <div class="shimmer"></div>
+            <div class="shimmer"></div>
         </div>
     </div>
-</div>
 
-<div id="forum" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Local_Forum</h2>
-    <div id="forum-feed"></div>
-</div>
-
-<div id="games" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Game_Center</h2>
-    <div class="games-container">
-        <div class="game-card">
-            <h3 style="font-family: var(--font-mono);">SNAKE_OS</h3>
-            <canvas id="sCanvas" width="280" height="280"></canvas>
-            <button class="game-btn" onclick="initSnake()">START</button>
-        </div>
-        <div class="game-card">
-            <h3 style="font-family: var(--font-mono);">BIT_MINER</h3>
-            <div style="padding: 40px 0;">
-                <h4 id="bitCount" style="font-size: 40px; color: var(--accent);">0</h4>
-                <p style="font-size: 10px; color: var(--text-dim);">BITS_COLLECTED</p>
+    <div id="secret" class="page">
+        <div class="secret-container">
+            <h2>Классифицировано</h2>
+            <div class="video-wrapper">
+                <iframe id="rick-iframe" width="100%" height="100%" src="" title="YouTUBE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
-            <button class="game-btn" onclick="mine()">GENERATE_BIT()</button>
         </div>
     </div>
 </div>
 
-<div id="secret" class="page">
-    <div class="video-wrapper" style="border-radius: 32px; overflow: hidden; border: 1px solid var(--accent);">
-        <iframe id="rick" width="100%" height="450" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div id="modal" onclick="closePost(event)">
+    <div class="close-btn" onclick="document.getElementById('modal').style.display='none'">[ ЗАКРЫТЬ ЗАМЕТКУ ]</div>
+    <div id="modal-content" class="modal-body" onclick="event.stopPropagation()"></div>
+</div>
+
+<div class="bento-card game-card">
+    <h3>Nebula_Racer v0.1</h3>
+    <p style="color: var(--text-dim); font-size: 11px; margin-top: 5px;">// Controls: [W][A][S][D] // Target: SCORE > 1000</p>
+    <div id="game-container">
+        <canvas id="race-canvas" width="250" height="250"></canvas>
+        <button id="start-game-btn">RUN_INTERFACE</button>
     </div>
 </div>
 
-<div id="modal">
-    <div class="close-btn" onclick="closeM()">[ ЗАКРЫТЬ ]</div>
-    <div id="mContent" class="modal-body"></div>
-</div>
+<style>
+    /* Стили для игровой карточки */
+    .game-card { overflow: hidden; position: relative; }
+    #game-container { position: relative; width: 100%; height: 250px; margin-top: 15px; border: 1px dashed var(--border); border-radius: var(--radius-ui); }
+    #race-canvas { display: none; background: #000; width: 100%; height: 100%; }
+    #start-game-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 10px 20px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; transition: 0.3s; z-index: 10; }
+    #start-game-btn:hover { background: var(--accent); color: #000; }
+</style>
 
+<script>
+    // Супер-минималистичный движок "Трона"
+    function initGame() {
+        const btn = document.getElementById('start-game-btn');
+        const canvas = document.getElementById('race-canvas');
+        const ctx = canvas.getContext('2d');
+        btn.style.display = 'none'; canvas.style.display = 'block';
+
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 5, y: 5 };
+        let dx = 1, dy = 0, score = 0, speed = 100, gameInterval;
+
+        // Отрисовка
+        function draw() {
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height); // Фон
+            
+            // Еда (акцентный пиксель)
+            ctx.fillStyle = '#00ffa3'; ctx.fillRect(food.x * 10, food.y * 10, 9, 9);
+            
+            // Хвост (след)
+            ctx.fillStyle = '#fff';
+            snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
+        }
+
+        // Логика движения
+        function move() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            
+            // Проверка столкновений
+            if (head.x < 0 || head.x >= canvas.width / 10 || head.y < 0 || head.y >= canvas.height / 10 || snake.some(part => part.x === head.x && part.y === head.y)) {
+                clearInterval(gameInterval);
+                alert(`SESSION_TERMINATED // SCORE: ${score}`);
+                btn.style.display = 'block'; canvas.style.display = 'none'; btn.innerText = 'RETRY';
+                return;
+            }
+
+            snake.unshift(head);
+
+            // Съели пиксель
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                placeFood();
+                if (speed > 50) speed -= 5; // Ускорение
+                clearInterval(gameInterval);
+                gameInterval = setInterval(moveLoop, speed);
+            } else { snake.pop(); }
+            draw();
+        }
+
+        function placeFood() {
+            food = { x: Math.floor(Math.random() * (canvas.width/10)), y: Math.floor(Math.random() * (canvas.height/10)) };
+        }
+
+        // Управление (WASD)
+        document.addEventListener('keydown', e => {
+            if (e.key === 'w' && dy === 0) { dx = 0; dy = -1; }
+            if (e.key === 's' && dy === 0) { dx = 0; dy = 1; }
+            if (e.key === 'a' && dx === 0) { dx = -1; dy = 0; }
+            if (e.key === 'd' && dx === 0) { dx = 1; dy = 0; }
+        });
+
+        placeFood();
+        function moveLoop() { move(); }
+        gameInterval = setInterval(moveLoop, speed);
+    }
+    document.getElementById('start-game-btn').addEventListener('click', initGame);
+</script>
+    
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
     const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
-    const sb = supabase.createClient(SB_URL, SB_KEY);
-    let posts = [];
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+    let cachedPosts = [];
 
-    function switchTab(id, btn) {
+    function switchTab(tabId, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.getElementById(tabId).classList.add('active');
         btn.classList.add('active');
-        
-        document.getElementById('rick').src = (id === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
-        if(id === 'forum') loadPosts();
+
+        const rick = document.getElementById('rick-iframe');
+        if(tabId === 'secret') { rick.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"; } 
+        else { rick.src = ""; }
+
+        if(tabId === 'forum') getPosts();
     }
 
-    async function loadPosts() {
+    async function getPosts() {
         const feed = document.getElementById('forum-feed');
-        const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
-        posts = data;
-        feed.innerHTML = data.map((p, i) => `
-            <div class="post-card" onclick="openP(${i})">
-                <div class="post-card-text">
-                    <div class="post-meta">ID: #${p.id} // DATA_NODE</div>
-                    <h3>${p.name}</h3>
-                    <p style="color:var(--text-dim)">${p.desc?.slice(0,100)}...</p>
-                </div>
+        try {
+            const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
+            if (error) throw error;
+            cachedPosts = data;
+            feed.innerHTML = '';
+            
+            data.forEach((post, i) => {
+                feed.innerHTML += `
+                    <div class="post-card" onclick="openFullPost(${i})">
+                        <div class="post-card-text">
+                            <div class="post-meta">ID: #${post.id} // SECURED_FILE</div>
+                            <h3>${post.name}</h3>
+                            <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 140) : ''}...</p>
+                        </div>
+                        ${post.image_url ? `<img src="${post.image_url}" class="post-img-preview" loading="lazy">` : ''}
+                    </div>
+                `;
+            });
+        } catch (e) {
+            feed.innerHTML = `<div style="color: #ff4757; border: 1px dashed; padding: 20px;">[ CRITICAL_ERROR ]: ${e.message}</div>`;
+        }
+    }
+
+    function openFullPost(index) {
+        const post = cachedPosts[index];
+        const modal = document.getElementById('modal');
+        const container = document.getElementById('modal-content');
+        const fullContent = post.content || post.desc || 'Нет контента.';
+
+        container.innerHTML = `
+            ${post.image_url ? `<img src="${post.image_url}" class="modal-main-img" style="width:100%; border-radius:20px; margin-bottom:30px;" alt="${post.name}">` : ''}
+            <div style="margin-bottom: 20px;">
+                <div class="post-meta" style="margin-bottom: 5px;">REF_DATA: #${post.id} // SOURCE: FERUM_OS</div>
+                <h1 style="font-size: 3.5rem; letter-spacing: -3px; font-weight: 800; color: #fff; line-height: 1;">${post.name}</h1>
             </div>
-        `).join('');
+            <div style="white-space: pre-wrap; margin-top: 40px; font-family: var(--font-mono); font-size: 16px; color: #ccc;">${fullContent}</div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
 
-    function openP(i) {
-        document.getElementById('mContent').innerHTML = `<h1>${posts[i].name}</h1><p style="margin-top:30px; white-space:pre-wrap;">${posts[i].content || posts[i].desc}</p>`;
-        document.getElementById('modal').style.display = 'block';
+    function closePost(e) {
+        document.getElementById('modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    // Clicker
-    let b = 0;
-    function mine() { b++; document.getElementById('bitCount').innerText = b; }
-
-    // Snake
-    let s, f, d, g;
-    const cvs = document.getElementById('sCanvas');
-    const ct = cvs.getContext('2d');
-
-    function initSnake() {
-        clearInterval(g); s=[{x:140,y:140}]; d={x:20,y:0}; spawnF();
-        g = setInterval(drawS, 150);
-    }
-    function spawnF() { f = {x:Math.floor(Math.random()*14)*20, y:Math.floor(Math.random()*14)*20}; }
-    function drawS() {
-        let head = {x: s[0].x + d.x, y: s[0].y + d.y};
-        if(head.x<0||head.x>=280||head.y<0||head.y>=280) return clearInterval(g);
-        s.unshift(head);
-        if(head.x===f.x && head.y===f.y) spawnF(); else s.pop();
-        ct.fillStyle='#000'; ct.fillRect(0,0,280,280);
-        ct.fillStyle='#00ffa3'; ct.fillRect(f.x,f.y,18,18);
-        ct.fillStyle='#fff'; s.forEach(p=>ct.fillRect(p.x,p.y,18,18));
-    }
-    window.onkeydown=e=>{
-        if(e.key==='w'&&d.y===0){d={x:0,y:-20}}
-        if(e.key==='s'&&d.y===0){d={x:0,y:20}}
-        if(e.key==='a'&&d.x===0){d={x:-20,y:0}}
-        if(e.key==='d'&&d.x===0){d={x:20,y:0}}
-    };
+    getPosts();
 </script>
+
 </body>
 </html>
