@@ -565,6 +565,45 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        #project-modal {
+    opacity: 0;
+    transform: scale(0.9);
+    backdrop-filter: blur(0px);
+    transition: var(--transition-mid);
+}
+
+#project-modal.active {
+    display: grid;
+    opacity: 1;
+    transform: scale(1);
+    backdrop-filter: blur(12px);
+}
+
+#project-modal .win-frame {
+    transform: scale(0.9);
+    transition: var(--transition-mid);
+}
+
+#project-modal.active .win-frame {
+    transform: scale(1);
+}
+        .bento-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(var(--accent-rgb),0.15), transparent 70%);
+    opacity: 0;
+    transition: var(--transition-mid);
+}
+
+.bento-card:hover::after {
+    opacity: 1;
+}
+
+.bento-card:active {
+    transform: scale(0.97);
+}
     </style>
 </head>
 <body onclick="core.initializeAudio()">
@@ -766,8 +805,31 @@ class FerumKernel {
     modal.style.display = 'grid';
 }
 
+openProjectModal(item) {
+    const modal = document.getElementById('project-modal');
+    const content = document.getElementById('project-modal-content');
+
+    content.innerHTML = `
+        <h2 style="color:var(--accent); margin-bottom:25px;">${item.name}</h2>
+        ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
+        <p style="opacity:0.7; line-height:1.8;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
+        <button class="btn-action" style="margin-top:30px;" onclick="core.closeProjectModal()">CLOSE</button>
+    `;
+
+    modal.style.display = 'grid';
+
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+    });
+}
+
 closeProjectModal() {
-    document.getElementById('project-modal').style.display = 'none';
+    const modal = document.getElementById('project-modal');
+    modal.classList.remove('active');
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 500);
 }
     constructor() {
         this.supabase = supabase.createClient(
@@ -1017,7 +1079,7 @@ closeProjectModal() {
         btn.disabled = true;
         btn.innerText = "UPLOADING_PACKET...";
         
-        const { error } = await this.supabase.from('guestbook').insert([{ name: name, content: body }]);
+        const { error } = await this.supabase.from('guestbook').insert([{ name: name, message: body }]);
         
         if(error) {
             this.sendNotification("UPLINK_ERROR", error.message);
@@ -1046,7 +1108,7 @@ closeProjectModal() {
         }
         
         if(data) {
-            ggrid.innerHTML = data.map(item => `
+            grid.innerHTML = data.map(item => `
     <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
                     <div>
                         <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">OBJECT_REF: ${item.id}</p>
