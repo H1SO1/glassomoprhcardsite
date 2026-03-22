@@ -22,45 +22,61 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
-        /* ТВОЯ РОДНАЯ НАВИГАЦИЯ */
+        /* NAVIGATION */
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px);
             padding: 8px; border-radius: 20px; border: 1px solid var(--border);
             display: flex; gap: 5px; z-index: 1000;
         }
-        .nav-btn { padding: 12px 28px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .nav-btn { padding: 12px 24px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; position: relative; }
         .nav-btn.active { background: var(--accent); color: #000; }
+
+        /* DROP THEME LIST */
+        .theme-dropdown { position: relative; display: inline-block; }
+        .theme-list { 
+            position: absolute; top: 60px; left: 0; background: var(--card); 
+            border: 1px solid var(--border); border-radius: 16px; padding: 10px;
+            display: none; flex-direction: column; gap: 8px; min-width: 120px; z-index: 1001;
+        }
+        .theme-dropdown:hover .theme-list { display: flex; }
+        .t-opt { padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; text-align: center; }
+        .t-opt:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
 
         .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s ease; }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BENTO (ТВОЙ ОРИГИНАЛ + НОВЫЕ КАРТОЧКИ) */
+        /* BENTO (ТВОЙ ОРИГИНАЛ) */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; transition: 0.3s; position: relative; overflow: hidden; }
+        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; transition: 0.3s; }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
-        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
-        .hero-card h1 span { color: var(--accent); }
+        .hero-card h1 { font-size: 4.5rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
+        .hero-card span { color: var(--accent); }
 
-        /* ТЕРМИНАЛ (ИНЛАЙН) */
-        #term-window { background: #000; border-radius: 16px; padding: 15px; font-family: var(--font-mono); font-size: 12px; height: 180px; overflow-y: auto; border: 1px solid var(--border); margin-top: 20px; color: var(--accent); }
-        .term-in { background: transparent; border: none; color: #fff; outline: none; width: 80%; font-family: var(--font-mono); }
+        .social-links { display: flex; gap: 12px; margin-top: 30px; }
+        .social-btn {
+            background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px;
+            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
+            transition: 0.3s; font-weight: 600;
+        }
+        .social-btn:hover { background: #fff; color: #000; }
 
-        /* ТЕМЫ */
-        .swatch-group { display: flex; gap: 10px; margin-top: 15px; }
-        .swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); }
+        /* TERMINAL PAGE */
+        #term-body { background: #000; border: 1px solid var(--border); border-radius: 24px; padding: 30px; font-family: var(--font-mono); height: 500px; overflow-y: auto; color: var(--accent); }
+        .term-input-line { display: flex; gap: 10px; margin-top: 15px; }
+        .term-input-line input { background: transparent; border: none; color: #fff; outline: none; flex: 1; font-family: var(--font-mono); }
 
-        /* ФОРУМ (БЕЗ ИЗМЕНЕНИЙ В СТИЛЯХ) */
+        /* FORUM */
         #forum-feed { display: grid; gap: 20px; }
         .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; cursor: pointer; transition: 0.3s; }
-        .post-card:hover { border-color: var(--accent); }
-        
-        /* МОДАЛКА */
-        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
-        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); color: #fff; cursor: pointer; }
+        .post-card:hover { border-color: var(--accent); transform: translateY(-3px); }
 
-        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.5rem; } }
+        /* MODAL */
+        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
+        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); color: #fff; cursor: pointer; }
+
+        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 3rem; } }
     </style>
 </head>
 <body>
@@ -68,46 +84,49 @@
 <nav>
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
     <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
+    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
     <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
+    <div class="theme-dropdown">
+        <button class="nav-btn">Theme</button>
+        <div class="theme-list">
+            <div class="t-opt" onclick="setTheme('#00ffa3')">Emerald</div>
+            <div class="t-opt" onclick="setTheme('#ff0055')">Arsenic</div>
+            <div class="t-opt" onclick="setTheme('#0088ff')">Cobalt</div>
+            <div class="t-opt" onclick="setTheme('#ffaa00')">Amber</div>
+        </div>
+    </div>
 </nav>
 
 <div id="home" class="page active">
     <div class="bento-grid">
         <div class="bento-card hero-card">
+            <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v4.2</p>
             <h1>FERUM<span>.OS</span></h1>
-            <p style="color: var(--text-dim); margin-top: 10px;">Цифровой архитектор. Много текста, скругленные углы.</p>
+            <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Архитектор цифровых интерфейсов и любитель лонгридов.</p>
             
-            <div style="margin-top: 25px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px; border: 1px solid var(--border); width: fit-content;">
-                <iframe width="100" height="25" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1" style="display:none;" id="lofi-stream"></iframe>
-                <button onclick="toggleAudio()" id="audio-ctrl" style="background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: 800;">▶</button>
-                <div style="font-size: 12px; font-family: var(--font-mono);">RADIO: Lofi_Girl_Live</div>
+            <div class="social-links">
+                <a href="https://github.com/H1SO1" target="_blank" class="social-btn">GitHub</a>
+                <a href="https://t.me/rh1so" target="_blank" class="social-btn">Telegram</a>
             </div>
-        </div>
 
-        <div class="bento-card" style="grid-column: span 1;">
-            <h3 style="font-size: 14px; margin-bottom: 10px;">SYS_TERMINAL</h3>
-            <div id="term-window">Welcome. Type 'help'...</div>
-            <div style="margin-top: 10px; font-family: var(--font-mono); font-size: 12px;">
-                <span style="color: var(--accent);">$</span> <input type="text" class="term-in" onkeydown="handleCmd(event)">
+            <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px;">
+                <button onclick="playMusic()" id="pBtn" style="background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-weight: 800;">▶</button>
+                <div style="font-size: 13px;">
+                    <b>Lofi_Girl_Radio</b><br>
+                    <span style="color: var(--text-dim); font-size: 11px;">Current stream: Chill beats to code/relax to</span>
+                </div>
             </div>
         </div>
 
         <div class="bento-card">
-            <h3>Visual_Sync</h3>
-            <div class="swatch-group">
-                <div class="swatch" style="background: #00ffa3;" onclick="setTheme('#00ffa3')"></div>
-                <div class="swatch" style="background: #ff3e3e;" onclick="setTheme('#ff3e3e')"></div>
-                <div class="swatch" style="background: #3e94ff;" onclick="setTheme('#3e94ff')"></div>
-                <div class="swatch" style="background: #ffbe3e;" onclick="setTheme('#ffbe3e')"></div>
-            </div>
+            <h3>Support</h3>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Оставь сообщение в истории этой системы.</p>
+            <button onclick="openSupport()" style="margin-top: 20px; background: var(--accent); color: #000; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%;">WRITE_LOG</button>
         </div>
 
-        <div class="bento-card" style="grid-column: span 2; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-                <h3>Support Project</h3>
-                <p style="color: var(--text-dim); font-size: 13px;">Оставь свой след в базе данных системы.</p>
-            </div>
-            <button onclick="openSupport()" style="background: var(--text-main); color: #000; border: none; padding: 15px 30px; border-radius: 16px; font-weight: 800; cursor: pointer;">WRITE_LOG</button>
+        <div class="bento-card">
+            <h3>Identity</h3>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Status: Online<br>Mode: Development<br>Build: 2026.03</p>
         </div>
     </div>
 </div>
@@ -117,11 +136,25 @@
     <div id="forum-feed"></div>
 </div>
 
+<div id="terminal" class="page">
+    <h2 style="font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -2px;">System_Console</h2>
+    <div id="term-body">Welcome, Ferum. Type 'help' to start.</div>
+    <div class="term-input-line">
+        <span style="color: var(--accent)">$</span>
+        <input type="text" id="t-in" onkeydown="runCmd(event)" placeholder="...">
+    </div>
+</div>
+
 <div id="secret" class="page">
     <iframe id="rick" width="100%" height="500" src="" frameborder="0" style="border-radius: 32px; border: 1px solid var(--accent);"></iframe>
 </div>
 
-<div id="modal"><div class="close-btn" onclick="closeM()">[ CLOSE ]</div><div id="mContent"></div></div>
+<div id="modal">
+    <div class="close-btn" onclick="closeM()">[ CLOSE ]</div>
+    <div id="mContent"></div>
+</div>
+
+<audio id="audioTrack" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
@@ -129,7 +162,36 @@
     const sb = supabase.createClient(SB_URL, SB_KEY);
     let cachedPosts = [];
 
-    // НАВИГАЦИЯ (ТВОЯ)
+    // ТВОЙ РОДНОЙ ФОРУМ (БЕЗ ГЛЮКОВ)
+    async function loadForum() {
+        const feed = document.getElementById('forum-feed');
+        feed.innerHTML = '<p style="color: var(--accent); font-family: var(--font-mono);">DATABASE_LOADING...</p>';
+        const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
+        if(error) return feed.innerHTML = 'Error loading feed.';
+        cachedPosts = data;
+        feed.innerHTML = data.map((p, i) => `
+            <div class="post-card" onclick="openP(${i})">
+                <div style="font-size: 10px; color: var(--accent); font-family: var(--font-mono);">#${p.id} // LOG_FILE</div>
+                <h3 style="font-size: 1.8rem; margin: 10px 0;">${p.name}</h3>
+                <p style="color: var(--text-dim); font-size: 14px;">${p.desc?.slice(0, 150)}...</p>
+            </div>
+        `).join('');
+    }
+
+    function openP(i) {
+        const p = cachedPosts[i];
+        document.getElementById('mContent').innerHTML = `
+            <div style="font-family: var(--font-mono); color: var(--accent); font-size: 12px;">ID: #${p.id}</div>
+            <h1 style="font-size: 3.5rem; letter-spacing: -3px; margin: 20px 0;">${p.name}</h1>
+            <div style="white-space: pre-wrap; font-size: 17px; color: #ccc; line-height: 1.8;">${p.content || p.desc}</div>
+        `;
+        document.getElementById('modal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    // НАВИГАЦИЯ
     function switchTab(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -139,67 +201,43 @@
         if(id === 'forum') loadForum();
     }
 
-    // ФОРУМ (ЧИСТАЯ ВЕРСИЯ)
-    async function loadForum() {
-        const feed = document.getElementById('forum-feed');
-        feed.innerHTML = 'LOADING...';
-        const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
-        cachedPosts = data;
-        feed.innerHTML = data.map((p, i) => `
-            <div class="post-card" onclick="openP(${i})">
-                <div style="font-size: 10px; color: var(--accent); font-family: var(--font-mono);">#${p.id}</div>
-                <h3>${p.name}</h3>
-                <p style="color: var(--text-dim); font-size: 14px;">${p.desc?.slice(0, 120)}...</p>
-            </div>
-        `).join('');
-    }
-    function openP(i) {
-        const p = cachedPosts[i];
-        document.getElementById('mContent').innerHTML = `<h1>${p.name}</h1><p style="margin-top:40px; white-space:pre-wrap;">${p.content || p.desc}</p>`;
-        document.getElementById('modal').style.display = 'block';
-    }
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-
     // ТЕМЫ
-    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); localStorage.setItem('theme', c); }
-    if(localStorage.getItem('theme')) setTheme(localStorage.getItem('theme'));
+    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); localStorage.setItem('f-theme', c); }
+    if(localStorage.getItem('f-theme')) setTheme(localStorage.getItem('f-theme'));
 
-    // ТЕРМИНАЛ (ПАСХАЛКИ)
-    function handleCmd(e) {
+    // МУЗЫКА (РЕАЛЬНОЕ LOFI)
+    let isPlaying = false;
+    function playMusic() {
+        const a = document.getElementById('audioTrack');
+        const b = document.getElementById('pBtn');
+        if(!isPlaying) { a.play(); b.innerText = '■'; } else { a.pause(); b.innerText = '▶'; }
+        isPlaying = !isPlaying;
+    }
+
+    // ТЕРМИНАЛ
+    function runCmd(e) {
         if(e.key === 'Enter') {
-            const cmd = e.target.value.toLowerCase().trim();
-            const win = document.getElementById('term-window');
-            let r = '';
-            if(cmd === 'help') r = 'Commands: matrix, neofetch, whoami, clear, destruct, win98';
-            else if(cmd === 'matrix') { r = 'Wake up, Ferum... The Matrix has you.'; document.body.style.textShadow = '0 0 5px #00ff00'; }
-            else if(cmd === 'neofetch') r = 'OS: FerumOS 1.0<br>Host: H1SO1-Machine<br>Kernel: Custom-CSS-3.0<br>Uptime: Forever';
-            else if(cmd === 'whoami') r = 'You are a visitor in the digital arsenic garden.';
-            else if(cmd === 'win98') { setTheme('#008080'); r = 'Legacy theme activated.'; }
-            else if(cmd === 'destruct') { document.body.style.filter = 'invert(1) grayscale(1)'; r = 'System corrupted.'; }
-            else if(cmd === 'clear') { win.innerHTML = ''; e.target.value = ''; return; }
-            else r = 'Error: Access denied.';
+            const val = e.target.value.toLowerCase().trim();
+            const out = document.getElementById('term-body');
+            let res = '';
             
-            win.innerHTML += `<div><span style="color:#666">> ${cmd}</span><br>${r}</div>`;
-            win.scrollTop = win.scrollHeight;
+            if(val === 'help') res = 'AVAILABLE: status, whoami, matrix, win98, clear, version';
+            else if(val === 'status') res = 'SYSTEM: ACTIVE | ACCENT: ' + getComputedStyle(document.documentElement).getPropertyValue('--accent');
+            else if(val === 'matrix') { res = 'Following the white rabbit...'; document.body.style.textShadow = '0 0 8px #00ff00'; }
+            else if(val === 'win98') { setTheme('#008080'); res = 'Microsoft Windows 98 Theme Loaded.'; }
+            else if(val === 'whoami') res = 'User: Ferum_Guest // Permissions: Restricted';
+            else if(val === 'clear') { out.innerHTML = ''; e.target.value = ''; return; }
+            else res = 'Command not found. Type "help".';
+
+            out.innerHTML += `<div><span style="color: #666;">> ${val}</span><br>${res}</div>`;
+            out.scrollTop = out.scrollHeight;
             e.target.value = '';
         }
     }
 
-    // ПЛЕЕР (Костыль для YouTube Lofi)
-    let playing = false;
-    function toggleAudio() {
-        const btn = document.getElementById('audio-ctrl');
-        // В реальности YouTube iframe требует взаимодействия, но мы просто меняем иконку
-        // Чтобы музыка реально играла, лучше юзать mp3 поток, но пока оставим как заглушку дизайна
-        btn.innerText = playing ? '▶' : '■';
-        playing = !playing;
-        alert('Музыка: Для реального потока вставь свой .mp3 или используй YouTube API. Пока это дизайн-заглушка!');
-    }
-
     function openSupport() {
-        const name = prompt("Как тебя зовут, путник?");
-        const msg = prompt("Твое сообщение для H1SO1:");
-        if(name && msg) alert("Записано в логи. Спасибо за поддержку!");
+        const msg = prompt("Log entry message:");
+        if(msg) alert("Log saved. Thanks for support, Ferum.");
     }
 </script>
 </body>
