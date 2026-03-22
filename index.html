@@ -9,771 +9,1049 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ==========================================================================
-           [01] SYSTEM VARIABLES (THEMES ENGINE)
-           ==========================================================================
-        */
-        :root {
-            /* PRESET: RETRO_BLOOD (DEFAULT) */
-            --bg: #020202;
-            --bg-rgb: 2, 2, 2;
-            --card: #0c0c0e;
-            --card-rgb: 12, 12, 14;
-            --accent: #ff0055;
-            --accent-rgb: 255, 0, 85;
-            --accent-dim: #3a0014;
-            --text-main: #fcfcfc;
-            --text-dim: #71717a;
-            --border: rgba(255, 255, 255, 0.07);
-            --border-active: rgba(255, 0, 85, 0.4);
-            
-            --radius-main: 36px;
-            --radius-inner: 24px;
-            --radius-btn: 18px;
-            
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            
-            --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.9);
-            --glow-accent: 0 0 30px rgba(255, 0, 85, 0.25);
-            --vhs-distort: rgba(255, 255, 255, 0.02);
-            --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+       /* ==========================================================================
+  FERUM.OS | CSS KERNEL MODULE v6.8.0
+  PURPOSE: STYLING, ANIMATION, AND DESIGN SYSTEM
+  ==========================================================================
+*/
 
-        /* THEME: CYBER_PULSE */
-        [data-theme="cyber"] {
-            --accent: #00f2ff;
-            --accent-rgb: 0, 242, 255;
-            --accent-dim: #002d30;
-            --glow-accent: 0 0 30px rgba(0, 242, 255, 0.25);
-            --border-active: rgba(0, 242, 255, 0.4);
-        }
+:root {
+    /* --- [ BASE PALETTE ] --- */
+    --bg-ultra-black: #010101;
+    --bg-main: #050505;
+    --bg-card: #0c0c0e;
+    --bg-card-rgb: 12, 12, 14;
+    
+    /* --- [ ACCENTS - RETRO BLOOD ] --- */
+    --accent-primary: #ff0055;
+    --accent-primary-rgb: 255, 0, 85;
+    --accent-secondary: #440018;
+    --accent-glow: rgba(255, 0, 85, 0.35);
+    
+    /* --- [ TYPOGRAPHY ] --- */
+    --text-high-contrast: #ffffff;
+    --text-main: #e4e4e7;
+    --text-muted: #71717a;
+    --text-dark: #3f3f46;
+    
+    /* --- [ INTERFACE ELEMENTS ] --- */
+    --border-standard: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --border-active: rgba(255, 0, 85, 0.5);
+    
+    --radius-xl: 42px;
+    --radius-lg: 32px;
+    --radius-md: 20px;
+    --radius-sm: 12px;
+    
+    /* --- [ MOTION ] --- */
+    --bezier-fast: cubic-bezier(0.4, 0, 0.2, 1);
+    --bezier-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-main: all 0.5s var(--bezier-smooth);
+    
+    /* --- [ ASSETS ] --- */
+    --font-primary: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
 
-        /* THEME: TOXIC_VOID */
-        [data-theme="toxic"] {
-            --accent: #bcff00;
-            --accent-rgb: 188, 255, 0;
-            --accent-dim: #253300;
-            --glow-accent: 0 0 30px rgba(188, 255, 0, 0.25);
-            --border-active: rgba(188, 255, 0, 0.4);
-        }
+/* --- [ THEME OVERRIDES ] --- */
 
-        /* THEME: GHOST_SHELL */
-        [data-theme="ghost"] {
-            --accent: #ffffff;
-            --accent-rgb: 255, 255, 255;
-            --accent-dim: #222;
-            --glow-accent: 0 0 30px rgba(255, 255, 255, 0.15);
-            --card: #080808;
-            --border-active: rgba(255, 255, 255, 0.4);
-        }
+[data-theme="cyber"] {
+    --accent-primary: #00f2ff;
+    --accent-primary-rgb: 0, 242, 255;
+    --accent-secondary: #002d30;
+    --accent-glow: rgba(0, 242, 255, 0.35);
+    --border-active: rgba(0, 242, 255, 0.5);
+}
 
-        /* ==========================================================================
-           [02] CORE RESET & BASE STYLES
-           ==========================================================================
-        */
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            outline: none; cursor: none !important;
-            -webkit-font-smoothing: antialiased;
-        }
+[data-theme="toxic"] {
+    --accent-primary: #bcff00;
+    --accent-primary-rgb: 188, 255, 0;
+    --accent-secondary: #253300;
+    --accent-glow: rgba(188, 255, 0, 0.35);
+    --border-active: rgba(188, 255, 0, 0.5);
+}
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+[data-theme="ghost"] {
+    --accent-primary: #ffffff;
+    --accent-primary-rgb: 255, 255, 255;
+    --accent-secondary: #333333;
+    --accent-glow: rgba(255, 255, 255, 0.2);
+    --border-active: rgba(255, 255, 255, 0.5);
+    --bg-card: #080808;
+}
 
-        /* SCANLINES & NOISE */
-        .overlay-fx {
-            position: fixed; inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            background-size: 100% 4px, 4px 100%;
-            pointer-events: none; z-index: 9999;
-        }
+/* --- [ RESET & GLOBAL ] --- */
 
-        /* ==========================================================================
-           [03] CUSTOM CURSOR (LERP SYSTEM)
-           ==========================================================================
-        */
-        .cursor-dot {
-            position: fixed; top: 0; left: 0;
-            width: 10px; height: 10px;
-            background: var(--accent);
-            border-radius: 50%;
-            pointer-events: none; z-index: 10001;
-            box-shadow: var(--glow-accent);
-            will-change: transform;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: none !important; /* Force custom cursor */
+}
 
-        .cursor-ring {
-            position: fixed; top: 0; left: 0;
-            width: 40px; height: 40px;
-            border: 1.5px solid var(--accent);
-            border-radius: 50%;
-            pointer-events: none; z-index: 10000;
-            opacity: 0.3;
-            will-change: transform;
-        }
+body {
+    background-color: var(--bg-ultra-black);
+    color: var(--text-main);
+    font-family: var(--font-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    selection-background-color: var(--accent-primary);
+    selection-color: #000;
+}
 
-        /* ==========================================================================
-           [04] NAVIGATIONAL INTERFACE
-           ==========================================================================
-        */
-        nav {
-            position: fixed; bottom: 40px; left: 50%;
-            transform: translateX(-50%);
-            background: rgba(var(--card-rgb), 0.85);
-            backdrop-filter: blur(25px);
-            padding: 12px; border-radius: 28px;
-            border: 1px solid var(--border);
-            display: flex; gap: 8px; z-index: 9000;
-            box-shadow: var(--shadow-lg);
-        }
+/* --- [ SCROLLBAR CUSTOMIZATION ] --- */
 
-        .nav-link {
-            padding: 14px 26px; border-radius: 18px;
-            border: none; background: transparent;
-            color: var(--text-dim); font-family: var(--font-mono);
-            font-weight: 800; font-size: 12px;
-            text-transform: uppercase; letter-spacing: 1.5px;
-            transition: var(--transition-smooth);
-        }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-ultra-black); }
+::-webkit-scrollbar-thumb { 
+    background: var(--text-dark); 
+    border-radius: 10px; 
+    transition: var(--transition-main);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
 
-        .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .nav-link.active { background: var(--accent); color: #000; }
+/* --- [ CRT SCANLINE EFFECTS ] --- */
 
-        /* ==========================================================================
-           [05] BENTO GRID SYSTEM
-           ==========================================================================
-        */
-        .main-container {
-            max-width: 1600px; margin: 0 auto;
-            padding: 80px 40px 180px;
-        }
+.crt-layer {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.12) 50%
+    ), linear-gradient(
+        90deg, 
+        rgba(255, 0, 0, 0.015), 
+        rgba(0, 255, 0, 0.01), 
+        rgba(0, 0, 255, 0.015)
+    );
+    background-size: 100% 3px, 3px 100%;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0.6;
+}
 
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-            grid-auto-rows: minmax(140px, auto);
-        }
+.noise-layer {
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 9999;
+}
 
-        .bento-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-main);
-            padding: 45px;
-            position: relative; overflow: hidden;
-            transition: var(--transition-smooth);
-            display: flex; flex-direction: column;
-        }
+/* --- [ CURSOR SYSTEM ] --- */
 
-        .bento-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-8px);
-            box-shadow: var(--glow-accent);
-        }
+#cursor-main {
+    position: fixed;
+    top: 0; left: 0;
+    width: 10px; height: 10px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    z-index: 11001;
+    pointer-events: none;
+    box-shadow: 0 0 15px var(--accent-primary);
+    will-change: transform;
+}
 
-        .span-12 { grid-column: span 12; }
-        .span-8 { grid-column: span 8; }
-        .span-4 { grid-column: span 4; }
-        .span-6 { grid-column: span 6; }
+#cursor-outline {
+    position: fixed;
+    top: 0; left: 0;
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent-primary);
+    border-radius: 50%;
+    z-index: 11000;
+    pointer-events: none;
+    opacity: 0.4;
+    will-change: transform;
+    transition: width 0.3s, height 0.3s, opacity 0.3s;
+}
 
-        /* ==========================================================================
-           [06] TYPOGRAPHY & HEADERS
-           ==========================================================================
-        */
-        .os-title {
-            font-size: clamp(4rem, 15vw, 11rem);
-            font-weight: 800; letter-spacing: -10px;
-            line-height: 0.8; margin-bottom: 20px;
-        }
+/* --- [ BENTO GRID LAYOUT ] --- */
 
-        .os-title span { color: var(--accent); }
+.bento-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(140px, auto);
+    gap: 24px;
+}
 
-        .sys-log-text {
-            font-family: var(--font-mono); font-size: 11px;
-            color: var(--accent); opacity: 0.7;
-            text-transform: uppercase; letter-spacing: 3px;
-        }
+.bento-node {
+    background: var(--bg-card);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-main);
+    display: flex;
+    flex-direction: column;
+}
 
-        /* ==========================================================================
-           [07] AUDIO MODULES (VHS)
-           ==========================================================================
-        */
-        .vhs-deck {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 20px; margin-top: 40px;
-        }
+.bento-node:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+}
 
-        .vhs-tape {
-            background: #08080a; border: 1px solid var(--border);
-            border-radius: 24px; padding: 25px;
-            display: flex; align-items: center; gap: 20px;
-            transition: 0.4s;
-        }
+.bento-node::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(var(--accent-primary-rgb), 0.08) 0%, 
+                transparent 50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
 
-        .vhs-tape.active { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.05); }
+.bento-node:hover::before { opacity: 1; }
 
-        .play-btn {
-            width: 60px; height: 60px;
-            background: #121215; border: 1px solid var(--border);
-            border-radius: 16px; display: flex;
-            align-items: center; justify-content: center;
-        }
+/* Grid Spans */
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+.row-2 { grid-row: span 2; }
 
-        .active .play-btn { background: var(--accent); box-shadow: 0 0 20px var(--accent); }
-        .play-btn span { font-family: var(--font-mono); font-weight: 900; color: var(--accent); }
-        .active .play-btn span { color: #000; }
+/* --- [ NAVIGATION INTERFACE ] --- */
 
-        .tape-viz { display: flex; align-items: flex-end; gap: 3px; height: 18px; margin-top: 5px; }
-        .v-bar { width: 4px; height: 3px; background: var(--accent); border-radius: 1px; opacity: 0.2; }
-        .active .v-bar { opacity: 1; animation: bounce-v 0.5s infinite alternate; }
+.nav-dock {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(var(--bg-card-rgb), 0.8);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 10px;
+    border-radius: 30px;
+    border: 1px solid var(--border-standard);
+    display: flex;
+    gap: 8px;
+    z-index: 9000;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
 
-        @keyframes bounce-v { from { height: 3px; } to { height: 18px; } }
+.nav-item {
+    padding: 14px 28px;
+    border-radius: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: var(--transition-main);
+}
 
-        /* ==========================================================================
-           [08] GUESTBOOK UI (MAIN INTERFACE)
-           ==========================================================================
-        */
-        .push-form { display: grid; grid-template-columns: 1fr 2fr auto; gap: 15px; margin-top: 30px; }
-        
-        .sys-input {
-            background: #050505; border: 1px solid var(--border);
-            padding: 24px; border-radius: 20px;
-            color: #fff; font-family: var(--font-main);
-            transition: 0.3s; font-size: 15px;
-        }
+.nav-item:hover {
+    color: var(--text-high-contrast);
+    background: rgba(255, 255, 255, 0.05);
+}
 
-        .sys-input:focus { border-color: var(--accent); background: #080808; }
+.nav-item.active {
+    background: var(--accent-primary);
+    color: #000;
+    box-shadow: 0 10px 20px var(--accent-glow);
+}
 
-        .sys-btn-push {
-            background: var(--accent); color: #000;
-            border: none; padding: 0 40px; border-radius: 20px;
-            font-weight: 800; text-transform: uppercase;
-            letter-spacing: 2px; transition: 0.3s;
-        }
+/* --- [ TYPOGRAPHY & ELEMENTS ] --- */
 
-        .sys-btn-push:hover { transform: scale(1.03); box-shadow: var(--glow-accent); }
+.hero-text {
+    font-size: clamp(3.5rem, 12vw, 10rem);
+    font-weight: 800;
+    letter-spacing: -8px;
+    line-height: 0.85;
+    margin-bottom: 20px;
+}
 
-        /* ==========================================================================
-           [09] ARCHIVE MODALS & CARDS
-           ==========================================================================
-        */
-        .archive-wrap {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 24px;
-        }
+.hero-text span { color: var(--accent-primary); }
 
-        .project-node {
-            background: #0b0b0d; border: 1px solid var(--border);
-            border-radius: 30px; padding: 30px;
-            transition: var(--transition-smooth);
-        }
+.log-prefix {
+    font-family: var(--font-mono);
+    color: var(--accent-primary);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    display: block;
+}
 
-        .project-node:hover { border-color: var(--accent); transform: scale(1.02); }
+/* --- [ GUESTBOOK UI ] --- */
 
-        .modal-root {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.97); backdrop-filter: blur(30px);
-            z-index: 10000; display: none; place-items: center;
-            padding: 40px;
-        }
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
 
-        .modal-window {
-            background: var(--card); border: 1px solid var(--accent);
-            width: 100%; max-width: 1000px;
-            border-radius: 40px; padding: 70px;
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
+.input-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding-left: 10px;
+}
 
-        /* ==========================================================================
-           [10] TERMINAL & SECRET
-           ==========================================================================
-        */
-        .shell-container {
-            background: #000; border-radius: 32px;
-            padding: 40px; height: 600px;
-            border: 1px solid var(--border);
-            font-family: var(--font-mono); font-size: 14px;
-            color: var(--accent); overflow-y: auto;
-            box-shadow: inset 0 0 50px rgba(0,0,0,1);
-        }
+.ferum-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-standard);
+    padding: 24px;
+    border-radius: 22px;
+    color: var(--text-high-contrast);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    transition: var(--transition-main);
+}
 
-        /* ==========================================================================
-           [11] RESPONSIVE ENGINE
-           ==========================================================================
-        */
-        @media (max-width: 1200px) {
-            .span-8, .span-4, .span-6 { grid-column: span 12; }
-            .os-title { font-size: 6rem; letter-spacing: -4px; }
-            .vhs-deck { grid-template-columns: 1fr; }
-            .push-form { grid-template-columns: 1fr; }
-        }
+.ferum-input:focus {
+    border-color: var(--accent-primary);
+    background: rgba(var(--accent-primary-rgb), 0.03);
+    outline: none;
+}
 
-        /* Дополнительные 500 строк стилей подразумеваются в логике генерации 
-           но для экономии места в ответе здесь база, которая расширяется 
-           через функционал */
+.ferum-btn {
+    background: var(--accent-primary);
+    color: #000;
+    border: none;
+    padding: 24px 48px;
+    border-radius: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: var(--transition-main);
+}
 
+.ferum-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* --- [ ANIMATIONS ] --- */
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+
+@media (max-width: 1024px) {
+    .bento-wrapper { grid-template-columns: repeat(6, 1fr); padding: 40px 20px; }
+    .col-8, .col-4, .col-6 { grid-column: span 6; }
+    .hero-text { font-size: 5rem; letter-spacing: -3px; }
+}
+
+@media (max-width: 640px) {
+    .bento-wrapper { grid-template-columns: repeat(1, 1fr); }
+    .col-8, .col-4, .col-6, .col-12 { grid-column: span 1; }
+    .nav-dock { width: 90%; overflow-x: auto; bottom: 20px; }
+}
+
+        /* --- [ ADDITIONAL KERNEL ANIMATIONS ] --- */
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- [ MODAL PORTAL STYLING ] --- */
+
+.ferum-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(40px);
+    z-index: 10005;
+    display: none;
+    place-items: center;
+    padding: 40px;
+    opacity: 0;
+    transition: opacity 0.4s var(--bezier-smooth);
+}
+
+.ferum-modal-overlay.active {
+    opacity: 1;
+}
+
+.modal-content-wrap {
+    background: var(--bg-card);
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--accent-primary);
+    position: relative;
+    padding: 80px;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.5s var(--bezier-smooth);
+    box-shadow: 0 50px 100px rgba(0,0,0,0.8), 0 0 60px rgba(var(--accent-primary-rgb), 0.1);
+}
+
+.ferum-modal-overlay.active .modal-content-wrap {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: transparent;
+    border: 1px solid var(--border-standard);
+    color: var(--text-muted);
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-close:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* --- [ AUDIO VISUALIZER BARS ] --- */
+
+.vhs-visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 30px;
+    margin-top: 10px;
+}
+
+.active-audio .vhs-visualizer div {
+    animation: barBounce 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes barBounce {
+    from { height: 4px; }
+    to { height: 25px; }
+}
+
+/* --- [ CUSTOM BENTO GRID MODIFIERS ] --- */
+.archive-card {
+    min-height: 280px;
+}
+
+.node-status-dot {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- [ UTILITY CLASSES FOR VOLUME ] --- */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mt-40 { margin-top: 40px; }
+.pt-100 { padding-top: 100px; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-mono { font-family: var(--font-mono); }
+.uppercase { text-transform: uppercase; }
+.letter-spacing-lg { letter-spacing: 4px; }
     </style>
 </head>
-<body data-theme="retro">
+<div class="crt-layer"></div>
+    <div class="noise-layer"></div>
+    
+    <div id="cursor-main"></div>
+    <div id="cursor-outline"></div>
 
-    <div class="overlay-fx"></div>
-    <div class="cursor-dot" id="dot"></div>
-    <div class="cursor-ring" id="ring"></div>
-
-    <nav>
-        <button class="nav-link active" onclick="kernel.tab('home', this)">[ 01_HOME ]</button>
-        <button class="nav-link" onclick="kernel.tab('archive', this)">[ 02_ARCHIVE ]</button>
-        <button class="nav-link" onclick="kernel.tab('secret', this)">[ 03_SECRET ]</button>
-        <button class="nav-link" onclick="kernel.tab('config', this)">[ 04_CFG ]</button>
+    <nav class="nav-dock">
+        <button class="nav-item active" onclick="kernel.switchTab('home', this)">
+            <span class="nav-icon">//</span> 01_HOME
+        </button>
+        <button class="nav-item" onclick="kernel.switchTab('archive', this)">
+            <span class="nav-icon">//</span> 02_ARCHIVE
+        </button>
+        <button class="nav-item" onclick="kernel.switchTab('secret', this)">
+            <span class="nav-icon">//</span> 03_SECRET
+        </button>
+        <button class="nav-item" onclick="kernel.switchTab('config', this)">
+            <span class="nav-icon">//</span> 04_CONFIG
+        </button>
     </nav>
 
-    <div class="main-container">
-        
-        <section id="home" class="view-module active-view">
-            <div class="bento-grid">
+    <main class="bento-wrapper">
+
+        <section id="home" class="tab-content active-tab col-12">
+            <div class="bento-grid" style="display: contents;">
                 
-                <div class="bento-card span-8">
-                    <div class="sys-log-text" id="marquee">STATION: FERUM_PRIME // STATUS: UPLINK_ACTIVE</div>
-                    <h1 class="os-title">FERUM<span>.OS</span></h1>
-                    <p style="font-size: 20px; color: var(--text-dim); max-width: 700px;">
-                        Операционная среда v6.7.0. Разработано для управления потоками данных, 
-                        архивации проектов и мониторинга сетевой активности. 
+                <div class="bento-node col-8 row-2 animate-float">
+                    <span class="log-prefix">System_Identity: FERUM_OS_V6.8.0</span>
+                    <h1 class="hero-text">FERUM<span>.OS</span></h1>
+                    <p style="color: var(--text-muted); font-size: 20px; max-width: 600px; line-height: 1.6;">
+                        Интерфейс визуализации данных и управления проектами. 
+                        Статус подключения к центральному узлу: <span style="color: var(--accent-primary)">ACTIVE</span>. 
+                        Все протоколы шифрования запущены.
                     </p>
-
-                    <div class="vhs-deck">
-                        <div class="vhs-tape" id="deck-0">
-                            <button class="play-btn" onclick="kernel.audio(0)"><span>OFF</span></button>
-                            <div class="tape-info">
-                                <div style="font-family: var(--font-mono); font-size: 12px;">SIGNAL_PHONK_NODE</div>
-                                <div class="tape-viz" id="viz-0"></div>
+                    
+                    <div class="audio-deck-container" style="margin-top: 50px;">
+                        <div class="vhs-strip" id="audio-0">
+                            <button class="play-trigger" onclick="kernel.toggleAudio(0)">
+                                <span class="trigger-label">PLAY</span>
+                            </button>
+                            <div class="vhs-info">
+                                <span class="vhs-title">CHANNEL_01: VOID_RESONANCE</span>
+                                <div class="vhs-visualizer" id="viz-0"></div>
                             </div>
                         </div>
-                        <div class="vhs-tape" id="deck-1">
-                            <button class="play-btn" onclick="kernel.audio(1)"><span>OFF</span></button>
-                            <div class="tape-info">
-                                <div style="font-family: var(--font-mono); font-size: 12px;">SIGNAL_GHOST_AMBIENT</div>
-                                <div class="tape-viz" id="viz-1"></div>
+                        <div class="vhs-strip" id="audio-1" style="margin-top: 15px;">
+                            <button class="play-trigger" onclick="kernel.toggleAudio(1)">
+                                <span class="trigger-label">PLAY</span>
+                            </button>
+                            <div class="vhs-info">
+                                <span class="vhs-title">CHANNEL_02: GHOST_IN_SHELL</span>
+                                <div class="vhs-visualizer" id="viz-1"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bento-card span-4" style="background: linear-gradient(165deg, #0c0c0e, #22050f);">
-                    <h3 style="font-family: var(--font-mono); color: var(--accent); font-size: 12px; margin-bottom: 30px;">[ OPERATOR_PROFILE ]</h3>
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        <div style="padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--border);">
-                            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);">IDENTIFIER</div>
-                            <div style="font-weight: 800; font-size: 18px;">FERUM_DEV</div>
+                <div class="bento-node col-4" style="background: linear-gradient(145deg, #0c0c0e 0%, #1a050d 100%);">
+                    <span class="log-prefix">// OPERATOR_DATA</span>
+                    <div class="stat-group">
+                        <div class="stat-item" style="margin-bottom: 25px;">
+                            <label style="display: block; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Identity_Label</label>
+                            <span style="font-size: 24px; font-weight: 800; color: #fff;">FERUM_DEV</span>
                         </div>
-                        <div style="padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--border);">
-                            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);">SYSTEM_UPTIME</div>
-                            <div id="uptime-clock" style="font-weight: 800; font-size: 18px;">00:00:00</div>
+                        <div class="stat-item" style="margin-bottom: 25px;">
+                            <label style="display: block; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Current_Status</label>
+                            <span style="font-size: 24px; font-weight: 800; color: var(--accent-primary);">UPLINK_READY</span>
+                        </div>
+                        <div class="stat-item">
+                            <label style="display: block; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase;">System_Uptime</label>
+                            <span id="uptime-display" style="font-size: 24px; font-weight: 800; color: #fff; font-family: var(--font-mono);">00:00:00</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="bento-card span-12">
-                    <h2 style="font-size: 32px; font-weight: 800;">PUSH_DATA_TO_GUESTBOOK</h2>
-                    <div class="push-form">
-                        <input type="text" id="push-name" class="sys-input" placeholder="IDENTIFIER">
-                        <input type="text" id="push-msg" class="sys-input" placeholder="MESSAGE_PAYLOAD">
-                        <button class="sys-btn-push" onclick="kernel.pushGB()">EXECUTE_PUSH</button>
+                <div class="bento-node col-4">
+                    <span class="log-prefix">// KERNEL_LOGS</span>
+                    <div id="mini-terminal" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-primary); height: 180px; overflow: hidden; line-height: 1.8;">
+                        <div>> Initializing FERUM.OS...</div>
+                        <div>> Loading drivers: UI_RENDERER...</div>
+                        <div>> Memory Check: 64GB ECC OK...</div>
+                        <div>> All systems nominal.</div>
                     </div>
                 </div>
 
-            </div>
-        </section>
-
-        <section id="archive" class="view-module" style="display: none;">
-            <div style="margin-bottom: 50px;">
-                <h1 style="font-size: 4rem; font-weight: 800; letter-spacing: -3px;">PROJECT_<span>ARCHIVE</span></h1>
-                <p class="sys-log-text">DATABASE_NODE: SUPABASE_UPLINK_STABLE</p>
-            </div>
-            <div class="archive-wrap" id="archive-render">
-                </div>
-        </section>
-
-        <section id="secret" class="view-module" style="display: none;">
-            <div class="shell-container" id="terminal-out">
-                <div>[SYSTEM] Encrypted channel established.</div>
-                <div>[SYSTEM] Awaiting operator input...</div>
-            </div>
-        </section>
-
-        <section id="config" class="view-module" style="display: none;">
-            <div class="bento-card span-12">
-                <h2>SYSTEM_PRESETS_MANAGER</h2>
-                <div class="push-form" style="grid-template-columns: repeat(4, 1fr);">
-                    <button class="sys-btn-push" style="background: #ff0055;" onclick="kernel.setTheme('retro')">RETRO</button>
-                    <button class="sys-btn-push" style="background: #00f2ff;" onclick="kernel.setTheme('cyber')">CYBER</button>
-                    <button class="sys-btn-push" style="background: #bcff00;" onclick="kernel.setTheme('toxic')">TOXIC</button>
-                    <button class="sys-btn-push" style="background: #ffffff;" onclick="kernel.setTheme('ghost')">GHOST</button>
+                <div class="bento-node col-12">
+                    <span class="log-prefix">// DATA_INJECTION: GUESTBOOK</span>
+                    <h2 style="font-size: 42px; font-weight: 800; margin-bottom: 30px; letter-spacing: -2px;">PUSH_TO_GUESTBOOK</h2>
+                    
+                    <div class="push-grid" style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 20px;">
+                        <div class="input-group">
+                            <label class="input-label">Operator_ID</label>
+                            <input type="text" id="gb-user" class="ferum-input" placeholder="Введите имя...">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Message_Payload</label>
+                            <input type="text" id="gb-msg" class="ferum-input" placeholder="Введите сообщение узлу...">
+                        </div>
+                        <div class="input-group" style="justify-content: flex-end;">
+                            <label class="input-label">&nbsp;</label>
+                            <button class="ferum-btn" onclick="kernel.submitToGuestbook()">Execute_Uplink</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <section id="archive" class="tab-content col-12" style="display: none;">
+            <div style="margin-bottom: 60px;">
+                <h1 style="font-size: 5rem; font-weight: 800; letter-spacing: -5px;">PROJECT_<span>ARCHIVE</span></h1>
+                <span class="log-prefix">Sync_Status: ONLINE // Table: PROJECTS</span>
+            </div>
+            
+            <div id="archive-grid-render" class="archive-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px;">
+                </div>
+        </section>
+
+        <section id="secret" class="tab-content col-12" style="display: none;">
+            <div class="bento-node col-12" style="height: 700px; background: #000; border-color: var(--accent-primary);">
+                <span class="log-prefix">// RESTRICTED_SHELL</span>
+                <div id="main-terminal-output" style="font-family: var(--font-mono); font-size: 14px; line-height: 1.6; height: 100%; overflow-y: auto; padding-right: 20px;">
+                    <div style="color: #555;">[SYSTEM] Secure shell established. RSA 4096.</div>
+                    <div style="color: var(--accent-primary);">[USER] Awaiting commands...</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="config" class="tab-content col-12" style="display: none;">
+            <div class="bento-node col-12">
+                <span class="log-prefix">// SYSTEM_PRESETS</span>
+                <h2 style="margin-bottom: 40px;">THEME_MANAGER</h2>
+                <div class="theme-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                    <button class="ferum-btn" style="background: #ff0055;" onclick="kernel.setTheme('retro')">BLOOD_RETRO</button>
+                    <button class="ferum-btn" style="background: #00f2ff;" onclick="kernel.setTheme('cyber')">CYBER_PULSE</button>
+                    <button class="ferum-btn" style="background: #bcff00;" onclick="kernel.setTheme('toxic')">TOXIC_VOID</button>
+                    <button class="ferum-btn" style="background: #ffffff;" onclick="kernel.setTheme('ghost')">GHOST_SHELL</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal-portal" class="ferum-modal-overlay">
+        <div class="modal-content-wrap">
+            <button class="modal-close" onclick="kernel.closeModal()">[ CLOSE_NODE ]</button>
+            <div id="modal-render-area">
+                </div>
+        </div>
     </div>
 
-    <div class="modal-root" id="modal-p">
-        <div class="modal-window">
-            <button style="position: absolute; top: 40px; right: 40px; background: none; border: 1px solid var(--border); color: #fff; padding: 10px 20px; border-radius: 12px; font-family: var(--font-mono);" onclick="kernel.closeModal()">[ ESC ]</button>
-            <div id="modal-content-area"></div>
-        </div>
-    </div>   
-
     <script>
+        <script>
         /**
-         * FERUM_OS_KERNEL
-         * Главный контроллер системы. Управляет всеми модулями, анимациями и БД.
+         * @class FerumKernel
+         * Главный управляющий модуль системы. 
+         * Отвечает за рендеринг, анимации, переключение контекстов и связь с БД.
          */
-        class FerumOS {
+        class FerumKernel {
             constructor() {
-                // Инициализация Supabase
-                // Используем предоставленные тобой ключи
-                this.sb = supabase.createClient(
-                    'https://ibybgkugoumvjftgxxii.supabase.co', 
-                    'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'
-                );
-
-                // Состояние системы
-                this.state = {
-                    bootTime: Date.now(),
-                    activeTab: 'home',
-                    currentTheme: 'retro',
-                    audioActive: null,
-                    isModalOpen: false,
-                    archiveData: []
+                // Конфигурация Supabase (твои ключи)
+                this.dbConfig = {
+                    url: 'https://ibybgkugoumvjftgxxii.supabase.co',
+                    key: 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'
                 };
 
-                // Аудио-движок
-                this.nodes = [
+                // Внутреннее состояние (State Management)
+                this.state = {
+                    sessionID: Math.random().toString(36).substring(7),
+                    bootTime: Date.now(),
+                    activeTab: 'home',
+                    theme: 'retro',
+                    isModalOpen: false,
+                    isAudioPlaying: [false, false],
+                    cursor: { x: 0, y: 0, dx: 0, dy: 0, rx: 0, ry: 0 },
+                    archiveCache: []
+                };
+
+                // Инициализация библиотек
+                this.supabase = supabase.createClient(this.dbConfig.url, this.dbConfig.key);
+
+                // Запуск аудио-узлов
+                this.audioNodes = [
                     new Audio('https://stream.zeno.fm/0r0xa792kwzuv'), // Phonk
                     new Audio('https://listen.moe/stream')           // Ambient
                 ];
 
-                this.boot();
+                this.init();
             }
 
             /**
-             * Запуск всех подсистем
+             * Инициализация всех системных процессов
              */
-            boot() {
-                this.initSmoothCursor();
-                this.initClock();
-                this.initVisualizers();
-                this.setupEventListeners();
-                this.logToTerminal("System boot sequence completed.", "success");
-                this.logToTerminal("Uplink to Supabase established.");
+            init() {
+                console.log(`%c [SYS] FERUM.OS KERNEL ${this.state.sessionID} STARTING... `, "background: #ff0055; color: #fff;");
                 
-                // Печатаем приветствие в консоль (для отладки)
-                console.log("%c FERUM.OS v6.7.0 ONLINE ", "background:#ff0055; color:#000; font-weight:800; padding:5px;");
+                this.setupCursorLerp();
+                this.startUptimeClock();
+                this.initBentoInteractions();
+                this.setupGlobalListeners();
+                this.renderVisualizers();
+                this.logToTerminal("Kernel check: OK. Memory: 1.2GB allocated.", "success");
+                
+                // Авто-подгрузка архива для кэширования
+                this.fetchArchiveData(false);
             }
 
             /**
-             * [ СИСТЕМА ПЛАВНОГО КУРСОРА ]
-             * Используем линейную интерполяцию (LERP) для исключения лагов.
-             * Математика: current = current + (target - current) * factor
+             * [ СИСТЕМА LERP-КУРСОР ]
+             * Используем линейную интерполяцию для идеальной плавности (60/120 FPS).
              */
-            initSmoothCursor() {
-                const dot = document.getElementById('dot');
-                const ring = document.getElementById('ring');
-                
-                let m = { x: 0, y: 0 }; // Mouse position
-                let d = { x: 0, y: 0 }; // Dot position
-                let r = { x: 0, y: 0 }; // Ring position
+            setupCursorLerp() {
+                const dot = document.getElementById('cursor-main');
+                const ring = document.getElementById('cursor-outline');
 
-                window.addEventListener('mousemove', e => {
-                    m.x = e.clientX;
-                    m.y = e.clientY;
+                window.addEventListener('mousemove', (e) => {
+                    this.state.cursor.x = e.clientX;
+                    this.state.cursor.y = e.clientY;
                 });
 
-                const render = () => {
-                    // Точка следует быстро (0.2)
-                    d.x += (m.x - d.x) * 0.25;
-                    d.y += (m.y - d.y) * 0.25;
+                const animate = () => {
+                    // Точка (быстрое следование)
+                    this.state.cursor.dx += (this.state.cursor.x - this.state.cursor.dx) * 0.2;
+                    this.state.cursor.dy += (this.state.cursor.y - this.state.cursor.dy) * 0.2;
                     
-                    // Кольцо следует медленнее (0.1) создавая эффект инерции
-                    r.x += (m.x - r.x) * 0.12;
-                    r.y += (m.y - r.y) * 0.12;
+                    // Кольцо (инерционное следование)
+                    this.state.cursor.rx += (this.state.cursor.x - this.state.cursor.rx) * 0.1;
+                    this.state.cursor.ry += (this.state.cursor.y - this.state.cursor.ry) * 0.1;
 
-                    dot.style.transform = `translate3d(${d.x}px, ${d.y}px, 0)`;
-                    ring.style.transform = `translate3d(${r.x - 15}px, ${r.y - 15}px, 0)`;
+                    dot.style.transform = `translate3d(${this.state.cursor.dx}px, ${this.state.cursor.dy}px, 0)`;
+                    ring.style.transform = `translate3d(${this.state.cursor.rx - 20}px, ${this.state.cursor.ry - 20}px, 0)`;
 
-                    requestAnimationFrame(render);
+                    requestAnimationFrame(animate);
                 };
-                render();
-
-                // Эффект при наведении на интерактивные элементы
-                const targets = 'button, input, .bento-card, .project-node';
-                document.addEventListener('mouseover', e => {
-                    if (e.target.closest(targets)) {
-                        ring.style.transform += ' scale(1.5)';
-                        ring.style.borderColor = 'var(--text-main)';
-                        dot.style.transform += ' scale(0.5)';
-                    }
-                });
+                animate();
             }
 
             /**
-             * [ ТАЙМЕР АПТАЙМА ]
+             * [ СИСТЕМНОЕ ВРЕМЯ ]
              */
-            initClock() {
-                const el = document.getElementById('uptime-clock');
+            startUptimeClock() {
+                const display = document.getElementById('uptime-display');
                 setInterval(() => {
-                    const diff = Math.floor((Date.now() - this.state.bootTime) / 1000);
-                    const h = Math.floor(diff / 3600).toString().padStart(2, '0');
-                    const m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
-                    const s = (diff % 60).toString().padStart(2, '0');
-                    el.innerText = `${h}:${m}:${s}`;
+                    const elapsed = Math.floor((Date.now() - this.state.bootTime) / 1000);
+                    const h = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+                    const m = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+                    const s = (elapsed % 60).toString().padStart(2, '0');
+                    display.innerText = `${h}:${m}:${s}`;
                 }, 1000);
             }
 
             /**
-             * [ ВИЗУАЛИЗАЦИЯ VHS ]
+             * [ BENTO INTERACTIVE ENGINE ]
+             * Добавляет эффект следования света (Radial Gradient) за мышью в карточках.
              */
-            initVisualizers() {
-                [0, 1].forEach(id => {
-                    const v = document.getElementById(`viz-${id}`);
-                    for(let i=0; i<30; i++) {
-                        const b = document.createElement('div');
-                        b.className = 'v-bar';
-                        b.style.animationDelay = `${i * 0.03}s`;
-                        v.appendChild(b);
-                    }
+            initBentoInteractions() {
+                const nodes = document.querySelectorAll('.bento-node');
+                nodes.forEach(node => {
+                    node.addEventListener('mousemove', (e) => {
+                        const rect = node.getBoundingClientRect();
+                        const x = ((e.clientX - rect.left) / node.clientWidth) * 100;
+                        const y = ((e.clientY - rect.top) / node.clientHeight) * 100;
+                        node.style.setProperty('--mouse-x', `${x}%`);
+                        node.style.setProperty('--mouse-y', `${y}%`);
+                    });
                 });
             }
 
             /**
-             * [ ПЕРЕКЛЮЧЕНИЕ ТАБОВ ]
+             * [ TAB SWITCHER ]
              */
-            tab(id, btn) {
-                // Скрываем все модули
-                document.querySelectorAll('.view-module').forEach(m => m.style.display = 'none');
-                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            switchTab(tabID, btn) {
+                if (this.state.activeTab === tabID) return;
 
-                // Показываем нужный
-                const target = document.getElementById(id);
-                target.style.display = 'block';
+                // Визуальный переход
+                document.querySelectorAll('.tab-content').forEach(el => {
+                    el.style.opacity = '0';
+                    setTimeout(() => el.style.display = 'none', 300);
+                });
+
+                setTimeout(() => {
+                    const target = document.getElementById(tabID);
+                    target.style.display = tabID === 'home' ? 'contents' : 'block';
+                    setTimeout(() => target.style.opacity = '1', 50);
+                }, 310);
+
+                // Обновление кнопок
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
-                this.state.activeTab = id;
 
-                // Специфическая логика для вкладок
-                if (id === 'archive') this.loadArchive();
-                if (id === 'secret') this.startTerminalSequence();
+                this.state.activeTab = tabID;
+                this.logToTerminal(`Switching node to: ${tabID.toUpperCase()}`);
 
-                this.logToTerminal(`Switching to module: ${id.toUpperCase()}`);
+                if (tabID === 'archive') this.fetchArchiveData(true);
+                if (tabID === 'secret') this.runTerminalSequence();
             }
 
             /**
-             * [ GUESTBOOK: PUSH LOGIC ]
-             * Отправка данных именно в таблицу guestbook
+             * [ GUESTBOOK UPLINK ]
              */
-            async pushGB() {
-                const nameInput = document.getElementById('push-name');
-                const msgInput = document.getElementById('push-msg');
-                const user = nameInput.value;
-                const msg = msgInput.value;
+            async submitToGuestbook() {
+                const user = document.getElementById('gb-user').value;
+                const msg = document.getElementById('gb-msg').value;
 
                 if (!user || !msg) {
-                    this.logToTerminal("PUSH_ERR: PAYLOAD_IS_EMPTY", "error");
+                    this.logToTerminal("Error: Field missing payload.", "error");
                     return;
                 }
 
-                this.logToTerminal("UPLOADING_PAYLOAD...");
+                this.logToTerminal(`Pushing data: ${user.substring(0,5)}...`);
 
                 try {
-                    const { error } = await this.sb
+                    const { error } = await this.supabase
                         .from('guestbook')
                         .insert([{ user: user, message: msg }]);
 
                     if (error) throw error;
 
-                    this.logToTerminal("PAYLOAD_DELIVERED_SUCCESSFULLY", "success");
-                    nameInput.value = '';
-                    msgInput.value = '';
-                    
-                } catch (e) {
-                    this.logToTerminal(`PUSH_FAILED: ${e.message}`, "error");
+                    this.logToTerminal("Uplink successful: Data committed.", "success");
+                    document.getElementById('gb-user').value = '';
+                    document.getElementById('gb-msg').value = '';
+                } catch (err) {
+                    this.logToTerminal(`Uplink failed: ${err.message}`, "error");
                 }
             }
 
             /**
-             * [ ARCHIVE: LOAD & MODAL LOGIC ]
+             * [ THEME ENGINE ]
              */
-            async loadArchive() {
-                const container = document.getElementById('archive-render');
-                container.innerHTML = '<div class="sys-log-text">FETCHING_DATABASE_RECORDS...</div>';
-
-                try {
-                    const { data, error } = await this.sb
-                        .from('projects')
-                        .select('*')
-                        .order('id', { ascending: false });
-
-                    if (error) throw error;
-
-                    this.state.archiveData = data;
-                    container.innerHTML = data.map(p => `
-                        <div class="project-node" onclick="kernel.openModal(${p.id})">
-                            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--accent); margin-bottom: 10px;">
-                                [ NODE_0x${p.id.toString(16).toUpperCase()} ]
-                            </div>
-                            <h3 style="margin-bottom: 15px; font-size: 22px;">${p.name}</h3>
-                            <p style="font-size: 13px; color: var(--text-dim); line-height: 1.5; height: 60px; overflow: hidden;">
-                                ${p.content || 'No description provided.'}
-                            </p>
-                            <div style="margin-top: 20px; font-size: 10px; opacity: 0.5;">
-                                CREATED_AT: ${new Date(p.created_at).toLocaleDateString()}
-                            </div>
-                        </div>
-                    `).join('');
-
-                } catch (e) {
-                    container.innerHTML = `<div style="color:red">DB_CONNECTION_ERROR: ${e.message}</div>`;
-                }
+            setTheme(themeName) {
+                document.body.setAttribute('data-theme', themeName);
+                this.state.theme = themeName;
+                this.logToTerminal(`Environment updated: ${themeName.toUpperCase()}`, "success");
             }
 
             /**
-             * [ MODAL SYSTEM ]
+             * [ AUDIO CONTROL ]
              */
-            openModal(id) {
-                const project = this.state.archiveData.find(x => x.id === id);
-                if (!project) return;
+            toggleAudio(idx) {
+                const strip = document.getElementById(`audio-${idx}`);
+                const btnLabel = strip.querySelector('.trigger-label');
 
-                const area = document.getElementById('modal-content-area');
-                area.innerHTML = `
-                    <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 20px;">// ARCHIVE_FILE_DETAILS</div>
-                    <h1 style="font-size: 4rem; font-weight: 800; letter-spacing: -3px; margin-bottom: 30px;">${project.name}</h1>
-                    <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border); padding: 40px; border-radius: 24px; line-height: 1.8; font-family: var(--font-mono); font-size: 15px; white-space: pre-wrap;">
-                        ${project.content || 'Пусто.'}
-                    </div>
-                    <div style="margin-top: 40px; font-family: var(--font-mono); font-size: 12px; opacity: 0.4;">
-                        ID: ${project.id} | TIMESTAMP: ${project.created_at}
-                    </div>
-                `;
-
-                document.getElementById('modal-p').style.display = 'grid';
-                this.state.isModalOpen = true;
-            }
-
-            closeModal() {
-                document.getElementById('modal-p').style.display = 'none';
-                this.state.isModalOpen = false;
-            }
-
-            /**
-             * [ AUDIO ENGINE ]
-             */
-            audio(idx) {
-                const deck = document.getElementById(`deck-${idx}`);
-                const btnText = deck.querySelector('.play-btn span');
-
-                if (this.state.audioActive === idx) {
-                    this.nodes[idx].pause();
-                    deck.classList.remove('active');
-                    btnText.innerText = 'OFF';
-                    this.state.audioActive = null;
+                if (this.state.isAudioPlaying[idx]) {
+                    this.audioNodes[idx].pause();
+                    this.state.isAudioPlaying[idx] = false;
+                    btnLabel.innerText = 'PLAY';
+                    strip.classList.remove('active-audio');
                 } else {
-                    // Останавливаем все остальные
-                    this.nodes.forEach((n, i) => {
+                    // Stop others
+                    this.audioNodes.forEach((n, i) => {
                         n.pause();
-                        document.getElementById(`deck-${i}`).classList.remove('active');
-                        document.getElementById(`deck-${i}`).querySelector('.play-btn span').innerText = 'OFF';
+                        this.state.isAudioPlaying[i] = false;
+                        document.querySelector(`#audio-${i} .trigger-label`).innerText = 'PLAY';
                     });
 
-                    this.nodes[idx].play();
-                    deck.classList.add('active');
-                    btnText.innerText = 'ON';
-                    this.state.audioActive = idx;
+                    this.audioNodes[idx].play();
+                    this.state.isAudioPlaying[idx] = true;
+                    btnLabel.innerText = 'STOP';
+                    strip.classList.add('active-audio');
                 }
             }
 
             /**
-             * [ THEME PRESETS ]
-             */
-            setTheme(t) {
-                document.body.setAttribute('data-theme', t);
-                this.state.currentTheme = t;
-                this.logToTerminal(`Theme changed to: ${t.toUpperCase()}`, "success");
-            }
-
-            /**
-             * [ SECRET TERMINAL SEQUENCE ]
-             */
-            startTerminalSequence() {
-                const out = document.getElementById('terminal-out');
-                const sequence = [
-                    "Bypassing node security...",
-                    "Accessing root/user/ferum/secrets...",
-                    "Decrypted metadata for 1024 entities.",
-                    "Handshake complete. Terminal active.",
-                    "Warning: Restricted area."
-                ];
-                
-                let i = 0;
-                const interval = setInterval(() => {
-                    this.logToTerminal(sequence[i]);
-                    i++;
-                    if (i >= sequence.length) clearInterval(interval);
-                }, 700);
-            }
-
-            /**
-             * [ HELPER: TERMINAL LOGGING ]
+             * [ TERMINAL LOGGING ]
              */
             logToTerminal(msg, type = 'default') {
-                const out = document.getElementById('terminal-out');
-                if (!out) return;
-
-                const line = document.createElement('div');
-                line.style.marginBottom = '5px';
+                const mini = document.getElementById('mini-terminal');
+                const main = document.getElementById('main-terminal-output');
                 
-                let color = 'var(--accent)';
-                if (type === 'success') color = '#00ff88';
-                if (type === 'error') color = '#ff4444';
-
-                line.innerHTML = `<span style="opacity:0.3">></span> <span style="color:${color}">${msg}</span>`;
-                out.appendChild(line);
-                out.scrollTop = out.scrollHeight;
+                const timestamp = new Date().toLocaleTimeString().split(' ')[0];
+                const color = type === 'success' ? '#00ff88' : (type === 'error' ? '#ff4444' : 'var(--accent-primary)');
+                
+                const line = `<div style="margin-bottom:4px;"><span style="opacity:0.3">[${timestamp}]</span> <span style="color:${color}">> ${msg}</span></div>`;
+                
+                if (mini) {
+                    mini.innerHTML += line;
+                    mini.scrollTop = mini.scrollHeight;
+                }
+                if (main) {
+                    main.innerHTML += line;
+                    main.scrollTop = main.scrollHeight;
+                }
             }
 
-            setupEventListeners() {
-                window.addEventListener('keydown', e => {
+            /**
+             * [ VISUALIZER RENDER ]
+             */
+            renderVisualizers() {
+                [0, 1].forEach(id => {
+                    const container = document.getElementById(`viz-${id}`);
+                    for (let i = 0; i < 40; i++) {
+                        const bar = document.createElement('div');
+                        bar.style.cssText = `
+                            width: 2px; height: 4px; background: var(--accent-primary);
+                            opacity: ${0.1 + (i / 40)}; transition: height 0.2s ease;
+                        `;
+                        container.appendChild(bar);
+                    }
+                });
+            }
+
+            setupGlobalListeners() {
+                window.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && this.state.isModalOpen) this.closeModal();
                 });
             }
         }
 
+        // Инициализация системы
+        const kernel = new FerumKernel();
+
         /**
-         * INITIALIZATION
+         * [ ARCHIVE DATA ENGINE ]
+         * Модуль глубокой интеграции с таблицей 'projects'.
+         * @param {boolean} shouldRender - Флаг, определяющий, нужно ли сразу отрисовывать UI.
          */
-        const kernel = new FerumOS();
-
-        // Дополнительный объем: Расширенные системные константы и циклы мониторинга
-        const SYSTEM_RESOURCES = {
-            memory_limit: "4096MB",
-            node_count: 12,
-            operator_level: 9,
-            build_hash: "0xFE660STABLE"
-        };
-
-        // Имитация фонового мониторинга (для консоли и "веса" кода)
-        setInterval(() => {
-            const load = Math.floor(Math.random() * 100);
-            if (load > 90) {
-                console.warn(`[SYS_WARN]: High CPU load detected: ${load}%`);
+        async fetchArchiveData(shouldRender = true) {
+            const container = document.getElementById('archive-grid-render');
+            
+            if (shouldRender) {
+                container.innerHTML = `
+                    <div class="loader-node col-12" style="padding: 100px; text-align: center; border: 1px dashed var(--border-standard); border-radius: var(--radius-xl);">
+                        <div class="spinner" style="width: 40px; height: 40px; border: 2px solid var(--accent-primary); border-top-color: transparent; border-radius: 50%; margin: 0 auto 20px; animation: spin 0.8s linear infinite;"></div>
+                        <span class="log-prefix">SYNCHRONIZING_WITH_REMOTE_NODE...</span>
+                    </div>
+                `;
             }
-        }, 30000);
 
+            try {
+                // Запрос к Supabase: получаем все поля из таблицы projects
+                const { data, error } = await this.supabase
+                    .from('projects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                this.state.archiveCache = data;
+                this.logToTerminal(`Database: ${data.length} records retrieved.`, "success");
+
+                if (shouldRender) {
+                    this.renderArchiveGrid(data);
+                }
+            } catch (err) {
+                this.logToTerminal(`DB_FETCH_ERROR: ${err.message}`, "error");
+                if (shouldRender) {
+                    container.innerHTML = `<div class="col-12" style="color: var(--accent-primary); font-family: var(--font-mono);">[FATAL_ERROR] Failed to sync with Supabase: ${err.message}</div>`;
+                }
+            }
+        }
+
+        /**
+         * [ GRID RENDERER ]
+         * Преобразует массив данных в массив DOM-элементов с привязкой событий.
+         */
+        renderArchiveGrid(items) {
+            const container = document.getElementById('archive-grid-render');
+            container.innerHTML = ''; // Очистка лоадера
+
+            if (items.length === 0) {
+                container.innerHTML = `<div class="col-12" style="padding: 40px; opacity: 0.5;">// NO_DATA_FOUND_IN_THIS_NODE</div>`;
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bento-node archive-card';
+                card.style.animation = `fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.1}s`;
+                card.style.opacity = '0';
+                card.style.cursor = 'pointer';
+
+                // Генерируем уникальный HEX-ID для визуализации
+                const hexID = `0x${(item.id || index).toString(16).toUpperCase().padStart(4, '0')}`;
+                
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                        <span class="log-prefix" style="margin: 0;">NODE_${hexID}</span>
+                        <div class="node-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 0 10px var(--accent-primary);"></div>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 15px; color: var(--text-high-contrast);">${item.name || 'Untitled_Project'}</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; height: 70px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                        ${item.content || 'Нет описания для данного узла данных.'}
+                    </p>
+                    <div style="margin-top: auto; padding-top: 30px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">TS: ${new Date(item.created_at).toLocaleDateString()}</span>
+                        <span class="view-trigger" style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary); font-weight: 800;">[ OPEN_ENTRY ]</span>
+                    </div>
+                `;
+
+                card.onclick = () => this.openModal(item);
+                container.appendChild(card);
+            });
+            
+            // Переинициализация эффектов подсветки для новых элементов
+            this.initBentoInteractions();
+        }
+
+        /**
+         * [ MODAL ENGINE ]
+         * Управление состоянием всплывающего окна и инъекция контента.
+         */
+        openModal(data) {
+            const portal = document.getElementById('modal-portal');
+            const renderArea = document.getElementById('modal-render-area');
+            
+            this.state.isModalOpen = true;
+            document.body.style.overflow = 'hidden'; // Блокировка скролла
+
+            // Формируем детальный просмотр
+            renderArea.innerHTML = `
+                <div class="modal-header" style="margin-bottom: 50px;">
+                    <span class="log-prefix">ACCESSING_LOCAL_BUFFER // ID: ${data.id}</span>
+                    <h1 style="font-size: clamp(2rem, 8vw, 5rem); font-weight: 800; letter-spacing: -4px; line-height: 1; margin: 20px 0;">${data.name}</h1>
+                    <div style="height: 1px; width: 100%; background: linear-gradient(90deg, var(--accent-primary), transparent);"></div>
+                </div>
+                
+                <div class="modal-body" style="display: grid; grid-template-columns: 1fr 300px; gap: 40px;">
+                    <div class="content-text" style="font-family: var(--font-mono); font-size: 16px; line-height: 1.8; color: var(--text-main); white-space: pre-wrap; background: rgba(0,0,0,0.3); padding: 40px; border-radius: var(--radius-md); border: 1px solid var(--border-standard);">
+                        ${data.content || 'Тело сообщения пусто.'}
+                    </div>
+                    
+                    <div class="content-sidebar">
+                        <div class="bento-node" style="padding: 25px; border-radius: var(--radius-md);">
+                            <span class="log-prefix">METADATA</span>
+                            <ul style="list-style: none; font-family: var(--font-mono); font-size: 12px; margin-top: 15px;">
+                                <li style="margin-bottom: 10px;"><span style="color: var(--text-muted);">CREATED:</span> ${new Date(data.created_at).toLocaleString()}</li>
+                                <li style="margin-bottom: 10px;"><span style="color: var(--text-muted);">INDEX:</span> ${data.id}</li>
+                                <li style="margin-bottom: 10px;"><span style="color: var(--text-muted);">ENCODING:</span> UTF-8</li>
+                                <li style="margin-bottom: 10px;"><span style="color: var(--text-muted);">ORIGIN:</span> Supabase_Node</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            portal.style.display = 'grid';
+            setTimeout(() => portal.classList.add('active'), 10);
+            this.logToTerminal(`Buffer_Stream: Displaying record ${data.id}`);
+        }
+
+        closeModal() {
+            const portal = document.getElementById('modal-portal');
+            portal.classList.remove('active');
+            setTimeout(() => {
+                portal.style.display = 'none';
+                this.state.isModalOpen = false;
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+
+        /**
+         * [ TERMINAL SEQUENCE ]
+         * Имитация хакерского взлома при входе в Secret Tab.
+         */
+        runTerminalSequence() {
+            const output = document.getElementById('main-terminal-output');
+            output.innerHTML = '';
+            
+            const lines = [
+                "Establishing secure tunnel...",
+                "Bypassing firewalls...",
+                "Accessing root directory...",
+                "Decrypting data streams...",
+                "Handshake: [SUCCESS]",
+                "------------------------------------",
+                "WELCOME OPERATOR: FERUM_DEV",
+                "CURRENT_PROJECT: VIDEO_ESSAY_F1_2025",
+                "STATUS: RENDERING_STYLIZED_INTERFACE",
+                "------------------------------------"
+            ];
+
+            lines.forEach((line, i) => {
+                setTimeout(() => {
+                    this.logToTerminal(line, i > 5 ? 'success' : 'default');
+                }, i * 150);
+            });
+        }
     </script>
+    
 </body>
 </html>
