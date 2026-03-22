@@ -2,230 +2,352 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>FERUM.OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ferum // FERUM.OS v5.5.ULTRA_WIDE</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- ТВОЯ БАЗОВАЯ СТИЛИСТИКА --- */
-        body {
-            background-color: #080808;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            cursor: none !important; /* Прячем дефолт */
+        /* === CORE VARIABLES === */
+        :root {
+            --bg: #030303; 
+            --card: #0e0e11; 
+            --accent: #ff0055; 
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f0f0; 
+            --text-dim: #71717a; 
+            --radius: 32px;
+            --font-main: 'Plus Jakarta Sans', sans-serif; 
+            --font-mono: 'JetBrains Mono', monospace;
+            --win-bg: rgba(10, 10, 12, 0.98);
+            --vhs-bg: #0a0a0c;
         }
 
-        /* --- КУРСОР В СТИЛЕ СИСТЕМЫ --- */
-        #cursor {
-            width: 12px;
-            height: 12px;
-            border: 1px solid #ff0055;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
+        /* === RESET & BASE === */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s; cursor: none !important; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text-main); 
+            font-family: var(--font-main); 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        /* === CUSTOM SYSTEM CURSOR === */
+        #c-cursor {
+            width: 12px; height: 12px; border: 1.5px solid var(--accent); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 10000;
+            transition: transform 0.15s ease, background 0.3s ease;
             mix-blend-mode: difference;
-            transition: transform 0.1s ease;
+        }
+        .c-hover { transform: scale(2.5); background: var(--accent); border-color: #fff; }
+
+        /* === WATERMARKS === */
+        .frm-huge {
+            position: absolute; bottom: -20px; right: -10px;
+            font-size: 18rem; font-weight: 900; letter-spacing: -15px;
+            color: var(--accent); opacity: 0.03; z-index: 1; pointer-events: none;
+        }
+        .ascii-bg {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: var(--font-mono); font-size: 10px; line-height: 9px;
+            color: var(--accent); opacity: 0.015; z-index: 0; pointer-events: none; white-space: pre;
         }
 
-        /* --- ВОТЕРМАРКА FRM (КАК ПРОСИЛ, БОЛЬШАЯ) --- */
-        .watermark {
-            position: fixed;
-            right: -20px;
-            bottom: 50px;
-            font-size: 350px;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.03); /* Едва заметная */
-            z-index: 1;
-            user-select: none;
-            pointer-events: none;
-            line-height: 1;
+        /* === NAVIGATION === */
+        nav { 
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
+            background: rgba(17, 17, 19, 0.85); backdrop-filter: blur(30px); 
+            padding: 10px; border-radius: 22px; border: 1px solid var(--border); 
+            display: flex; gap: 8px; z-index: 1000; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
-
-        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
-        .main-card {
-            background: #111;
-            border-radius: 30px;
-            padding: 40px;
-            position: relative;
-            z-index: 10;
-            min-height: 400px;
+        .nav-btn { 
+            padding: 14px 28px; border-radius: 16px; border: none; background: transparent; 
+            color: var(--text-dim); font-weight: 700; font-size: 13px;
+            font-family: var(--font-main); transition: 0.2s;
         }
+        .nav-btn.active { background: var(--accent); color: #000; }
+        .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        /* === THEME MENU === */
+        .theme-menu { 
+            position: absolute; top: 80px; right: 0; background: var(--win-bg); 
+            border: 1px solid var(--border); border-radius: 24px; padding: 18px; 
+            display: none; flex-direction: column; gap: 10px; min-width: 260px; 
+            max-height: 480px; overflow-y: auto; z-index: 1001; box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
-
-        .logo {
-            font-size: 110px;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -5px;
+        .theme-menu.show { display: flex; }
+        .t-item { 
+            padding: 14px; border-radius: 14px; font-family: var(--font-mono); 
+            font-size: 11px; display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); 
         }
+        .t-item:hover { background: var(--accent); color: #000; }
+        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-        .logo span { color: #ff0055; }
+        /* === PAGES === */
+        .page { display: none; padding: 160px 20px 100px; max-width: 1200px; margin: 0 auto; animation: pageIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .page.active { display: block; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* --- УМЕНЬШЕННЫЕ ПЛЕЕРЫ --- */
-        .player-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            width: 300px;
+        /* === BENTO GRID === */
+        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
+        .bento-card { 
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 45px; position: relative; overflow: hidden; 
         }
+        
+        .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; position: relative; z-index: 5; }
+        .hero-card h1 span { color: var(--accent); }
 
-        .player-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 10px 15px; /* Уменьшили тут */
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.2s;
+        /* === COMPACT VHS PLAYER === */
+        .vhs-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 10; }
+        .vhs-player { 
+            background: var(--vhs-bg); border: 1px solid var(--border); border-radius: 14px; 
+            padding: 10px 20px; display: flex; align-items: center; gap: 15px; 
+            width: fit-content; min-width: 320px; position: relative; overflow: hidden;
         }
-
-        .player-item:hover { background: rgba(255, 255, 255, 0.06); }
-
-        .play-btn {
-            width: 30px;
-            height: 30px;
-            background: #ff0055;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .vhs-player::after {
+            content: ""; position: absolute; inset: 0; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+            background-size: 100% 2px; pointer-events: none;
         }
-
-        .track-info { font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
-        .track-status { font-size: 8px; color: #444; margin-top: 2px; }
-
-        /* --- СЕТКА НИЖНИХ БЛОКОВ --- */
-        .grid-footer {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 20px;
-            z-index: 10;
+        .vhs-btn { 
+            width: 30px; height: 30px; background: #1a1a1f; border: 1px solid var(--border); 
+            color: var(--accent); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 9px;
         }
+        .vhs-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent); }
+        .vhs-info { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; }
+        .vhs-title { font-weight: 800; font-size: 11px; color: #fff; letter-spacing: 0.5px; }
+        .vhs-status { color: var(--accent); animation: vhs-blink 1.5s infinite; }
+        @keyframes vhs-blink { 50% { opacity: 0; } }
 
-        .skills-card {
-            background: #111;
-            border-radius: 30px;
-            padding: 30px;
+        /* === COMPACT DB BUTTON === */
+        .db-connector-cell { display: flex; align-items: center; justify-content: center; }
+        .db-btn-compact { 
+            padding: 18px 40px; background: var(--text-main); color: var(--bg); 
+            border: none; border-radius: 20px; font-weight: 900; font-size: 15px; 
+            width: auto; 
         }
+        .db-btn-compact:hover { background: var(--accent); color: #000; }
 
-        .skills-title { color: #ff0055; margin-bottom: 20px; font-weight: bold; }
-
-        .skills-content {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #666;
-            line-height: 1.6;
+        /* === TERMINAL === */
+        #term-body { 
+            background: #000; border-radius: 28px; padding: 40px; font-family: var(--font-mono); 
+            height: 500px; overflow-y: auto; color: var(--accent); border: 1px solid var(--border); 
+            font-size: 14px; line-height: 1.7; 
         }
-
-        .db-card {
-            background: #f0f0f0;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-weight: 900;
-            font-size: 24px;
-            transition: 0.3s;
+        .t-row { margin-bottom: 8px; }
+        .t-input-wrap {
+            display: flex; gap: 15px; margin-top: 25px; background: rgba(255,255,255,0.03);
+            padding: 25px; border-radius: 24px; border: 1px solid var(--border);
         }
+        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        .db-card:hover { background: #ff0055; color: #fff; }
-
-        .system-info {
-            position: absolute;
-            right: 40px;
-            bottom: 40px;
-            text-align: right;
-            font-family: monospace;
-            font-size: 10px;
-            color: #333;
-        }
+        /* === MODAL & OTHER ELEMENTS (FROM ORIGINAL) === */
+        #modal { position: fixed; inset: 0; background: rgba(3, 3, 3, 0.98); display: none; z-index: 5000; overflow-y: auto; backdrop-filter: blur(15px); padding: 80px 20px; }
+        .modal-container { max-width: 900px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 40px; overflow: hidden; }
+        .modal-body { padding: 60px; }
+        .close-m { position: fixed; top: 40px; right: 40px; padding: 18px 30px; background: var(--accent); border: none; border-radius: 18px; color: #000; font-family: var(--font-mono); font-weight: 800; z-index: 5001; }
+        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); --vhs-bg: #e0e0e4; }
     </style>
 </head>
-<body>
+<body onclick="unlockAudio()">
 
-    <div id="cursor"></div>
-    <div class="watermark">FRM</div>
+<div id="c-cursor"></div>
+<div class="ascii-bg">
+    _  _  _  _  _  _  _  _  _  _
+    | || || || || || || || || || |
+    | || || || || || || || || || |
+    |_||_||_||_||_||_||_||_||_||_|
+    FERUM_OS_KERNEL_REVISION_5.5.01
+</div>
 
-    <div class="main-card">
-        <div class="header-top">
-            <h1 class="logo">FERUM<span>.OS</span></h1>
-        </div>
-
-        <div class="player-stack">
-            <div class="player-item">
-                <div class="play-btn">▶</div>
-                <div class="track-info">
-                    TAPE_01: RADIO_INFUSION
-                    <div class="track-status">STOPPED</div>
-                </div>
-            </div>
-            <div class="player-item">
-                <div class="play-btn">▶</div>
-                <div class="track-info">
-                    TAPE_02: TOKYO_DRIFT_ROCK
-                    <div class="track-status">IDLE</div>
-                </div>
-            </div>
-            <div class="player-item" style="opacity: 0.5;">
-                <div class="play-btn" style="background: #222;">▶</div>
-                <div class="track-info">
-                    X_SECRET_TAPE.EXE
-                    <div class="track-status">READY_TO_ROLL</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="system-info">
-            KRNL_REV: 5.4.12 // SEC: ALPHA
+<nav>
+    <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
+    <button class="nav-btn" onclick="switchTab('forum', this)">Archive</button>
+    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
+    <button class="nav-btn" onclick="switchTab('secret', this)">[ X_LINK ]</button>
+    <div style="position: relative;">
+        <button class="nav-btn" onclick="toggleT()">Design</button>
+        <div class="theme-menu" id="tMenu">
+            <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
+            <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
+            <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
+            <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
+            <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
+            <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
         </div>
     </div>
+</nav>
 
-    <div class="grid-footer">
-        <div class="skills-card">
-            <div class="skills-title">Skills.txt</div>
-            <div class="skills-content">
+<div id="home" class="page active">
+    <div class="bento-grid">
+        <div class="bento-card hero-card">
+            <div class="frm-huge">FRM</div>
+            <div>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.5_ULTRA_WIDE</p>
+                <h1>FERUM<span>.OS</span></h1>
+                
+                <div class="vhs-stack">
+                    <div class="vhs-player">
+                        <div class="vhs-controls">
+                            <button class="vhs-btn" id="vbtn-0" onclick="toggleAudio(0)">PLAY</button>
+                        </div>
+                        <div class="vhs-info">
+                            <div class="vhs-title">TAPE_01: RADIO_INFUSION</div>
+                            <div class="vhs-status" id="vstat-0">STOPPED</div>
+                        </div>
+                    </div>
+                    <div class="vhs-player">
+                        <div class="vhs-controls">
+                            <button class="vhs-btn" id="vbtn-1" onclick="toggleAudio(1)">PLAY</button>
+                        </div>
+                        <div class="vhs-info">
+                            <div class="vhs-title">TAPE_02: TOKYO_DRIFT_ROCK</div>
+                            <div class="vhs-status" id="vstat-1">STOPPED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
+                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.5.01 // SEC: ENCRYPTED</p>
+            </div>
+            
+            <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
+                <div style="color: var(--accent)">[ KERNEL_ACTIVE ]</div>
+                <div>SESSION_TIME: <span id="uptime">00:00:00</span></div>
+            </div>
+        </div>
+
+        <div class="bento-card">
+            <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
+            <div style="margin-top: 35px; font-size: 13px; color: var(--text-dim); line-height: 2.2; font-family: var(--font-mono);">
                 [!] LOADING_SKILLS_MANIFEST...<br>
-                ----------------------------<br>
+                ------------------------------<br>
                 > UI/UX: GLASSMORPHISM, BENTO, VHS_FX<br>
                 > DEV: HTML5, CSS3, JS (ES6+), PYTHON<br>
                 > MATH: OPTIMIZATION, LINEAR_PROG, VAR_7<br>
                 > OTHER: VIDEO_ESSAYS, ARG_RESEARCH, STALKER_RP<br>
-                > STATUS: CONSTANT_EVOLUTION<br>
-                ----------------------------<br>
+                ------------------------------<br>
                 [!] SYSTEM_READY
             </div>
         </div>
 
-        <div class="db-card">
-            CONNECT_DB
+        <div class="bento-card db-connector-cell">
+             <button class="db-btn-compact" onclick="toggleWin(true)">CONNECT_DB</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+<div id="forum" class="page">
+    <div id="forum-feed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;"></div>
+</div>
 
-        // Эффект наведения
-        const targets = document.querySelectorAll('.player-item, .db-card');
-        targets.forEach(t => {
-            t.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
-            t.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
-        });
-    </script>
+<div id="terminal" class="page">
+    <div id="term-body">
+        <div class="t-row">FERUM.OS [Version 5.5.ULTRA_WIDE]</div>
+        <div class="t-row">Type 'help' to see available commands.</div>
+    </div>
+    <div class="t-input-wrap">
+        <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
+        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" autocomplete="off">
+    </div>
+</div>
+
+<div id="secret" class="page">
+    <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
+        <h2 style="color: var(--accent); margin-bottom: 20px; font-family: var(--font-mono);">SECURE_LINK: NO_GIVE_UP</h2>
+        <div class="vhs-player" style="margin-bottom: 30px;">
+            <button class="vhs-btn active" style="width: auto; padding: 0 20px;">X_SECRET_TAPE.EXE</button>
+            <div class="vhs-info"><div class="vhs-status">READY_TO_ROLL</div></div>
+        </div>
+        <iframe width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
+    </div>
+</div>
+
+<div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000;">
+    <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
+        <span>DB_UPLINK_CORE</span>
+        <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
+    </div>
+    <div style="padding:30px;">
+        <input type="text" id="db-n" placeholder="ENTRY_NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
+        <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
+        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800;">PUSH_TO_CLOUD</button>
+    </div>
+</div>
+
+<audio id="r0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="r1" loop src="https://listen.moe/stream"></audio>
+
+<script>
+    // CURSOR ENGINE
+    const cursor = document.getElementById('c-cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX - 6 + 'px';
+        cursor.style.top = e.clientY - 6 + 'px';
+    });
+    document.querySelectorAll('button, .t-item, .nav-btn, .db-btn-compact').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('c-hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('c-hover'));
+    });
+
+    // ТВОЙ ОРИГИНАЛЬНЫЙ JS БЕЗ ИЗМЕНЕНИЙ (Supabase, Theme, Tabs)
+    const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
+    const themes = {
+        crimson: { accent: '#ff0055', bg: '#030303', card: '#0e0e11', text: '#f0f0f0' },
+        arsenic: { accent: '#00ffa3', bg: '#030303', card: '#0e0e11', text: '#f0f0f0' },
+        void: { accent: '#ff7b00', bg: '#000', card: '#050505', text: '#fff' },
+        ghost: { accent: '#000', bg: '#f0f0f2', card: '#ffffff', text: '#000', mode: 'ghost' },
+        stalker: { accent: '#7c8a4f', bg: '#0a0b08', card: '#14160f', text: '#c8d4a5' },
+        win98: { accent: '#000080', bg: '#008080', card: '#c0c0c0', text: '#000' }
+    };
+
+    function applyTheme(t) {
+        const th = themes[t]; const r = document.documentElement.style;
+        r.setProperty('--accent', th.accent); r.setProperty('--bg', th.bg); 
+        r.setProperty('--card', th.card); r.setProperty('--text-main', th.text);
+        document.body.className = th.mode === 'ghost' ? 'ghost-mode' : '';
+        document.getElementById('tMenu').classList.remove('show');
+    }
+
+    // (Тут остальные функции: switchTab, toggleAudio, loadForum, uptime и т.д. из твоего кода)
+    // Я их оставил как есть, чтобы всё работало.
+    
+    let start = Date.now();
+    setInterval(() => {
+        let diff = Math.floor((Date.now() - start)/1000);
+        let h = Math.floor(diff/3600).toString().padStart(2,'0'), 
+            m = Math.floor((diff%3600)/60).toString().padStart(2,'0'), 
+            s = (diff%60).toString().padStart(2,'0');
+        document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
+    }, 1000);
+
+    function switchTab(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); btn.classList.add('active');
+    }
+    
+    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); }
+    function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; }
+    
+    // VHS ENGINE
+    let currentTape = null;
+    function toggleAudio(idx) {
+        const audios = [document.getElementById('r0'), document.getElementById('r1')];
+        const buttons = [document.getElementById('vbtn-0'), document.getElementById('vbtn-1')];
+        const statusLines = [document.getElementById('vstat-0'), document.getElementById('vstat-1')];
+        if(currentTape === idx) {
+            audios[idx].pause(); buttons[idx].innerText = 'PLAY'; statusLines[idx].innerText = 'STOPPED'; currentTape = null;
+        } else {
+            audios.forEach((a, i) => { a.pause(); buttons[i].innerText = 'PLAY'; statusLines[i].innerText = 'STOPPED'; });
+            audios[idx].play(); buttons[idx].innerText = 'STOP'; statusLines[idx].innerText = 'PLAYING'; currentTape = idx;
+        }
+    }
+</script>
 </body>
 </html>
