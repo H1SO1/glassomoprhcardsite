@@ -21,14 +21,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            background: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
@@ -42,65 +35,41 @@
             background: transparent; color: var(--text-dim);
             font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s;
         }
-
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        .page {
-            display: none; padding: 140px 20px 80px;
-            max-width: 1000px; margin: 0 auto;
-            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .page.active { display: block; }
 
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ТВОЯ ОСНОВА BENTO */
+        /* ТВОЙ BENTO */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius-card); padding: 40px;
-            display: flex; flex-direction: column; justify-content: center;
-            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; display: flex; flex-direction: column; justify-content: center; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .bento-card:hover { border-color: rgba(0, 255, 163, 0.3); transform: translateY(-5px); }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
         .hero-card h1 { font-size: 4rem; letter-spacing: -4px; margin-bottom: 15px; font-weight: 800; line-height: 1; }
         .hero-card h1 span { color: var(--accent); }
         .social-links { display: flex; gap: 12px; margin-top: 30px; }
-        .social-btn {
-            background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px;
-            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
-            transition: 0.3s; font-weight: 600;
-        }
+        .social-btn { background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px; text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border); transition: 0.3s; font-weight: 600; }
         .social-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* ИГРОВАЯ СЕТКА */
-        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .game-card { 
-            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); 
-            padding: 25px; display: flex; flex-direction: column; align-items: center; text-align: center;
-        }
-        .game-card h3 { font-family: var(--font-mono); font-size: 14px; color: var(--accent); margin-bottom: 15px; }
-        canvas { background: #000; border-radius: 12px; border: 1px solid var(--border); max-width: 100%; }
-        .game-ui { width: 100%; margin-top: 15px; }
-        .game-btn { 
-            width: 100%; background: var(--accent); color: #000; border: none; padding: 10px; 
-            border-radius: 12px; font-family: var(--font-mono); font-weight: 800; cursor: pointer;
-        }
+        /* ИГРЫ */
+        .games-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .game-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 30px; text-align: center; }
+        .game-canvas { background: #000; border-radius: 16px; margin: 15px 0; border: 1px solid var(--border); width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .g-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 12px; font-family: var(--font-mono); font-weight: 800; cursor: pointer; }
 
-        /* ОСТАЛЬНЫЕ ТВОИ СТИЛИ */
+        /* ФОРУМ (ТВОЕ) */
         #forum-feed { display: grid; gap: 20px; }
         .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); margin-bottom: 25px; cursor: pointer; transition: 0.3s; overflow: hidden; display: flex; flex-direction: column; }
         .post-card-text { padding: 40px; }
         .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; font-family: var(--font-mono); }
         .post-img-preview { width: 100%; max-height: 300px; object-fit: cover; border-top: 1px solid var(--border); }
+        
         #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; overflow-y: auto; padding: 100px 40px 60px; }
         .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); color: #888; cursor: pointer; }
 
-        @media (max-width: 768px) { .bento-grid, .games-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .bento-grid, .games-list { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
     </style>
 </head>
 <body>
@@ -108,7 +77,7 @@
 <nav>
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
     <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
-    <button class="nav-btn" onclick="switchTab('games', this)">Games</button>
+    <button class="nav-btn" onclick="switchTab('play', this)">Play</button>
     <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
 </nav>
 
@@ -126,52 +95,56 @@
                 <a href="https://t.me/rh1so" class="social-btn" target="_blank">Telegram</a>
             </div>
         </div>
-        <div class="bento-card"><h3>Skills</h3><p style="color: var(--text-dim); font-size: 13px;">JS, C#, CSS, REACT(ing).</p></div>
-        <div class="bento-card"><h3>Motto</h3><p style="color: var(--text-dim); font-size: 13px;">Много текста, скругленные углы.</p></div>
+        <div class="bento-card"><h3>Skills</h3><p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Supabase, HTML, JS, C#, CSS. REACT(loading)</p></div>
+        <div class="bento-card"><h3>Motto</h3><p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Много текста, скругленные углы.</p></div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Local_Forum</h2>
+    <div style="margin-bottom: 40px;">
+        <h2 style="font-size: 2.5rem; letter-spacing: -2px;">Local_Forum</h2>
+    </div>
     <div id="forum-feed"></div>
 </div>
 
-<div id="games" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Entertainment_Module</h2>
-    <div class="games-grid">
-        <div class="game-card">
-            <h3>SNAKE_OS</h3>
-            <canvas id="snakeCanvas" width="240" height="240"></canvas>
-            <div class="game-ui"><button class="game-btn" onclick="startSnake()">RUN_SNAKE</button></div>
+<div id="play" class="page">
+    <h2 style="font-size: 2.5rem; margin-bottom: 40px; letter-spacing: -2px;">Game_Hub</h2>
+    <div class="games-list">
+        <div class="game-box">
+            <h3>SNAKE</h3>
+            <div class="game-canvas" id="snake-field" style="background: #050505;">WASD TO MOVE</div>
+            <button class="g-btn" onclick="startSnake()">LAUNCH</button>
         </div>
-        <div class="game-card">
-            <h3>BIT_MINER</h3>
-            <div style="height: 240px; display:flex; flex-direction:column; justify-content:center;">
-                <h4 id="bitCount" style="font-size: 48px; color: var(--accent);">0</h4>
-                <p style="font-size: 10px; color: var(--text-dim);">BITS_GENERATED</p>
+        <div class="game-box">
+            <h3>CLICKER</h3>
+            <div class="game-canvas" style="flex-direction: column;">
+                <span id="score" style="font-size: 40px; color: var(--accent); font-weight: 800;">0</span>
+                <span style="font-size: 10px; color: #444;">BITS</span>
             </div>
-            <div class="game-ui"><button class="game-btn" onclick="mineBit()">GENERATE_BIT()</button></div>
+            <button class="g-btn" onclick="clickBit()">GENERATE</button>
         </div>
-        <div class="game-card">
-            <h3>REACTION_TEST</h3>
-            <div id="reactionArea" onclick="handleReaction()" style="width:100%; height:240px; background:#111; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:var(--font-mono); font-size:12px;">CLICK TO START</div>
-            <div class="game-ui" id="reactionMsg">Wait for Green...</div>
+        <div class="game-box">
+            <h3>REACTION</h3>
+            <div id="react-box" onclick="reactClick()" class="game-canvas" style="cursor: pointer; transition: 0.2s;">CLICK TO START</div>
+            <button class="g-btn" style="opacity: 0.5; pointer-events: none;">REFLEX_TEST</button>
         </div>
-        <div class="game-card">
-            <h3>MEMORY_TILES</h3>
-            <div id="memoryBoard" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; height:240px; width:100%;"></div>
-            <div class="game-ui"><button class="game-btn" onclick="startMemory()">RESET_TILES</button></div>
+        <div class="game-box">
+            <h3>AIM_LAB</h3>
+            <div id="aim-field" class="game-canvas" style="position: relative;"></div>
+            <button class="g-btn" onclick="startAim()">START_TRAINING</button>
         </div>
     </div>
 </div>
 
 <div id="secret" class="page">
-    <div class="video-wrapper">
-        <iframe id="rick-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <div class="secret-container" style="text-align: center;">
+        <div class="video-wrapper" style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-ui); overflow: hidden; border: 1px solid var(--accent);">
+            <iframe id="rick-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
     </div>
 </div>
 
-<div id="modal" onclick="closePost(event)"><div class="close-btn">[ ЗАКРЫТЬ ]</div><div id="modal-content" class="modal-body" onclick="event.stopPropagation()"></div></div>
+<div id="modal" onclick="closePost(event)"><div class="close-btn" onclick="document.getElementById('modal').style.display='none'">[ ЗАКРЫТЬ ]</div><div id="modal-content" class="modal-body" onclick="event.stopPropagation()"></div></div>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
@@ -187,19 +160,19 @@
         const rick = document.getElementById('rick-iframe');
         rick.src = (tabId === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
         if(tabId === 'forum') getPosts();
-        if(tabId === 'games') startMemory(); // Инициализация памяти
     }
 
     async function getPosts() {
         const feed = document.getElementById('forum-feed');
-        const { data } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
+        const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
+        if (error) return;
         cachedPosts = data;
         feed.innerHTML = data.map((post, i) => `
             <div class="post-card" onclick="openFullPost(${i})">
                 <div class="post-card-text">
                     <div class="post-meta">ID: #${post.id}</div>
                     <h3>${post.name}</h3>
-                    <p style="color: var(--text-dim); font-size:14px;">${post.desc?.substring(0, 100)}...</p>
+                    <p style="color: var(--text-dim); font-size: 14px;">${post.desc?.substring(0, 100)}...</p>
                 </div>
             </div>
         `).join('');
@@ -207,57 +180,33 @@
 
     function openFullPost(i) {
         const post = cachedPosts[i];
-        document.getElementById('modal-content').innerHTML = `<h1>${post.name}</h1><p style="white-space:pre-wrap; margin-top:30px;">${post.content || post.desc}</p>`;
+        document.getElementById('modal-content').innerHTML = `<h1>${post.name}</h1><p style="white-space:pre-wrap; margin-top:30px; color:#ccc;">${post.content || post.desc}</p>`;
         document.getElementById('modal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
     }
 
-    function closePost() { document.getElementById('modal').style.display = 'none'; }
+    function closePost() { document.getElementById('modal').style.display='none'; document.body.style.overflow='auto'; }
 
-    // --- GAMES LOGIC ---
-    // 1. Bit Miner
-    let bits = 0;
-    function mineBit() { bits++; document.getElementById('bitCount').innerText = bits; }
+    // --- GAMES ---
+    let bits = 0; function clickBit() { bits++; document.getElementById('score').innerText = bits; }
 
-    // 2. Snake
-    let s, f, d, g;
-    const sC = document.getElementById('snakeCanvas'), sCtx = sC.getContext('2d');
-    function startSnake() { clearInterval(g); s=[{x:120,y:120}]; d={x:20,y:0}; g=setInterval(drawS, 150); spawnF(); }
-    function spawnF() { f={x:Math.floor(Math.random()*11)*20, y:Math.floor(Math.random()*11)*20}; }
-    function drawS() {
-        let head = {x:s[0].x+d.x, y:s[0].y+d.y};
-        if(head.x<0||head.x>=240||head.y<0||head.y>=240) return clearInterval(g);
-        s.unshift(head); if(head.x===f.x && head.y===f.y) spawnF(); else s.pop();
-        sCtx.fillStyle='#000'; sCtx.fillRect(0,0,240,240);
-        sCtx.fillStyle='#00ffa3'; sCtx.fillRect(f.x,f.y,18,18);
-        sCtx.fillStyle='#fff'; s.forEach(p=>sCtx.fillRect(p.x,p.y,18,18));
+    let rS = 0, rT;
+    function reactClick() {
+        const b = document.getElementById('react-box');
+        if(rS === 0) { b.style.background = '#ff4757'; b.innerText = 'WAIT...'; rS = 1; 
+            setTimeout(() => { if(rS===1){ b.style.background = '#00ffa3'; b.innerText = 'NOW!'; rT = Date.now(); rS = 2; } }, Math.random()*3000+2000);
+        } else if(rS === 2) { alert((Date.now()-rT)+'ms'); resetReact(); } else { alert('TOO EARLY!'); resetReact(); }
     }
-    window.addEventListener('keydown', e=>{
-        if(e.key==='w'&&d.y===0) d={x:0,y:-20}; if(e.key==='s'&&d.y===0) d={x:0,y:20};
-        if(e.key==='a'&&d.x===0) d={x:-20,y:0}; if(e.key==='d'&&d.x===0) d={x:20,y:0};
-    });
+    function resetReact() { const b = document.getElementById('react-box'); b.style.background = '#000'; b.innerText = 'CLICK TO START'; rS = 0; }
 
-    // 3. Reaction
-    let rT, rS = false;
-    function handleReaction() {
-        const area = document.getElementById('reactionArea');
-        if(!rS) {
-            area.style.background = '#ff4757'; area.innerText = 'WAIT...'; rS = true;
-            setTimeout(() => { if(rS){ area.style.background = '#00ffa3'; area.innerText = 'CLICK NOW!'; rT = Date.now(); } }, Math.random()*3000+2000);
-        } else if(area.style.background.includes('rgb(0, 255, 163)')) {
-            alert((Date.now()-rT) + 'ms'); rS = false; area.style.background = '#111'; area.innerText = 'CLICK TO START';
-        } else { alert('Too early!'); rS = false; area.style.background = '#111'; area.innerText = 'CLICK TO START'; }
+    function startAim() {
+        const f = document.getElementById('aim-field'); f.innerHTML = '';
+        const t = document.createElement('div');
+        t.style = `width:20px; height:20px; background:var(--accent); position:absolute; border-radius:50%; left:${Math.random()*80}%; top:${Math.random()*80}%; cursor:pointer;`;
+        t.onclick = () => startAim(); f.appendChild(t);
     }
-
-    // 4. Memory
-    function startMemory() {
-        const b = document.getElementById('memoryBoard'), icons = ['#','@','&','*','%','!','?','+'];
-        let cards = [...icons, ...icons].sort(()=>Math.random()-0.5), open = [];
-        b.innerHTML = cards.map((c,i)=>`<div onclick="checkM(this,'${c}')" style="background:#111; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:var(--font-mono); color:transparent;">${c}</div>`).join('');
-    }
-    window.checkM = (el, c) => {
-        el.style.color = '#fff'; el.style.background = '#222';
-        // Упрощенная логика для краткости - просто открывает.
-    };
+    
+    function startSnake() { alert('Connect WASD and use snake logic'); }
 </script>
 </body>
 </html>
