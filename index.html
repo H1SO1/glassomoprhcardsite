@@ -21,15 +21,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            background: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
         /* NAVIGATION */
         nav {
@@ -44,80 +36,38 @@
             background: transparent; color: var(--text-dim);
             font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s;
         }
-
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* PAGES */
-        .page {
-            display: none; padding: 140px 20px 80px;
-            max-width: 1000px; margin: 0 auto;
-            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .page.active { display: block; }
 
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BENTO GRID */
+        /* BENTO (Твой оригинал) */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius-card); padding: 40px;
-            display: flex; flex-direction: column; justify-content: center;
-            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .bento-card:hover { border-color: rgba(0, 255, 163, 0.3); transform: translateY(-5px); }
+        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; display: flex; flex-direction: column; justify-content: center; transition: 0.3s; }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
-        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; margin-bottom: 15px; font-weight: 800; line-height: 1; }
+        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
         .hero-card h1 span { color: var(--accent); }
-        
-        .social-links { display: flex; gap: 12px; margin-top: 30px; }
-        .social-btn {
-            background: rgba(255,255,255,0.01); padding: 12px 24px; border-radius: 16px;
-            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
-            transition: 0.3s; font-weight: 600;
-        }
-        .social-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* FORUM FEED */
+        /* FORUM */
         #forum-feed { display: grid; gap: 20px; }
-        .post-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius-card); margin-bottom: 25px;
-            cursor: pointer; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            overflow: hidden; position: relative; display: flex; flex-direction: column;
-        }
-        .post-card:hover { border-color: var(--accent); transform: scale(1.01); }
-        .post-card-text { padding: 40px; }
-        .post-card h3 { font-size: 1.8rem; margin: 10px 0; font-weight: 800; line-height: 1.2; color: #fff; }
-        .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; font-family: var(--font-mono); }
-        .post-img-preview { width: 100%; max-height: 300px; object-fit: cover; border-top: 1px solid var(--border); }
+        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; cursor: pointer; transition: 0.3s; }
+        .post-card:hover { border-color: var(--accent); }
+        .post-meta { font-size: 11px; color: var(--accent); font-family: var(--font-mono); font-weight: 800; }
+
+        /* TERMINAL */
+        .term-container { background: #000; border: 1px solid var(--border); border-radius: 20px; padding: 25px; font-family: var(--font-mono); min-height: 450px; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        #term-output { flex-grow: 1; overflow-y: auto; color: var(--accent); font-size: 14px; white-space: pre-wrap; margin-bottom: 10px; }
+        .term-line { display: flex; gap: 10px; align-items: center; }
+        .term-input { background: transparent; border: none; color: #fff; font-family: var(--font-mono); font-size: 14px; outline: none; width: 100%; }
+        .term-prompt { color: var(--accent); font-weight: bold; }
 
         /* MODAL */
-        #modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); display: none; flex-direction: column; z-index: 2000;
-            overflow-y: auto; padding: 100px 40px 60px;
-        }
-        .modal-body { width: 100%; max-width: 1000px; margin: 0 auto; color: #ccc; font-size: 17px; line-height: 1.9; }
-        .close-btn {
-            position: fixed; top: 30px; right: 30px;
-            background: var(--card); padding: 12px 24px; border-radius: 14px;
-            border: 1px solid var(--border); color: #888; cursor: pointer;
-            font-size: 12px; font-weight: 700; text-transform: uppercase; z-index: 2001;
-        }
-        .close-btn:hover { color: var(--accent); border-color: var(--accent); }
+        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; overflow-y: auto; padding: 100px 40px; }
+        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); color: #888; cursor: pointer; z-index: 2001; }
 
-        /* VIDEO */
-        .video-wrapper { width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-ui); overflow: hidden; border: 1px solid var(--accent); margin-top: 20px; }
-
-        @media (max-width: 768px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .hero-card h1 { font-size: 2.8rem; }
-            #modal { padding: 80px 20px 40px; }
-        }
+        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
     </style>
 </head>
 <body>
@@ -125,6 +75,7 @@
 <nav>
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
     <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
+    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
     <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
 </nav>
 
@@ -133,112 +84,110 @@
         <div class="bento-card hero-card">
             <p style="color: var(--accent); font-weight: 800; font-size: 11px;">// SYSTEM_STATUS: ONLINE</p>
             <h1>FERUM<span>.OS</span></h1>
-            <p style="color: var(--text-dim); max-width: 600px; font-size: 18px; margin-top: 10px;">
-                Привет. Я <b>H1SO1</b>. <br>
-                Цифровой архитектор, фанат лонгридов и чистого кода. Страдаю перфекционизмом (иногда).
-            </p>
-            <div class="social-links">
-                <a href="https://github.com/H1SO1" class="social-btn" target="_blank">GitHub</a>
-                <a href="https://t.me/rh1so" class="social-btn" target="_blank">Telegram</a>
-            </div>
+            <p style="color: var(--text-dim); max-width: 600px; font-size: 18px; margin-top: 10px;">Цифровой архитектор. Много текста, скругленные углы.</p>
         </div>
-        <div class="bento-card">
-            <h3>Skills</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 15px;">Supabase, HTML, JS, C#, CSS, REACT (loading...)</p>
-        </div>
-        <div class="bento-card">
-            <h3>Motto</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 15px;">Много текста, скругленные углы.</p>
-        </div>
+        <div class="bento-card"><h3>Skills</h3><p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">JS, C#, CSS, REACT(loading)</p></div>
+        <div class="bento-card"><h3>Focus</h3><p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Frontend & Creative Design</p></div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <h2 style="font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 40px;">Local_Forum</h2>
+    <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Local_Forum</h2>
     <div id="forum-feed"></div>
 </div>
 
-<div id="secret" class="page">
-    <div style="text-align: center;">
-        <h2>CLASSIFIED_DATA</h2>
-        <div class="video-wrapper">
-            <iframe id="rick-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div id="terminal" class="page">
+    <h2 style="font-size: 2.5rem; margin-bottom: 40px;">System_Terminal</h2>
+    <div class="term-container" onclick="document.getElementById('cli').focus()">
+        <div id="term-output">Welcome to FERUM.OS v1.0.4
+Type 'help' to see available commands.</div>
+        <div class="term-line">
+            <span class="term-prompt">user@ferum:~$</span>
+            <input type="text" id="cli" class="term-input" autocomplete="off" autofocus spellcheck="false">
         </div>
     </div>
 </div>
 
-<div id="modal" onclick="closePost(event)">
-    <div class="close-btn" onclick="closePost()">[ ЗАКРЫТЬ ]</div>
-    <div id="modal-content" class="modal-body" onclick="event.stopPropagation()"></div>
+<div id="secret" class="page">
+    <iframe id="rick-iframe" width="100%" height="450" src="" frameborder="0" style="border-radius:32px; border:1px solid var(--accent);"></iframe>
+</div>
+
+<div id="modal" onclick="this.style.display='none'; document.body.style.overflow='auto';">
+    <div class="close-btn">[ ЗАКРЫТЬ ]</div>
+    <div id="modal-content" class="modal-body" onclick="event.stopPropagation()" style="max-width:800px; margin:0 auto; color:#ccc;"></div>
 </div>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
     const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-    let cachedPosts = [];
+    const sb = supabase.createClient(SB_URL, SB_KEY);
+    let posts = [];
 
-    function switchTab(tabId, btn) {
+    function switchTab(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-
-        const rick = document.getElementById('rick-iframe');
-        rick.src = (tabId === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
-
-        if(tabId === 'forum' && cachedPosts.length === 0) getPosts();
+        if(id === 'secret') document.getElementById('rick-iframe').src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+        if(id === 'forum') loadForum();
     }
 
-    async function getPosts() {
+    async function loadForum() {
         const feed = document.getElementById('forum-feed');
-        feed.innerHTML = '<p style="color: var(--accent); font-family: var(--font-mono);">LOADING_DATABASE...</p>';
-        
-        try {
-            const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
-            if (error) throw error;
-            cachedPosts = data;
-            feed.innerHTML = '';
-            
-            data.forEach((post, i) => {
-                feed.innerHTML += `
-                    <div class="post-card" onclick="openFullPost(${i})">
-                        <div class="post-card-text">
-                            <div class="post-meta">ID: #${post.id} // SECURED_FILE</div>
-                            <h3>${post.name}</h3>
-                            <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 140) : ''}...</p>
-                        </div>
-                        ${post.image_url ? `<img src="${post.image_url}" class="post-img-preview">` : ''}
-                    </div>
-                `;
-            });
-        } catch (e) {
-            feed.innerHTML = `<div style="color: #ff4757; border: 1px dashed; padding: 20px;">[ ERROR ]: ${e.message}</div>`;
-        }
+        if (posts.length > 0) return;
+        feed.innerHTML = 'LOADING...';
+        const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
+        posts = data;
+        feed.innerHTML = data.map((p, i) => `
+            <div class="post-card" onclick="openP(${i})">
+                <div class="post-meta">#${p.id} // DATA_NODE</div>
+                <h3 style="font-size: 1.8rem; margin:10px 0;">${p.name}</h3>
+                <p style="color:var(--text-dim)">${p.desc?.slice(0,100)}...</p>
+            </div>
+        `).join('');
     }
 
-    function openFullPost(index) {
-        const post = cachedPosts[index];
-        const modal = document.getElementById('modal');
-        const container = document.getElementById('modal-content');
-
-        container.innerHTML = `
-            ${post.image_url ? `<img src="${post.image_url}" style="width:100%; border-radius:24px; margin-bottom:30px;">` : ''}
-            <div class="post-meta">REF: #${post.id} // SOURCE: FERUM_OS</div>
-            <h1 style="font-size: 3.5rem; letter-spacing: -3px; font-weight: 800; color: #fff; line-height: 1;">${post.name}</h1>
-            <div style="white-space: pre-wrap; margin-top: 40px; font-family: var(--font-mono); font-size: 16px; color: #ccc;">${post.content || post.desc}</div>
-        `;
-
-        modal.style.display = 'flex';
+    function openP(i) {
+        document.getElementById('modal-content').innerHTML = `<h1>${posts[i].name}</h1><p style="margin-top:30px; white-space:pre-wrap; line-height:1.8;">${posts[i].content || posts[i].desc}</p>`;
+        document.getElementById('modal').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
 
-    function closePost() {
-        document.getElementById('modal').style.display = 'none';
-        document.body.style.overflow = 'auto';
+    // TERMINAL LOGIC
+    const cli = document.getElementById('cli');
+    const out = document.getElementById('term-output');
+
+    cli.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+            const cmd = cli.value.toLowerCase().trim();
+            print(`user@ferum:~$ ${cli.value}`, '#fff');
+            
+            if (cmd === 'help') {
+                print("Available: status, about, posts, clear, help");
+            } else if (cmd === 'status') {
+                print("CPU: 12% | RAM: 450MB/16GB | DATABASE: CONNECTED\nOS_STATE: STABLE");
+            } else if (cmd === 'about') {
+                print("FERUM.OS - Personal Digital Environment by H1SO1.\nBuilt with Supabase & Pure Despair.");
+            } else if (cmd === 'posts') {
+                if(posts.length === 0) { print("Fetching database..."); await loadForum(); }
+                posts.forEach(p => print(`> ${p.name}`));
+            } else if (cmd === 'clear') {
+                out.innerText = '';
+            } else if (cmd !== '') {
+                print(`Command '${cmd}' not found. Type 'help'.`, '#ff4757');
+            }
+            
+            cli.value = '';
+            out.scrollTop = out.scrollHeight;
+        }
+    });
+
+    function print(txt, color = 'var(--accent)') {
+        const div = document.createElement('div');
+        div.style.color = color;
+        div.innerText = txt;
+        out.appendChild(div);
     }
 </script>
-
 </body>
 </html>
