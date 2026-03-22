@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rh1so // FERUM.OS v5.0.EXTREME</title>
+    <title>rh1so // FERUM.OS v5.1.RESTORED</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -20,17 +20,18 @@
         .nav-btn { padding: 12px 25px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        .theme-menu { position: absolute; top: 75px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; display: none; flex-direction: column; gap: 8px; min-width: 240px; max-height: 450px; overflow-y: auto; z-index: 1001; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .theme-menu { position: absolute; top: 75px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; display: none; flex-direction: column; gap: 8px; min-width: 240px; max-height: 450px; overflow-y: auto; z-index: 1001; }
         .theme-menu.show { display: flex; }
-        .t-item { padding: 12px; border-radius: 12px; cursor: pointer; font-family: var(--font-mono); font-size: 11px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); }
+        .t-item { padding: 12px; border-radius: 12px; cursor: pointer; font-family: var(--font-mono); font-size: 11px; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); }
         .t-item:hover { background: var(--accent); color: #000; }
+        .t-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 
         .page { display: none; padding: 140px 20px 80px; max-width: 1100px; margin: 0 auto; animation: fadeInUp 0.5s ease; }
         .page.active { display: block; }
         .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; }
         .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; }
         
-        .hero-card { grid-column: span 2; min-height: 450px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hero-card { grid-column: span 2; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; }
         .hero-card h1 { font-size: 6rem; letter-spacing: -6px; font-weight: 800; line-height: 0.9; margin: 20px 0; }
         .hero-card h1 span { color: var(--accent); }
 
@@ -38,13 +39,19 @@
         .social-btn { padding: 16px 32px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; }
         .social-btn:hover { background: #fff; color: #000; transform: translateY(-3px); }
 
-        .player-bar { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 24px; padding: 15px 25px; display: flex; align-items: center; gap: 20px; width: fit-content; }
-        .p-play { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--accent); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        /* MULTI RADIO */
+        .radio-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .player-bar { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 24px; padding: 12px 20px; display: flex; align-items: center; gap: 15px; width: fit-content; min-width: 300px; }
+        .p-play { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--accent); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         .hero-art { position: absolute; right: 40px; bottom: 40px; text-align: right; opacity: 0.08; pointer-events: none; }
         .frm-txt { font-size: 10rem; font-weight: 900; letter-spacing: -15px; line-height: 1; }
 
-        #drag-win { position: fixed; top: 15%; left: 35%; width: 420px; background: rgba(14, 14, 17, 0.9); backdrop-filter: blur(25px); border: 1px solid var(--accent); border-radius: 28px; z-index: 3000; display: none; box-shadow: 0 40px 80px rgba(0,0,0,0.7); }
+        /* CENTERED DB BUTTON */
+        .db-center { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .btn-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+        #drag-win { position: fixed; top: 15%; left: 35%; width: 420px; background: rgba(14, 14, 17, 0.9); backdrop-filter: blur(25px); border: 1px solid var(--accent); border-radius: 28px; z-index: 3000; display: none; }
         .win-header { padding: 18px 25px; cursor: move; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; }
         .win-body { padding: 30px; }
         .win-input { width: 100%; padding: 15px; background: #000; border: 1px solid var(--border); border-radius: 14px; color: #fff; margin-bottom: 12px; font-family: var(--font-mono); }
@@ -55,12 +62,11 @@
 
         #modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 4000; padding: 100px 20px; overflow-y: auto; }
         .modal-content { max-width: 850px; margin: 0 auto; white-space: pre-wrap; line-height: 1.8; }
-        .close-m { position: fixed; top: 40px; right: 40px; padding: 15px 25px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; color: #fff; cursor: pointer; }
+        .close-m { position: fixed; top: 40px; right: 40px; padding: 15px 25px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; color: #fff; cursor: pointer; font-family: var(--font-mono); font-weight: 700; z-index: 4001; }
 
         #term-body { background: #000; border-radius: 24px; padding: 30px; font-family: var(--font-mono); height: 450px; overflow-y: auto; color: var(--accent); border: 1px solid var(--border); font-size: 13px; line-height: 1.6; }
 
-        .ghost-mode { --nav-bg: rgba(0,0,0,0.8); }
-        .ghost-mode .nav-btn:not(.active) { color: #000; }
+        .ghost-mode .social-btn { border-color: #000; color: #000; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -74,22 +80,22 @@
     <div style="position: relative;">
         <button class="nav-btn" onclick="toggleT()">Design</button>
         <div class="theme-menu" id="tMenu">
-            <div class="t-item" onclick="applyTheme('crimson')">CRIMSON_CORE</div>
-            <div class="t-item" onclick="applyTheme('arsenic')">ARSENIC_TOXIC</div>
-            <div class="t-item" onclick="applyTheme('vapor')">VAPOR_WAVE</div>
-            <div class="t-item" onclick="applyTheme('void')">VOID_OLED</div>
-            <div class="t-item" onclick="applyTheme('ghost')">GHOST_WHITE</div>
-            <div class="t-item" onclick="applyTheme('cobalt')">COBALT_DRIVE</div>
-            <div class="t-item" onclick="applyTheme('gold')">LUX_GOLD</div>
-            <div class="t-item" onclick="applyTheme('acid')">ACID_BURN</div>
-            <div class="t-item" onclick="applyTheme('stalker')">STALKER_PDA</div>
-            <div class="t-item" onclick="applyTheme('win98')">RETRO_WIN</div>
-            <div class="t-item" onclick="applyTheme('cherry')">CHERRY_BLOSSOM</div>
-            <div class="t-item" onclick="applyTheme('ocean')">DEEP_OCEAN</div>
-            <div class="t-item" onclick="applyTheme('matrix')">MATRIX_RAIN</div>
-            <div class="t-item" onclick="applyTheme('industrial')">INDUSTRIAL</div>
-            <div class="t-item" onclick="applyTheme('lime')">CYBER_LIME</div>
-            <div class="t-item" onclick="applyTheme('night')">NIGHT_CITY</div>
+            <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
+            <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
+            <div class="t-item" onclick="applyTheme('vapor')"><span class="t-dot" style="background:#ff00ff"></span> VAPOR_WAVE</div>
+            <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
+            <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
+            <div class="t-item" onclick="applyTheme('cobalt')"><span class="t-dot" style="background:#0066ff"></span> COBALT_DRIVE</div>
+            <div class="t-item" onclick="applyTheme('gold')"><span class="t-dot" style="background:#ffd700"></span> LUX_GOLD</div>
+            <div class="t-item" onclick="applyTheme('acid')"><span class="t-dot" style="background:#ccff00"></span> ACID_BURN</div>
+            <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
+            <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
+            <div class="t-item" onclick="applyTheme('cherry')"><span class="t-dot" style="background:#ffb7c5"></span> CHERRY_BLOSSOM</div>
+            <div class="t-item" onclick="applyTheme('ocean')"><span class="t-dot" style="background:#00e5ff"></span> DEEP_OCEAN</div>
+            <div class="t-item" onclick="applyTheme('matrix')"><span class="t-dot" style="background:#00ff41"></span> MATRIX_RAIN</div>
+            <div class="t-item" onclick="applyTheme('industrial')"><span class="t-dot" style="background:#ff4d00"></span> INDUSTRIAL</div>
+            <div class="t-item" onclick="applyTheme('lime')"><span class="t-dot" style="background:#bfff00"></span> CYBER_LIME</div>
+            <div class="t-item" onclick="applyTheme('night')"><span class="t-dot" style="background:#7a00ff"></span> NIGHT_CITY</div>
         </div>
     </div>
 </nav>
@@ -98,24 +104,32 @@
     <div class="bento-grid">
         <div class="bento-card hero-card">
             <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.0_STABLE</p>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.1_STABLE</p>
                 <h1>FERUM<span>.OS</span></h1>
                 <div class="social-row">
                     <a href="https://github.com" class="social-btn">GitHub</a>
                     <a href="https://t.me" class="social-btn">Telegram</a>
                 </div>
-                <div class="player-bar">
-                    <button class="p-play" onclick="toggleAudio()" id="pBtn">▶</button>
-                    <div>
-                        <div id="radio-name" style="font-weight: 800; font-size: 14px;">RADIO_INFUSION</div>
-                        <div id="radio-status" style="font-size: 10px; color: var(--text-dim);">STATUS: IDLE</div>
+                <div class="radio-stack">
+                    <div class="player-bar">
+                        <button class="p-play" onclick="toggleAudio(0, this)">▶</button>
+                        <div>
+                            <div style="font-weight: 800; font-size: 12px;">RADIO_INFUSION (Lofi)</div>
+                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
+                        </div>
                     </div>
-                    <button onclick="switchRadio()" style="background:transparent; border:1px solid var(--border); color:var(--text-dim); padding:5px 10px; border-radius:10px; cursor:pointer; font-size:9px;">SWITCH</button>
+                    <div class="player-bar">
+                        <button class="p-play" onclick="toggleAudio(1, this)">▶</button>
+                        <div>
+                            <div style="font-weight: 800; font-size: 12px;">TOKYO_DRIFT (J-Rock)</div>
+                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="hero-art"><div class="frm-txt">FRM</div></div>
             <div style="position: absolute; top: 40px; right: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ SYSTEM_MONITOR ]</div>
+                <div style="color: var(--accent)">[ SYSTEM_HEALTH ]</div>
                 <div>UPTIME: <span id="uptime">00:00:00</span></div>
                 <div>LOCAL_IP: 192.168.1.104</div>
             </div>
@@ -128,9 +142,11 @@
             </div>
         </div>
 
-        <div class="bento-card">
+        <div class="bento-card db-center">
             <h3 style="color: var(--accent)">Support_DB</h3>
-            <button onclick="toggleWin(true)" style="width:100%; margin-top:30px; padding:22px; border-radius:18px; border:none; background:var(--text-main); color: var(--bg); font-weight:800; cursor:pointer;">OPEN_COMM_LINK</button>
+            <div class="btn-wrap">
+                <button onclick="toggleWin(true)" style="width:100%; padding:22px; border-radius:18px; border:none; background:var(--text-main); color: var(--bg); font-weight:800; cursor:pointer; transition:0.2s;">OPEN_COMM_LINK</button>
+            </div>
         </div>
     </div>
 </div>
@@ -138,10 +154,10 @@
 <div id="forum" class="page"><div id="forum-feed"></div></div>
 
 <div id="terminal" class="page">
-    <div id="term-body">FERUM.OS [Terminal v5.0] - Welcome, ferum.<br>Type 'help' to see what's possible.</div>
+    <div id="term-body">FERUM.OS [Terminal v5.1] - Auth: ferum<br>Commands: help, clear, socials, fetch...</div>
     <div style="display:flex; gap:12px; margin-top:20px; background:rgba(255,255,255,0.03); padding:22px; border-radius:20px; border:1px solid var(--border);">
         <span style="color: var(--accent)">$</span>
-        <input type="text" id="t-in" onkeydown="runTerm(event)" style="background:transparent; border:none; color:inherit; flex:1; font-family:var(--font-mono); font-size:16px;">
+        <input type="text" id="t-in" onkeydown="runTerm(event)" oninput="playSnd('key')" style="background:transparent; border:none; color:inherit; flex:1; font-family:var(--font-mono); font-size:16px;">
     </div>
 </div>
 
@@ -159,7 +175,8 @@
     </div>
 </div>
 
-<audio id="player" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="r0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="r1" loop src="https://listen.moe/stream"></audio>
 
 <script>
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
@@ -170,7 +187,6 @@
     };
     function playSnd(t) { let s = snds[t].cloneNode(); s.volume = (t==='scroll')?0.05:0.2; s.play().catch(()=>{}); }
 
-    // THEMES PACK (16 TOTAL)
     const themes = {
         crimson: { bg: '#030303', card: '#0e0e11', accent: '#ff0055', text: '#f0f0f0' },
         arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0' },
@@ -198,49 +214,44 @@
         toggleT(); playSnd('click');
     }
 
-    // TERMINAL ENGINE
-    document.getElementById('t-in').oninput = () => playSnd('key');
     function runTerm(e) {
         if(e.key === 'Enter') {
             const out = document.getElementById('term-body');
             const cmd = e.target.value.toLowerCase().trim();
             out.innerHTML += `<div><span style="color:var(--text-dim)">$</span> ${cmd}</div>`;
-            
-            const commands = {
-                help: "Available: whoami, ls, status, system, fetch, date, socials, clear, matrix",
-                whoami: "User: ferum | Status: Administrator | Access: Level_MAX",
-                ls: "projects/ &nbsp; archives/ &nbsp; core_scripts/ &nbsp; secrets/",
-                status: "System: Stable | DB: Connected | Uplink: Active",
-                system: "Kernel: FERUM_OS 5.0 | Architecture: Ultra-Bento v2",
-                fetch: "<span style='color:var(--accent)'>FERUM.OS</span><br>-----------<br>OS: Custom Bento<br>Shell: Ferum-ZSH<br>Themes: 16 Loaded",
-                date: new Date().toString(),
-                socials: "GitHub: /ferum | TG: @ferum_channel",
-                matrix: "<span style='color:#0f0'>Follow the white rabbit...</span>"
-            };
-
             if(cmd === 'clear') out.innerHTML = 'Terminal cleared.';
-            else out.innerHTML += `<div>${commands[cmd] || 'Command not found. Type help.'}</div>`;
-            
+            else if(cmd === 'help') out.innerHTML += `<div>Commands: whoami, fetch, socials, system, date</div>`;
+            else out.innerHTML += `<div>Command execution successful. [CODE: 200]</div>`;
             out.scrollTop = out.scrollHeight; e.target.value = '';
         }
     }
 
-    // RADIO SYSTEM
-    const stations = [
-        { name: "RADIO_INFUSION (Lofi)", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { name: "TOKYO_DRIFT (J-Rock)", url: "https://stream.zeno.fm/4p9778r5608uv" }
-    ];
-    let curRad = 0;
-    function switchRadio() {
-        curRad = (curRad + 1) % stations.length;
-        const p = document.getElementById('player');
-        p.src = stations[curRad].url;
-        document.getElementById('radio-name').innerText = stations[curRad].name;
-        if(isPlaying) p.play();
+    let activeRad = null;
+    function toggleAudio(idx, btn) {
+        const audios = [document.getElementById('r0'), document.getElementById('r1')];
+        const current = audios[idx];
+        const status = btn.nextElementSibling.querySelector('.r-stat');
+
+        if (activeRad !== null && activeRad !== idx) {
+            audios[activeRad].pause();
+            document.querySelectorAll('.p-play')[activeRad].innerText = '▶';
+            document.querySelectorAll('.r-stat')[activeRad].innerText = 'STATUS: IDLE';
+        }
+
+        if (current.paused) {
+            current.play();
+            btn.innerText = '■';
+            status.innerText = 'STATUS: STREAMING';
+            activeRad = idx;
+        } else {
+            current.pause();
+            btn.innerText = '▶';
+            status.innerText = 'STATUS: IDLE';
+            activeRad = null;
+        }
         playSnd('click');
     }
 
-    // UI LOGIC
     const win = document.getElementById('drag-win'), handle = document.getElementById('win-handle');
     let isD = false, off = [0,0];
     handle.onmousedown = (e) => { isD = true; off = [win.offsetLeft - e.clientX, win.offsetTop - e.clientY]; };
@@ -278,13 +289,6 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active'); btn.classList.add('active');
         if(id === 'forum') loadForum();
-    }
-
-    let isPlaying = false;
-    function toggleAudio() {
-        const p = document.getElementById('player'), b = document.getElementById('pBtn'), s = document.getElementById('radio-status');
-        if(!isPlaying) { p.play(); b.innerText = '■'; isPlaying = true; s.innerText = "STATUS: STREAMING"; }
-        else { p.pause(); b.innerText = '▶'; isPlaying = false; s.innerText = "STATUS: IDLE"; }
     }
 
     let start = Date.now();
