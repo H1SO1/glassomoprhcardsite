@@ -298,7 +298,7 @@ nav {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.85);
-    z-index: 5000;
+    z-index: 10000;
     display: none;
     place-items: center;
     backdrop-filter: blur(15px);
@@ -669,7 +669,10 @@ class FerumKernel {
     modal.style.display = 'grid';
 }
 
-openProjectModal(item) {
+openProjectModalByIndex(index) {
+        const item = this.archiveData[index];
+        if(!item) return;
+
         const modal = document.getElementById('project-modal');
         const content = document.getElementById('modal-content');
         
@@ -686,7 +689,7 @@ openProjectModal(item) {
             </p>
         `;
         
-        modal.style.display = 'grid';
+        modal.style.display = 'grid'; // Убедись, что тут 'grid' или 'flex'
         document.body.style.overflow = 'hidden';
         this.soundBank.click.play();
     }
@@ -973,12 +976,16 @@ closeProjectModal() {
         }
         
         if(data && data.length > 0) {
-            grid.innerHTML = data.map(item => {
+            
+            this.archiveData = data; 
+
+            grid.innerHTML = data.map((item, index) => {
                 const descText = item.content || item.desc || "";
                 const shortDesc = descText.length > 200 ? descText.slice(0, 200) + "..." : descText;
                 
+                
                 return `
-                    <div class="archive-post-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
+                    <div class="archive-post-card" onclick="core.openProjectModalByIndex(${index})">
                         <div class="post-layout">
                             ${item.image_url ? `
                                 <div class="post-image-wrapper">
