@@ -3,297 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ferum // FERUM.OS v6.8.1_STABLE</title>
+    <title>ferum // FERUM.OS v6.8.1_RESTORED</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* [ CSS KERNEL v6.8.1 ] */
+        /* ==========================================================================
+           FERUM.OS | CSS KERNEL MODULE v6.8.1_ULTIMATE
+           ==========================================================================
+        */
+
         :root {
             --bg-ultra-black: #010101;
+            --bg-main: #050505;
             --bg-card: #0c0c0e;
+            --bg-card-rgb: 12, 12, 14;
+            
             --accent-primary: #ff0055;
             --accent-glow: rgba(255, 0, 85, 0.35);
+            
             --text-main: #e4e4e7;
             --text-muted: #71717a;
             --radius-xl: 42px;
+            --radius-m: 20px;
             --font-mono: 'JetBrains Mono', monospace;
-            --transition-main: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Твои темы из конфига */
-        [data-theme="cyber"] { --accent-primary: #00f2ff; --accent-glow: rgba(0, 242, 255, 0.35); }
-        [data-theme="toxic"] { --accent-primary: #bcff00; --accent-glow: rgba(188, 255, 0, 0.35); }
-        [data-theme="ghost"] { --accent-primary: #ffffff; --accent-glow: rgba(255, 255, 255, 0.2); }
+        /* [ GLOBAL RESET ] */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; outline: none; }
+        body { 
+            background: var(--bg-ultra-black); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
-        body { background: var(--bg-ultra-black); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        /* [ UI FX ] */
+        .crt-overlay { 
+            position: fixed; inset: 0; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02)); 
+            background-size: 100% 3px, 3px 100%; 
+            pointer-events: none; z-index: 10000; 
+        }
 
-        /* Эффекты CRT и Курсор */
-        .crt-layer { position: fixed; inset: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%), linear-gradient(90deg, rgba(255,0,0,0.01), rgba(0,255,0,0.01), rgba(0,0,255,0.01)); background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: 10000; }
-        #cursor-main { position: fixed; width: 10px; height: 10px; background: var(--accent-primary); border-radius: 50%; z-index: 11001; pointer-events: none; box-shadow: 0 0 15px var(--accent-primary); }
-        #cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid var(--accent-primary); border-radius: 50%; z-index: 11000; pointer-events: none; opacity: 0.4; transition: width 0.3s, height 0.3s; }
+        #cursor-dot { position: fixed; width: 10px; height: 10px; background: var(--accent-primary); border-radius: 50%; z-index: 11001; pointer-events: none; box-shadow: 0 0 15px var(--accent-primary); }
+        #cursor-ring { position: fixed; width: 45px; height: 45px; border: 1px solid var(--accent-primary); border-radius: 50%; z-index: 11000; pointer-events: none; opacity: 0.3; transition: 0.1s ease-out; }
 
-        /* Bento Grid */
-        .bento-wrapper { max-width: 1600px; margin: 0 auto; padding: 100px 40px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-        .bento-node { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-xl); padding: 40px; position: relative; overflow: hidden; transition: var(--transition-main); display: flex; flex-direction: column; }
-        .bento-node:hover { border-color: var(--accent-primary); transform: translateY(-8px); box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow); }
+        /* [ LAYOUT SYSTEM ] */
+        .bento-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 100px 40px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
 
-        .col-12 { grid-column: span 12; } .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .row-2 { grid-row: span 2; }
+        .node {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            padding: 45px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* UI Elements */
-        .hero-text { font-size: clamp(3.5rem, 12vw, 10rem); font-weight: 800; letter-spacing: -8px; line-height: 0.85; margin-bottom: 20px; }
-        .hero-text span { color: var(--accent-primary); }
-        .log-prefix { font-family: var(--font-mono); color: var(--accent-primary); font-size: 11px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; display: block; }
+        .node:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px var(--accent-glow);
+        }
 
-        /* Навигация */
-        .nav-dock { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(12,12,14,0.8); backdrop-filter: blur(25px); padding: 10px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.08); display: flex; gap: 8px; z-index: 9000; }
-        .nav-item { padding: 14px 28px; border-radius: 20px; border: none; background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; font-weight: 800; transition: 0.3s; }
-        .nav-item.active { background: var(--accent-primary); color: #000; }
+        .span-12 { grid-column: span 12; }
+        .span-8 { grid-column: span 8; }
+        .span-4 { grid-column: span 4; }
+        .tall { grid-row: span 2; }
 
-        /* Radio & Visualizer */
-        .vhs-strip { display: flex; align-items: center; gap: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .play-trigger { background: var(--accent-primary); border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 10px; }
-        .vhs-visualizer { display: flex; align-items: flex-end; gap: 2px; height: 20px; }
-        .vhs-visualizer div { width: 2px; background: var(--accent-primary); }
-        .active-audio .vhs-visualizer div { animation: bounce 0.5s infinite alternate; }
-        @keyframes bounce { from { height: 2px; } to { height: 100%; } }
+        /* [ ELEMENTS ] */
+        .hero-title { font-size: clamp(4rem, 12vw, 9rem); font-weight: 800; letter-spacing: -7px; line-height: 0.8; margin-bottom: 25px; }
+        .hero-title span { color: var(--accent-primary); transition: 0.3s; }
+        
+        .sys-tag { font-family: var(--font-mono); color: var(--accent-primary); font-size: 11px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; display: block; opacity: 0.8; }
 
-        /* Theme Grid */
-        .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
-        .theme-card { background: #111; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; font-family: var(--font-mono); font-size: 11px; text-align: left; }
+        /* [ RADIO ENGINE ] */
+        .radio-stack { margin-top: 50px; display: flex; flex-direction: column; gap: 15px; }
+        .audio-item { 
+            display: flex; align-items: center; gap: 25px; 
+            padding: 25px; background: rgba(0,0,0,0.3); 
+            border-radius: 28px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .audio-item.active { border-color: var(--accent-primary); background: rgba(255,0,85,0.03); }
+        .play-trigger { 
+            width: 70px; height: 70px; border-radius: 22px; 
+            background: var(--accent-primary); color: #000; 
+            border: none; font-weight: 900; font-size: 11px; 
+            letter-spacing: 1px; transition: 0.3s;
+        }
+        .play-trigger:hover { transform: rotate(-5deg) scale(1.1); }
 
-        /* Modal */
-        .ferum-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(40px); z-index: 10005; display: none; place-items: center; padding: 40px; opacity: 0; transition: 0.4s; }
-        .ferum-modal-overlay.active { display: grid; opacity: 1; }
-        .modal-content-wrap { background: var(--bg-card); width: 100%; max-width: 1200px; border-radius: var(--radius-xl); border: 1px solid var(--accent-primary); padding: 60px; position: relative; }
+        .bars { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
+        .bars div { width: 4px; background: var(--accent-primary); border-radius: 2px; height: 4px; transition: 0.1s; }
+        .active .bars div { animation: barMotion 0.6s infinite alternate; }
+        @keyframes barMotion { from { height: 4px; } to { height: 35px; } }
 
-        .tab-content { display: none; }
-        .active-tab { display: contents; }
-        #archive, #secret, #config { display: none; } /* По умолчанию скрыты */
+        /* [ SOCIALS ] */
+        .social-row { margin-top: auto; display: flex; gap: 15px; padding-top: 50px; }
+        .social-btn { 
+            flex: 1; padding: 18px; border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 18px; font-family: var(--font-mono); font-size: 11px; 
+            text-align: center; text-decoration: none; color: var(--text-main);
+            transition: 0.3s; background: rgba(255,255,255,0.02);
+        }
+        .social-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); background: rgba(255,0,85,0.05); }
+
+        /* [ ARCHIVE CARDS ] */
+        .project-card { cursor: pointer; }
+        .project-thumb { 
+            width: 100%; height: 260px; object-fit: cover; 
+            border-radius: 24px; margin-bottom: 25px; 
+            background: #111; filter: grayscale(1) contrast(1.2); transition: 0.6s;
+        }
+        .project-card:hover .project-thumb { filter: grayscale(0) contrast(1); }
+
+        /* [ NAVIGATION ] */
+        .dock { 
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); 
+            background: rgba(12, 12, 14, 0.85); backdrop-filter: blur(30px); 
+            padding: 12px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); 
+            display: flex; gap: 8px; z-index: 9999; 
+        }
+        .dock-tab { 
+            padding: 16px 32px; border-radius: 25px; border: none; 
+            background: transparent; color: var(--text-muted); 
+            font-family: var(--font-mono); font-size: 14px; font-weight: 800; 
+            transition: 0.4s; 
+        }
+        .dock-tab.active { background: var(--accent-primary); color: #000; box-shadow: 0 10px 20px var(--accent-glow); }
+
+        /* [ FORMS ] */
+        .input-group { display: grid; grid-template-columns: 200px 1fr 180px; gap: 20px; margin-top: 30px; }
+        .os-input { 
+            background: #000; border: 1px solid #1a1a1e; 
+            padding: 25px; border-radius: 22px; color: #fff; 
+            font-family: var(--font-mono); font-size: 14px; transition: 0.3s; 
+        }
+        .os-input:focus { border-color: var(--accent-primary); box-shadow: 0 0 20px rgba(255,0,85,0.1); }
+        .os-btn { 
+            background: var(--accent-primary); color: #000; border: none; 
+            border-radius: 22px; font-weight: 900; font-size: 13px;
+            letter-spacing: 1px; transition: 0.3s;
+        }
+
+        /* [ MODAL ] */
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.96); 
+            backdrop-filter: blur(50px); z-index: 10005; 
+            display: none; place-items: center; padding: 50px; 
+            opacity: 0; transition: 0.5s; 
+        }
+        .modal-overlay.active { display: grid; opacity: 1; }
+        .modal-window { 
+            background: var(--bg-card); width: 100%; max-width: 1200px; 
+            border-radius: var(--radius-xl); border: 1px solid var(--accent-primary); 
+            padding: 80px; position: relative; max-height: 85vh; overflow-y: auto;
+        }
+
+        /* [ THEME SELECTOR ] */
+        .theme-panel { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 40px; }
+        .t-card { 
+            padding: 20px; background: #080808; border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 20px; text-align: left; transition: 0.3s;
+        }
+        .t-card:hover { border-color: #fff; }
+
+        /* [ TABS ] */
+        .content-tab { display: none; }
+        .content-tab.active { display: contents; }
+        #archive, #config, #secret { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="crt-layer"></div>
-    <div id="cursor-main"></div>
-    <div id="cursor-outline"></div>
+    <div class="crt-overlay"></div>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
 
-    <nav class="nav-dock">
-        <button class="nav-item active" onclick="kernel.switchTab('home', this)">// 01_HOME</button>
-        <button class="nav-item" onclick="kernel.switchTab('archive', this)">// 02_ARCHIVE</button>
-        <button class="nav-item" onclick="kernel.switchTab('secret', this)">// 03_SECRET</button>
-        <button class="nav-item" onclick="kernel.switchTab('config', this)">// 04_CONFIG</button>
+    <nav class="dock">
+        <button class="dock-tab active" onclick="kernel.switchTab('home', this)">// 01_HOME</button>
+        <button class="dock-tab" onclick="kernel.switchTab('archive', this)">// 02_ARCHIVE</button>
+        <button class="dock-tab" onclick="kernel.switchTab('secret', this)">// 03_SECRET</button>
+        <button class="dock-tab" onclick="kernel.switchTab('config', this)">// 04_CONFIG</button>
     </nav>
 
-    <main class="bento-wrapper">
-        <section id="home" class="tab-content active-tab col-12">
-            <div class="bento-node col-8 row-2">
-                <span class="log-prefix">System_Identity: FERUM_OS_V6.8.1</span>
-                <h1 class="hero-text">FERUM<span>.OS</span></h1>
-                <p style="color: var(--text-muted); font-size: 18px; line-height: 1.6;">Центральный узел управления. База данных Supabase: <span style="color: var(--accent-primary)">CONNECTED</span>.</p>
-                
-                <div class="audio-deck" style="margin-top: 40px;">
-                    <div class="vhs-strip" id="audio-0">
-                        <button class="play-trigger" onclick="kernel.toggleAudio(0)">PLAY</button>
-                        <div><span class="log-prefix" style="margin:0">CH_01_PHONK</span><div class="vhs-visualizer" id="viz-0"></div></div>
+    <main class="bento-grid">
+        <section id="home" class="content-tab active col-12" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px;">
+            <div class="node span-8 tall">
+                <span class="sys-tag">System_Identity: FERUM_OS_V6.8.1_STABLE</span>
+                <h1 class="hero-title">FERUM<span>.OS</span></h1>
+                <p style="color: var(--text-muted); font-size: 20px; line-height: 1.6; max-width: 600px;">
+                    Ядро загружено. Системы мониторинга и рендеринга активны. Все протоколы связи с Supabase стабилизированы.
+                </p>
+
+                <div class="radio-stack">
+                    <div class="audio-item" id="ch-0">
+                        <button class="play-trigger" onclick="kernel.toggleRadio(0)">PLAY</button>
+                        <div style="flex:1">
+                            <span class="sys-tag" style="margin:0">FREQ: 104.2_VOID_RESONANCE</span>
+                            <div class="bars" id="viz-0"></div>
+                        </div>
                     </div>
-                    <div class="vhs-strip" id="audio-1" style="margin-top:10px">
-                        <button class="play-trigger" onclick="kernel.toggleAudio(1)">PLAY</button>
-                        <div><span class="log-prefix" style="margin:0">CH_02_LOFI</span><div class="vhs-visualizer" id="viz-1"></div></div>
+                    <div class="audio-item" id="ch-1">
+                        <button class="play-trigger" onclick="kernel.toggleRadio(1)">PLAY</button>
+                        <div style="flex:1">
+                            <span class="sys-tag" style="margin:0">FREQ: 88.7_GHOST_SHELL</span>
+                            <div class="bars" id="viz-1"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div style="margin-top: auto; display: flex; gap: 20px;">
-                    <a href="#" class="log-prefix" style="text-decoration: none;">[ TG ]</a>
-                    <a href="#" class="log-prefix" style="text-decoration: none;">[ GIT ]</a>
-                    <a href="#" class="log-prefix" style="text-decoration: none;">[ STEAM ]</a>
+                <div class="social-row">
+                    <a href="https://t.me/ferum" target="_blank" class="social-btn">TELEGRAM_ID</a>
+                    <a href="https://github.com/ferum" target="_blank" class="social-btn">GITHUB_REPO</a>
+                    <a href="#" class="social-btn">STEAM_PROFILE</a>
                 </div>
             </div>
 
-            <div class="bento-node col-4">
-                <span class="log-prefix">// SYSTEM_STATS</span>
-                <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono);" id="uptime-display">00:00:00</div>
+            <div class="node span-4">
+                <span class="sys-tag">// OPERATOR_STATUS</span>
+                <div style="margin-top: 20px;">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Identity</div>
+                    <div style="font-size: 32px; font-weight: 800; letter-spacing: -1px;">FERUM_DEVELOPER</div>
+                    
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 30px;">Up_Time</div>
+                    <div id="uptime" style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary);">00:00:00</div>
+                </div>
             </div>
 
-            <div class="bento-node col-4">
-                <span class="log-prefix">// KERNEL_LOGS</span>
-                <div id="mini-terminal" style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary); height: 150px; overflow: hidden;"></div>
+            <div class="node span-4">
+                <span class="sys-tag">// KERNEL_LOGS</span>
+                <div id="terminal-mini" style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary); line-height: 1.8; overflow: hidden; height: 180px;"></div>
             </div>
 
-            <div class="bento-node col-12">
-                <span class="log-prefix">// DATA_INJECTION: GUESTBOOK</span>
-                <div style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 20px; margin-top: 10px;">
-                    <input type="text" id="gb-user" style="background:#000; border:1px solid #333; padding:20px; border-radius:15px; color:#fff;" placeholder="ОПЕРАТОР">
-                    <input type="text" id="gb-msg" style="background:#000; border:1px solid #333; padding:20px; border-radius:15px; color:#fff;" placeholder="СООБЩЕНИЕ">
-                    <button onclick="kernel.submitToGuestbook()" style="background:var(--accent-primary); border:none; padding:0 40px; border-radius:15px; font-weight:800;">EXECUTE</button>
+            <div class="node span-12">
+                <span class="sys-tag">// UPLINK: GUESTBOOK_V3</span>
+                <div class="input-group">
+                    <input type="text" id="gb-name" class="os-input" placeholder="ACCESS_NAME">
+                    <input type="text" id="gb-msg" class="os-input" placeholder="TRANSMIT_MESSAGE_TO_KERNEL...">
+                    <button class="os-btn" onclick="kernel.transmit()">EXECUTE_UPLINK</button>
                 </div>
             </div>
         </section>
 
-        <section id="archive" class="tab-content col-12">
-            <h1 class="hero-text">PROJECT_<span>ARCHIVE</span></h1>
-            <div id="archive-grid-render" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px; margin-top: 40px;"></div>
+        <section id="archive" class="content-tab col-12">
+            <h1 class="hero-title" style="margin-bottom: 60px;">ARCHIVE<span>.DATA</span></h1>
+            <div id="archive-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 24px;">
+                </div>
         </section>
 
-        <section id="secret" class="tab-content col-12">
-            <div class="bento-node col-12" style="height: 600px; background: #000;">
-                <span class="log-prefix">// RESTRICTED_SHELL</span>
-                <div id="main-terminal-output" style="font-family: var(--font-mono); font-size: 14px; color: var(--accent-primary); padding: 20px;"></div>
-            </div>
-        </section>
-
-        <section id="config" class="tab-content col-12">
-            <div class="bento-node col-12">
-                <span class="log-prefix">// THEME_ENGINE</span>
-                <div class="theme-grid" id="theme-render"></div>
-            </div>
+        <section id="config" class="content-tab col-12">
+            <h1 class="hero-title">CONFIG<span>.SYS</span></h1>
+            <span class="sys-tag">Theme_Engine: Select system preset</span>
+            <div class="theme-panel" id="theme-injector">
+                </div>
         </section>
     </main>
 
-    <div id="modal-portal" class="ferum-modal-overlay" onclick="if(event.target==this) kernel.closeModal()">
-        <div class="modal-content-wrap">
-            <div id="modal-render-area"></div>
-        </div>
+    <div id="modal-portal" class="modal-overlay" onclick="if(event.target==this) kernel.closeModal()">
+        <div class="modal-window" id="modal-root"></div>
     </div>
 
     <script>
         class FerumKernel {
             constructor() {
-                this.supabase = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
-                this.state = { boot: Date.now(), activeTab: 'home', themes: [
-                    {n:'Retro Blood', c:'#ff0055'}, {n:'Cyber Pulse', c:'#00f2ff'}, {n:'Toxic Void', c:'#bcff00'}, {n:'Ghost Shell', c:'#ffffff'},
-                    {n:'Neon Dream', c:'#ff00ff'}, {n:'Gold Dust', c:'#ffd700'}, {n:'Deep Sea', c:'#0055ff'}, {n:'Forest', c:'#00ff66'},
-                    {n:'Amber', c:'#ffaa00'}, {n:'Ultraviolet', c:'#9d00ff'}, {n:'Slime', c:'#32cd32'}, {n:'Crimson', c:'#dc143c'},
-                    {n:'Ice', c:'#afeeee'}, {n:'Midnight', c:'#191970'}, {n:'Sakura', c:'#ffb7c5'}, {n:'Matrix', c:'#22ff00'},
-                    {n:'Carbon', c:'#555555'}, {n:'Bumblebee', c:'#f3ce13'}, {n:'Vampire', c:'#8b0000'}, {n:'Nord', c:'#88c0d0'},
-                    {n:'Solar', c:'#d08770'}, {n:'Coffee', c:'#6f4e37'}, {n:'Nebula', c:'#4b0082'}, {n:'Acid', c:'#dfff00'},
-                    {n:'Void', c:'#222222'}, {n:'Mint', c:'#98ff98'}, {n:'Rose', c:'#e0115f'}, {n:'Sky', c:'#87ceeb'},
-                    {n:'Lava', c:'#ff4500'}, {n:'Zenith', c:'#000080'}
-                ]};
+                this.client = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
+                this.state = {
+                    bootTime: Date.now(),
+                    themes: [
+                        {n:'Retro Blood', c:'#ff0055'}, {n:'Cyber Pulse', c:'#00f2ff'}, {n:'Toxic Void', c:'#bcff00'}, {n:'Ghost Shell', c:'#ffffff'},
+                        {n:'Neon Dream', c:'#ff00ff'}, {n:'Gold Dust', c:'#ffd700'}, {n:'Deep Sea', c:'#0055ff'}, {n:'Forest Echo', c:'#00ff66'},
+                        {n:'Amber Alert', c:'#ffaa00'}, {n:'Ultraviolet', c:'#9d00ff'}, {n:'Slime Core', c:'#32cd32'}, {n:'Crimson', c:'#dc143c'},
+                        {n:'Iceberg', c:'#afeeee'}, {n:'Midnight', c:'#191970'}, {n:'Sakura', c:'#ffb7c5'}, {n:'Matrix', c:'#22ff00'},
+                        {n:'Carbon', c:'#555555'}, {n:'Bumblebee', c:'#f3ce13'}, {n:'Vampire', c:'#8b0000'}, {n:'Nordic', c:'#88c0d0'},
+                        {n:'Solaris', c:'#d08770'}, {n:'Coffee', c:'#6f4e37'}, {n:'Nebula', c:'#4b0082'}, {n:'Acid', c:'#dfff00'},
+                        {n:'Void Walker', c:'#222222'}, {n:'Mint', c:'#98ff98'}, {n:'Rose', c:'#e0115f'}, {n:'Sky High', c:'#87ceeb'},
+                        {n:'Lava', c:'#ff4500'}, {n:'Zenith', c:'#000080'}
+                    ]
+                };
                 this.audio = [new Audio('https://stream.zeno.fm/0r0xa792kwzuv'), new Audio('https://listen.moe/stream')];
                 this.init();
             }
 
             init() {
                 this.setupCursor();
-                this.startClock();
+                this.runClock();
                 this.renderThemes();
-                this.renderVisualizers();
-                this.logToTerminal("Kernel check: OK. Systems nominal.");
+                this.renderBars();
+                this.log("Kernel: 6.8.1 ULTIMATE boot success.");
+                this.log("Supabase: Connection established.");
             }
 
             setupCursor() {
-                const dot = document.getElementById('cursor-main');
-                const ring = document.getElementById('cursor-outline');
+                const dot = document.getElementById('cursor-dot'), ring = document.getElementById('cursor-ring');
                 window.addEventListener('mousemove', e => {
-                    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
-                    ring.style.left = (e.clientX - 20) + 'px'; ring.style.top = (e.clientY - 20) + 'px';
+                    dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`;
+                    ring.style.left = `${e.clientX - 22}px`; ring.style.top = `${e.clientY - 22}px`;
                 });
             }
 
-            startClock() {
+            runClock() {
                 setInterval(() => {
-                    const s = Math.floor((Date.now() - this.state.boot) / 1000);
-                    document.getElementById('uptime-display').innerText = new Date(s * 1000).toISOString().substr(11, 8);
+                    const diff = Math.floor((Date.now() - this.state.bootTime) / 1000);
+                    document.getElementById('uptime').innerText = new Date(diff * 1000).toISOString().substr(11, 8);
                 }, 1000);
             }
 
-            switchTab(tab, btn) {
-                document.querySelectorAll('.tab-content').forEach(el => {
-                    el.style.display = 'none';
-                    el.classList.remove('active-tab');
-                });
-                const target = document.getElementById(tab);
-                target.style.display = (tab === 'home' ? 'contents' : 'block');
-                setTimeout(() => target.classList.add('active-tab'), 10);
+            switchTab(tabId, btn) {
+                document.querySelectorAll('.content-tab').forEach(t => t.style.display = 'none');
+                const target = document.getElementById(tabId);
+                target.style.display = (tabId === 'home' ? 'grid' : 'block');
                 
-                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.dock-tab').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                if(tab === 'archive') this.fetchArchive();
-                if(tab === 'secret') this.runSecret();
+
+                if(tabId === 'archive') this.fetchArchive();
+                this.log(`Switched to: ${tabId.toUpperCase()}`);
             }
 
-            async submitToGuestbook() {
-                const name = document.getElementById('gb-user').value;
+            async transmit() {
+                const name = document.getElementById('gb-name').value;
                 const message = document.getElementById('gb-msg').value;
                 if(!name || !message) return;
-                const { error } = await this.supabase.from('guestbook').insert([{ name, message }]);
-                if(!error) { this.logToTerminal("Uplink success."); document.getElementById('gb-msg').value = ''; }
+
+                const { error } = await this.client.from('guestbook').insert([{ name, message }]);
+                if(!error) {
+                    this.log(`Packet delivered: ${name}`);
+                    document.getElementById('gb-msg').value = '';
+                }
             }
 
             async fetchArchive() {
-                const { data } = await this.supabase.from('projects').select('*');
-                const container = document.getElementById('archive-grid-render');
-                container.innerHTML = data.map(item => `
-                    <div class="bento-node" onclick="kernel.openModal('${item.name}', '${item.content || item.message}')">
-                        <span class="log-prefix">NODE_0x${item.id.toString(16)}</span>
-                        <h3>${item.name}</h3>
-                        <p style="color:var(--text-muted); font-size:12px; margin-top:10px">${(item.content || '').substring(0, 50)}...</p>
+                const { data } = await this.client.from('projects').select('*');
+                const grid = document.getElementById('archive-grid');
+                if(!data) return;
+
+                grid.innerHTML = data.map(p => `
+                    <div class="node project-card" onclick='kernel.openModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                        ${p.image ? `<img src="${p.image}" class="project-thumb">` : `<div class="project-thumb" style="display:grid; place-items:center; opacity:0.1">NO_IMAGE</div>`}
+                        <span class="sys-tag">NODE_0x${p.id.toString(16)}</span>
+                        <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">${p.name}</h3>
+                        <p style="color:var(--text-muted); font-size:14px; line-height:1.5">${(p.content || p.message || '').substring(0, 120)}...</p>
                     </div>
                 `).join('');
             }
 
+            openModal(data) {
+                const portal = document.getElementById('modal-portal'), root = document.getElementById('modal-root');
+                root.innerHTML = `
+                    <h1 class="hero-title" style="font-size: 4rem;">${data.name}</h1>
+                    <div style="font-family: var(--font-mono); margin-top: 50px; line-height: 1.8; color: var(--text-main); font-size: 18px;">
+                        ${data.content || data.message}
+                    </div>
+                `;
+                portal.style.display = 'grid';
+                setTimeout(() => portal.classList.add('active'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeModal() {
+                const portal = document.getElementById('modal-portal');
+                portal.classList.remove('active');
+                setTimeout(() => { portal.style.display = 'none'; document.body.style.overflow = 'auto'; }, 500);
+            }
+
             renderThemes() {
-                const grid = document.getElementById('theme-render');
+                const container = document.getElementById('theme-injector');
                 this.state.themes.forEach(t => {
                     const card = document.createElement('button');
-                    card.className = 'theme-card';
-                    card.innerHTML = `<div style="width:20px; height:4px; background:${t.c}; margin-bottom:10px"></div>${t.n}`;
+                    card.className = 't-card social-btn';
+                    card.innerHTML = `<div style="width:25px; height:5px; background:${t.c}; border-radius:10px; margin-bottom:12px"></div>${t.n}`;
                     card.onclick = () => {
                         document.documentElement.style.setProperty('--accent-primary', t.c);
-                        document.documentElement.style.setProperty('--accent-glow', t.c + '55');
+                        document.documentElement.style.setProperty('--accent-glow', `${t.c}55`);
                     };
-                    grid.appendChild(card);
+                    container.appendChild(card);
                 });
             }
 
-            toggleAudio(idx) {
-                const strip = document.getElementById(`audio-${idx}`);
+            toggleRadio(idx) {
+                const item = document.getElementById(`ch-${idx}`);
                 if(this.audio[idx].paused) {
                     this.audio.forEach(a => a.pause());
+                    document.querySelectorAll('.audio-item').forEach(el => el.classList.remove('active'));
                     this.audio[idx].play();
-                    strip.classList.add('active-audio');
+                    item.classList.add('active');
                 } else {
                     this.audio[idx].pause();
-                    strip.classList.remove('active-audio');
+                    item.classList.remove('active');
                 }
             }
 
-            renderVisualizers() {
+            renderBars() {
                 [0, 1].forEach(id => {
                     const viz = document.getElementById(`viz-${id}`);
-                    for(let i=0; i<30; i++) {
+                    for(let i=0; i<35; i++) {
                         const b = document.createElement('div');
-                        b.style.opacity = 0.2 + (i/30);
+                        b.style.opacity = 0.2 + (i/35);
                         viz.appendChild(b);
                     }
                 });
             }
 
-            openModal(title, text) {
-                const portal = document.getElementById('modal-portal');
-                document.getElementById('modal-render-area').innerHTML = `<h1 class="hero-text" style="font-size:3rem">${title}</h1><div style="font-family:var(--font-mono); margin-top:30px; line-height:1.6">${text}</div>`;
-                portal.style.display = 'grid';
-                setTimeout(() => portal.classList.add('active'), 10);
-            }
-
-            closeModal() { document.getElementById('modal-portal').classList.remove('active'); setTimeout(() => document.getElementById('modal-portal').style.display='none', 400); }
-
-            logToTerminal(msg) {
-                const line = `<div>[${new Date().toLocaleTimeString()}] > ${msg}</div>`;
-                document.getElementById('mini-terminal').innerHTML += line;
-            }
-
-            runSecret() {
-                const out = document.getElementById('main-terminal-output');
-                out.innerHTML = '';
-                ["Bypassing firewalls...", "Accessing root...", "Welcome, OPERATOR."].forEach((l, i) => {
-                    setTimeout(() => out.innerHTML += `<div>> ${l}</div>`, i * 500);
-                });
+            log(msg) {
+                const log = document.getElementById('terminal-mini');
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] > ${msg}</div>`;
+                log.scrollTop = log.scrollHeight;
             }
         }
+
         const kernel = new FerumKernel();
     </script>
 </body>
