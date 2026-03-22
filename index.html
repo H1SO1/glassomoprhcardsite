@@ -752,6 +752,23 @@
 
 <script>
 class FerumKernel {
+    openProjectModal(item) {
+    const modal = document.getElementById('project-modal');
+    const content = document.getElementById('project-modal-content');
+
+    content.innerHTML = `
+        <h2 style="color:var(--accent); margin-bottom:25px;">${item.name}</h2>
+        ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
+        <p style="opacity:0.7; line-height:1.8;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
+        <button class="btn-action" style="margin-top:30px;" onclick="core.closeProjectModal()">CLOSE</button>
+    `;
+
+    modal.style.display = 'grid';
+}
+
+closeProjectModal() {
+    document.getElementById('project-modal').style.display = 'none';
+}
     constructor() {
         this.supabase = supabase.createClient(
             'https://ibybgkugoumvjftgxxii.supabase.co', 
@@ -1000,7 +1017,7 @@ class FerumKernel {
         btn.disabled = true;
         btn.innerText = "UPLOADING_PACKET...";
         
-        const { error } = await this.supabase.from('projects').insert([{ name: name, content: body }]);
+        const { error } = await this.supabase.from('guestbook').insert([{ name: name, content: body }]);
         
         if(error) {
             this.sendNotification("UPLINK_ERROR", error.message);
@@ -1029,8 +1046,8 @@ class FerumKernel {
         }
         
         if(data) {
-            grid.innerHTML = data.map(item => `
-                <div class="bento-card">
+            ggrid.innerHTML = data.map(item => `
+    <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
                     <div>
                         <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">OBJECT_REF: ${item.id}</p>
                         <h3 style="margin-bottom:18px; font-weight:900; font-size:19px; letter-spacing: -0.5px;">${item.name}</h3>
@@ -1092,5 +1109,8 @@ class FerumKernel {
 
 const core = new FerumKernel();
 </script>
+    <div class="overlay" id="project-modal">
+    <div class="win-frame" id="project-modal-content"></div>
+</div>
 </body>
 </html>
