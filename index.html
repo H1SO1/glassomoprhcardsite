@@ -104,13 +104,53 @@
 
 <div id="home" class="page active">
     <div class="bento-grid">
-        <div class="bento-card hero-card">
-            <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 800;">// FERUM_OS_v4.5</p>
-            <h1>FERUM<span>.OS</span></h1>
-            <div class="social-links">
-                <a href="https://github.com/H1SO1" target="_blank" class="social-btn">GitHub</a>
-                <a href="https://t.me/rh1so" target="_blank" class="social-btn">Telegram</a>
+       <div class="bento-card hero-card" style="display: flex; justify-content: space-between; position: relative;">
+    <div style="z-index: 2;">
+        <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 800; letter-spacing: 2px;">
+            // FERUM_OS_v4.5.STABLE
+        </p>
+        <h1 style="margin-top: 10px;">FERUM<span>.OS</span></h1>
+        
+        <div class="social-links">
+            <a href="https://github.com/H1SO1" target="_blank" class="social-btn">GitHub</a>
+            <a href="https://t.me/rh1so" target="_blank" class="social-btn">Telegram</a>
+        </div>
+        
+        <div style="margin-top: 45px; padding: 20px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); border-radius: 24px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px; width: fit-content;">
+            <button onclick="toggleAudio()" id="pBtn" style="background: var(--accent); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: 0.3s; box-shadow: 0 0 15px rgba(0,255,163,0.2);">▶</button>
+            <div>
+                <b style="font-size: 14px; letter-spacing: 1px;">LOFI_CORE_RADIO</b><br>
+                <span id="radio-status" style="color: var(--text-dim); font-size: 11px; font-family: var(--font-mono);">STATUS: IDLE</span>
             </div>
+        </div>
+    </div>
+
+    <div style="text-align: right; display: flex; flex-direction: column; justify-content: space-between; z-index: 1;">
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8;">
+            <div style="color: var(--accent); margin-bottom: 5px;">[ SYSTEM_MONITOR ]</div>
+            <div>UPTIME: <span id="uptime">00:00:00</span></div>
+            <div>PING: <span id="ping">24</span>ms</div>
+            <div>MEM: 44%</div>
+            <div id="date-now" style="margin-top: 10px; opacity: 0.5;">2026-03-22</div>
+        </div>
+
+        <div style="opacity: 0.2; user-select: none; pointer-events: none; margin-top: 20px;">
+            <pre style="font-size: 7px; line-height: 1; color: var(--accent); font-family: var(--font-mono);">
+      .---.
+     /     \
+    | () () |
+     \  ^  /
+      |||||
+      |||||
+            </pre>
+            <div style="font-size: 9px; font-family: var(--font-mono); margin-top: 5px;">SECURITY_LEVEL: HIGH</div>
+        </div>
+    </div>
+    
+    <div style="position: absolute; right: -20px; bottom: -20px; font-size: 150px; font-weight: 900; opacity: 0.02; z-index: 0; pointer-events: none;">
+        FRM
+    </div>
+</div>
             
             <div style="margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 24px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px; width: fit-content;">
                 <button onclick="toggleAudio()" id="pBtn" style="background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;">▶</button>
@@ -166,26 +206,32 @@
 <div id="modal"><div class="close-btn" onclick="closeM()">[ CLOSE ]</div><div id="mContent" style="max-width: 800px; margin: 0 auto;"></div></div>
 <audio id="player" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
 
-    <div style="position: absolute; right: 40px; top: 40px; width: 280px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
-        <div style="font-size: 11px; color: var(--text-dim);">CPU_LOAD</div>
-        <div id="cpu-stat" style="font-size: 24px; color: var(--accent);">0.0%</div>
-    </div>
-    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
-        <div style="font-size: 11px; color: var(--text-dim);">RAM_USAGE</div>
-        <div style="font-size: 24px;">768 MB</div>
-    </div>
-</div>
+<script>
+    let startTime = Date.now();
+setInterval(() => {
+    let diff = Math.floor((Date.now() - startTime) / 1000);
+    let h = Math.floor(diff / 3600).toString().padStart(2, '0');
+    let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+    let s = (diff % 60).toString().padStart(2, '0');
+    document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
+    
+    // Рандомный пинг для жизни
+    document.getElementById('ping').innerText = Math.floor(Math.random() * (35 - 20) + 20);
+}, 1000);
 
-    <script>
-    function updateCpu() {
-        const cpuVal = (Math.random() * 5 + 0.1).toFixed(1);
-        document.getElementById('cpu-stat').innerText = `${cpuVal}%`;
-        setTimeout(updateCpu, 1500 + Math.random() * 1000);
-    }
-    updateCpu(); 
+// Обновление даты
+document.getElementById('date-now').innerText = new Date().toISOString().split('T')[0];
+
+// Обновление статуса радио
+const oldToggle = toggleAudio;
+toggleAudio = function() {
+    oldToggle();
+    const status = document.getElementById('radio-status');
+    status.innerText = isPlaying ? "STATUS: STREAMING..." : "STATUS: PAUSED";
+    status.style.color = isPlaying ? "var(--accent)" : "var(--text-dim)";
+};устить симуляцию
 </script>
-
+    
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
     const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
