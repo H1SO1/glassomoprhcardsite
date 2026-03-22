@@ -232,15 +232,89 @@
     // AUDIO & TERMINAL
     let playing = false;
     function toggleAudio() { const a = document.getElementById('player'), b = document.getElementById('pBtn'); if(!playing) { a.play(); b.innerText = '■'; } else { a.pause(); b.innerText = '▶'; } playing = !playing; }
-    function runCmd(e) {
-        if(e.key === 'Enter') {
-            const cmd = e.target.value.toLowerCase().trim(), out = document.getElementById('term-body');
-            let r = (cmd === 'help') ? 'Commands: status, matrix, clear' : 'Unknown.';
-            if(cmd === 'clear') { out.innerHTML = ''; e.target.value = ''; return; }
-            out.innerHTML += `<div>> ${cmd}<br>${r}</div>`;
-            out.scrollTop = out.scrollHeight; e.target.value = '';
+    const termOut = document.getElementById('term-body');
+const termIn = document.getElementById('t-in');
+let cmdHistory = [];
+let historyIdx = -1;
+
+function runCmd(e) {
+    if (e.key === 'ArrowUp') {
+        if (historyIdx < cmdHistory.length - 1) {
+            historyIdx++;
+            termIn.value = cmdHistory[cmdHistory.length - 1 - historyIdx];
         }
     }
+
+    if (e.key === 'Enter') {
+        const fullCmd = termIn.value.trim();
+        const cmd = fullCmd.toLowerCase();
+        if (cmd) cmdHistory.push(fullCmd);
+        historyIdx = -1;
+        
+        let res = '';
+        
+        switch(cmd) {
+            case 'help':
+                res = 'AVAILABLE_COMMANDS: <br>- [neofetch] : System info<br>- [stalker] : PDA Log<br>- [dayz] : Vital signs<br>- [arg] : Decrypt mystery<br>- [matrix] : Toggle visual glitch<br>- [ls] : List directory<br>- [clear] : Wipe screen<br>- [whoami] : User identity';
+                break;
+            
+            case 'neofetch':
+                res = `<span style="color:var(--accent)">       .---.       </span><br>` +
+                      `<span style="color:var(--accent)">      /     \\      </span> OS: FerumOS 4.5.2- arsenic<br>` +
+                      `<span style="color:var(--accent)">      \\_..._/      </span> Host: H1SO1-Machine<br>` +
+                      `                     Kernel: 6.9.2-glass-reveal<br>` +
+                      `                     Shell: rh1so-sh v1.0`;
+                break;
+
+            case 'stalker':
+                const logs = [
+                    "PDA: [14:22] Найдена стоянка сталкеров у Агропрома.",
+                    "PDA: [14:40] Внимание! Выброс через 5 минут. Ищите укрытие!",
+                    "PDA: [15:01] Свобода и Долг опять закусились у Бара.",
+                    "PDA: [ERROR] Сигнал потерян в районе Радара..."
+                ];
+                res = logs[Math.floor(Math.random() * logs.length)];
+                break;
+
+            case 'dayz':
+                res = `<span style="color:#ff3e3e">BLOOD: LOW</span><br>FOOD: █░░░░░░░░░ (12%)<br>WATER: ██░░░░░░░░ (20%)<br><span style="color:#ffbe3e">STATUS: SICK (Unknown virus)</span>`;
+                break;
+
+            case 'arg':
+                res = `<span style="font-style:italic; opacity:0.7">"The tapes were never meant to be found. 01001000 01000101 01001100 01001100 01001111..."</span>`;
+                break;
+
+            case 'matrix':
+                document.body.classList.toggle('matrix-mode');
+                res = 'VISUAL_OVERRIDE: TOGGLED';
+                break;
+
+            case 'ls':
+                res = 'drwxr-xr-x  root  rh1so  /projects<br>drwxr-xr-x  root  rh1so  /css_configs<br>-rw-r--r--  user  ferum  readme.txt';
+                break;
+
+            case 'whoami':
+                res = 'User: ferum // Access_Level: [ROOT]<br>Identity: Content Creator / Web Architect';
+                break;
+
+            case 'sudo':
+                res = `<span style="color:#ff3e3e">Nice try, kid. This incident will be reported.</span>`;
+                break;
+
+            case 'clear':
+                termOut.innerHTML = '';
+                termIn.value = '';
+                return;
+
+            default:
+                res = `Command not found: ${cmd}. Type 'help' for manual.`;
+        }
+
+        termOut.innerHTML += `<div><span style="opacity:0.4">> ${fullCmd}</span><br>${res}</div><br>`;
+        termOut.scrollTop = termOut.scrollHeight;
+        termIn.value = '';
+    }
+}
 </script>
 </body>
 </html>
