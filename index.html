@@ -89,6 +89,19 @@
         .post-card h3 { font-size: 1.6rem; margin: 10px 0; color: #fff; }
         .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
+        .post-card {
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card); 
+            margin-bottom: 25px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: grid; 
+            grid-template-columns: 1fr 200px; /* Текст слева, 200px картинка справа */
+            gap: 20px;
+            overflow: hidden; /* Чтобы картинка не вылезала */
+        }
+
         /* --- МОДАЛЬНОЕ ОКНО (ПОЛНЫЙ ПОСТ) --- */
         #modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
