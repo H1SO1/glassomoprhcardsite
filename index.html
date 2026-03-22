@@ -245,6 +245,7 @@
             flex-direction: column;
             justify-content: space-between;
             transition: var(--transition-mid);
+            z-index: 1;
         }
 
         .bento-card:hover {
@@ -581,16 +582,19 @@
     opacity: 0;
     transition: var(--transition-mid);
     pointer-events: none;
+             z-index: 0;
 }
 
 .bento-card:hover::after {
     opacity: 1;
     pointer-events: none;
+    z-index: 0;
 }
 
 .bento-card:active {
     transform: scale(0.97);
-    pointer-events: none;
+    pointer-events: auto;
+    z-index: 0;
 }
     </style>
 </head>
