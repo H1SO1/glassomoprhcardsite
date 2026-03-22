@@ -3,27 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rh1so // FERUM.OS v5.4.REBORN</title>
+    <title>FERUM.OS // TERMINAL_ACCESS</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;800&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     
     <style>
-        /* === CORE VARIABLES === */
+        /* === CORE SYSTEM VARIABLES === */
         :root {
-            --bg: #030303; 
-            --card: #0e0e11; 
-            --accent: #ff0055; 
+            --bg: #030303;
+            --card: #0e0e11;
+            --accent: #ff0055;
             --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f0f0f0; 
-            --text-dim: #71717a; 
+            --text-main: #f0f0f0;
+            --text-dim: #71717a;
             --radius: 32px;
-            --font-main: 'Plus Jakarta Sans', sans-serif; 
+            --font-main: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --win-bg: rgba(10, 10, 12, 0.98);
+            --glow: rgba(255, 0, 85, 0.3);
+            --anim-speed: 0.6s;
+            --glitch-opacity: 0.5;
         }
 
+        /* === 20 DEFINED THEMES (NO MINIFICATION) === */
+        .t-crimson { --bg: #030303; --card: #0e0e11; --accent: #ff0055; --text-main: #f0f0f0; }
+        .t-void    { --bg: #000000; --card: #050505; --accent: #ff7b00; --text-main: #ffffff; }
+        .t-matrix  { --bg: #000000; --card: #050505; --accent: #00ff41; --text-main: #00ff41; }
+        .t-toxic   { --bg: #050805; --card: #0b120b; --accent: #adff2f; --text-main: #ffffff; }
+        .t-cyber   { --bg: #0b001a; --card: #1a0033; --accent: #00f2ff; --text-main: #ffffff; }
+        .t-gold    { --bg: #0a0a05; --card: #15150a; --accent: #ffd700; --text-main: #ffffff; }
+        .t-ocean   { --bg: #000814; --card: #001d3d; --accent: #00b4d8; --text-main: #ffffff; }
+        .t-stalker { --bg: #0a0b08; --card: #14160f; --accent: #7c8a4f; --text-main: #c8d4a5; }
+        .t-win98   { --bg: #008080; --card: #c0c0c0; --accent: #000080; --text-main: #000000; }
+        .t-neon    { --bg: #000000; --card: #000000; --accent: #ff00ff; --text-main: #ffffff; }
+        .t-mono    { --bg: #111111; --card: #1a1a1a; --accent: #ffffff; --text-main: #ffffff; }
+        .t-sunset  { --bg: #1a0a00; --card: #2d1200; --accent: #ff4e00; --text-main: #ffffff; }
+        .t-forest  { --bg: #050a05; --card: #0d1a0d; --accent: #2ecc71; --text-main: #ffffff; }
+        .t-frost   { --bg: #f0f8ff; --card: #ffffff; --accent: #00d2ff; --text-main: #000000; }
+        .t-violet  { --bg: #0f051a; --card: #1e0a33; --accent: #9b59b6; --text-main: #ffffff; }
+        .t-blood   { --bg: #050000; --card: #1a0000; --accent: #ff0000; --text-main: #ffffff; }
+        .t-clay    { --bg: #e0e5ec; --card: #e0e5ec; --accent: #3498db; --text-main: #000000; }
+        .t-plasma  { --bg: #000000; --card: #0a0a0a; --accent: #6200ea; --text-main: #ffffff; }
+        .t-retro   { --bg: #2c3e50; --card: #34495e; --accent: #e67e22; --text-main: #ffffff; }
+        .t-nord    { --bg: #2e3440; --card: #3b4252; --accent: #88c0d0; --text-main: #eceff4; }
+
         /* === RESET & BASE === */
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background var(--anim-speed), border-color var(--anim-speed), color var(--anim-speed); }
         
         body { 
             background: var(--bg); 
@@ -34,472 +60,392 @@
             cursor: crosshair;
         }
 
-        /* === SCROLLBAR === */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        /* === ANIMATIONS LIBRARY === */
+        @keyframes pageIn { 
+            0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(10px); } 
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+            50% { box-shadow: 0 0 40px var(--glow); }
+        }
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        .enable-anim .bento-card { animation: breathe 5s infinite; }
+        .enable-anim .bento-card:hover { transform: translateY(-10px); border-color: var(--accent); }
 
         /* === NAVIGATION === */
         nav { 
-            position: fixed; 
-            top: 25px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(17, 17, 19, 0.85); 
-            backdrop-filter: blur(30px); 
-            padding: 10px; 
-            border-radius: 22px; 
-            border: 1px solid var(--border); 
-            display: flex; 
-            gap: 8px; 
-            z-index: 1000; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
+            background: rgba(17, 17, 19, 0.85); backdrop-filter: blur(30px); 
+            padding: 10px; border-radius: 24px; border: 1px solid var(--border); 
+            display: flex; gap: 8px; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .nav-btn { 
-            padding: 14px 28px; 
-            border-radius: 16px; 
-            border: none; 
-            background: transparent; 
-            color: var(--text-dim); 
-            font-weight: 700; 
-            font-size: 13px; 
-            cursor: pointer; 
-            font-family: var(--font-main);
-            transition: 0.2s;
+            padding: 12px 24px; border-radius: 18px; border: none; background: transparent; 
+            color: var(--text-dim); font-weight: 800; font-size: 13px; cursor: pointer;
+            font-family: var(--font-main); text-transform: uppercase; letter-spacing: 1px;
         }
-        .nav-btn.active { background: var(--accent); color: #000; }
-        .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
+        .nav-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
 
-        /* === THEME MENU === */
-        .theme-menu { 
-            position: absolute; 
-            top: 80px; 
-            right: 0; 
-            background: var(--win-bg); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 18px; 
-            display: none; 
-            flex-direction: column; 
-            gap: 10px; 
-            min-width: 260px; 
-            max-height: 480px; 
-            overflow-y: auto; 
-            z-index: 1001; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-        }
-        .theme-menu.show { display: flex; }
-        .t-item { 
-            padding: 14px; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            font-family: var(--font-mono); 
-            font-size: 11px; 
-            display: flex; 
-            align-items: center; 
-            gap: 14px; 
-            background: rgba(255,255,255,0.03); 
-        }
-        .t-item:hover { background: var(--accent); color: #000; }
-        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
-
-        /* === PAGES === */
-        .page { display: none; padding: 160px 20px 100px; max-width: 1200px; margin: 0 auto; animation: pageIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .page.active { display: block; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        /* === PAGE LAYOUT === */
+        .page { display: none; padding: 140px 20px 100px; max-width: 1400px; margin: 0 auto; }
+        .page.active { display: block; animation: pageIn 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
         /* === BENTO GRID === */
-        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
+        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .bento-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: var(--radius); 
-            padding: 45px; 
-            position: relative; 
-            overflow: hidden; 
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 45px; position: relative; overflow: hidden; 
         }
         
-        .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
-        .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; }
-        .hero-card h1 span { color: var(--accent); }
+        /* === HERO SECTION === */
+        .hero-box { grid-column: span 3; min-height: 550px; display: flex; flex-direction: column; justify-content: center; }
+        .hero-box h1 { font-size: 9rem; font-weight: 800; letter-spacing: -12px; line-height: 0.8; margin-bottom: 20px; }
+        .hero-box h1 span { color: var(--accent); text-shadow: 0 0 40px var(--accent); }
+        
+        .hero-sub { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-bottom: 10px; }
 
-        /* === PLAYER === */
-        .radio-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; position: relative; z-index: 10; }
-        .player-bar { 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border); 
-            border-radius: 26px; 
-            padding: 14px 24px; 
-            display: flex; 
-            align-items: center; 
-            gap: 18px; 
-            width: fit-content; 
-            min-width: 340px; 
+        /* === SKILLS BLOCK === */
+        .skills-container { grid-column: span 2; }
+        .skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 25px; }
+        .skill-tag { 
+            background: rgba(255,255,255,0.03); padding: 12px; border-radius: 14px; 
+            font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--border);
+            text-align: center; color: var(--text-dim);
         }
-        .p-play { 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 50%; 
-            border: none; 
-            background: var(--accent); 
-            color: #000; 
-            cursor: pointer; 
-            font-size: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            flex-shrink: 0; 
-            box-shadow: 0 8px 20px rgba(255, 0, 85, 0.2);
-        }
+        .skill-tag:hover { color: #fff; border-color: var(--accent); background: rgba(255,0,85,0.05); }
 
-        /* === MODAL REFIX === */
-        #modal { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(3, 3, 3, 0.98); 
-            display: none; 
-            z-index: 5000; 
-            overflow-y: auto; 
-            backdrop-filter: blur(15px);
-            padding: 80px 20px;
-        }
-        .modal-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
-        }
-        .modal-img-wrap { width: 100%; max-height: 500px; overflow: hidden; background: #000; }
-        .modal-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
-        .modal-body { padding: 60px; }
-        .modal-body h2 { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 25px; line-height: 1; }
-        .modal-text { color: var(--text-dim); font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap; }
-        .close-m { 
-            position: fixed; 
-            top: 40px; 
-            right: 40px; 
-            padding: 18px 30px; 
-            background: var(--accent); 
-            border: none; 
-            border-radius: 18px; 
-            color: #000; 
-            font-family: var(--font-mono); 
-            font-weight: 800;
-            cursor: pointer;
-            z-index: 5001;
-        }
+        /* === TERMINAL PAGE === */
+        #term-wrap { background: #000; border-radius: 25px; padding: 40px; border: 1px solid var(--border); height: 600px; display: flex; flex-direction: column; }
+        #term-body { flex: 1; overflow-y: auto; font-family: var(--font-mono); color: var(--accent); font-size: 14px; line-height: 1.6; }
+        .term-input-line { display: flex; gap: 15px; margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 15px; }
+        .term-input { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        /* === TERMINAL === */
-        #term-body { 
-            background: #000; 
-            border-radius: 28px; 
-            padding: 40px; 
-            font-family: var(--font-mono); 
-            height: 500px; 
-            overflow-y: auto; 
-            color: var(--accent); 
-            border: 1px solid var(--border); 
-            font-size: 14px; 
-            line-height: 1.7; 
+        /* === SETTINGS MODAL === */
+        .settings-win {
+            position: fixed; bottom: 30px; right: 30px; width: 320px; background: var(--win-bg);
+            border: 1px solid var(--border); border-radius: 28px; padding: 30px; z-index: 3000;
+            display: none; flex-direction: column; gap: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
-        .t-row { margin-bottom: 8px; }
-        .t-input-wrap {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            background: rgba(255,255,255,0.03);
-            padding: 25px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-        }
-        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
+        .s-item { display: flex; justify-content: space-between; align-items: center; }
+        .toggle-box { width: 50px; height: 24px; background: #333; border-radius: 12px; position: relative; cursor: pointer; }
+        .toggle-box.active { background: var(--accent); }
+        .toggle-box::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle-box.active::after { left: 28px; }
 
-        /* === GHOST MODE FIXES === */
-        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); }
-        .ghost-mode .p-play { background: #000 !important; color: #fff !important; }
-        .ghost-mode .nav-btn.active { color: #fff; }
+        /* === THEME MENU === */
+        .theme-grid {
+            position: absolute; top: 90px; right: 0; background: var(--win-bg);
+            border: 1px solid var(--border); border-radius: 25px; padding: 20px;
+            display: none; grid-template-columns: 1fr 1fr; gap: 10px; width: 450px; z-index: 2001;
+        }
+        .theme-btn { 
+            padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+            color: var(--text-dim); font-family: var(--font-mono); font-size: 10px; cursor: pointer; text-align: left;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .theme-btn:hover { background: var(--accent); color: #000; }
+        .theme-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* === SECRET RICKROLL (REMASTERED) === */
+        .vhs-container { 
+            position: relative; width: 100%; height: 550px; background: #000; border-radius: 30px; overflow: hidden;
+            border: 1px solid var(--accent);
+        }
+        .vhs-overlay {
+            position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+            pointer-events: none; z-index: 10;
+        }
+        .vhs-header { position: absolute; top: 30px; left: 30px; font-family: var(--font-mono); color: var(--accent); z-index: 11; font-size: 18px; text-transform: uppercase; animation: glitch 0.2s infinite; }
+
+        /* === UTILITY BUTTONS === */
+        .action-btn { 
+            padding: 15px 30px; border-radius: 18px; border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.03); color: var(--text-main); text-decoration: none;
+            font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 12px;
+        }
+        .action-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
     </style>
 </head>
-<body onclick="unlockAudio()">
+<body class="enable-anim" onclick="startEngine()">
 
 <nav>
-    <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
-    <button class="nav-btn" onclick="switchTab('forum', this)">Archive</button>
-    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
-    <button class="nav-btn" onclick="switchTab('secret', this)">[ X_LINK ]</button>
-    <div style="position: relative;">
-        <button class="nav-btn" onclick="toggleT()">Design</button>
-        <div class="theme-menu" id="tMenu">
-            <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
-            <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
-            <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
-            <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
-            <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
-            <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
-            <div class="t-item" onclick="applyTheme('matrix')"><span class="t-dot" style="background:#00ff41"></span> MATRIX_RAIN</div>
-        </div>
-    </div>
+    <button class="nav-btn active" onclick="showTab('home', this)">Home</button>
+    <button class="nav-btn" onclick="showTab('forum', this)">Archive</button>
+    <button class="nav-btn" onclick="showTab('terminal', this)">Terminal</button>
+    <button class="nav-btn" onclick="showTab('secret', this)">Secret</button>
+    <button class="nav-btn" onclick="toggleUI('themeMenu')">Design</button>
+    <button class="nav-btn" onclick="toggleUI('settingsWin')">Settings</button>
 </nav>
+
+<div class="theme-grid" id="themeMenu">
+    <button class="theme-btn" onclick="applyT('crimson')"><div class="theme-dot" style="background:#ff0055"></div> CRIMSON_STRIKE</button>
+    <button class="theme-btn" onclick="applyT('void')"><div class="theme-dot" style="background:#ff7b00"></div> VOID_WALKER</button>
+    <button class="theme-btn" onclick="applyT('matrix')"><div class="theme-dot" style="background:#00ff41"></div> MATRIX_RELOAD</button>
+    <button class="theme-btn" onclick="applyT('toxic')"><div class="theme-dot" style="background:#adff2f"></div> TOXIC_WASTE</button>
+    <button class="theme-btn" onclick="applyT('cyber')"><div class="theme-dot" style="background:#00f2ff"></div> CYBER_PUNK_2077</button>
+    <button class="theme-btn" onclick="applyT('gold')"><div class="theme-dot" style="background:#ffd700"></div> GOLDEN_EYE</button>
+    <button class="theme-btn" onclick="applyT('ocean')"><div class="theme-dot" style="background:#00b4d8"></div> DEEP_OCEAN_V2</button>
+    <button class="theme-btn" onclick="applyT('stalker')"><div class="theme-dot" style="background:#7c8a4f"></div> STALKER_PDA_MOD</button>
+    <button class="theme-btn" onclick="applyT('win98')"><div class="theme-dot" style="background:#000080"></div> WINDOWS_98_SE</button>
+    <button class="theme-btn" onclick="applyT('neon')"><div class="theme-dot" style="background:#ff00ff"></div> NEON_NIGHTS</button>
+    <button class="theme-btn" onclick="applyT('mono')"><div class="theme-dot" style="background:#ffffff"></div> MONO_CHROME_X</button>
+    <button class="theme-btn" onclick="applyT('sunset')"><div class="theme-dot" style="background:#ff4e00"></div> SUNSET_OVERDRIVE</button>
+    <button class="theme-btn" onclick="applyT('forest')"><div class="theme-dot" style="background:#2ecc71"></div> GREEN_FOREST_OP</button>
+    <button class="theme-btn" onclick="applyT('frost')"><div class="theme-dot" style="background:#00d2ff"></div> FROST_BYTE_CORE</button>
+    <button class="theme-btn" onclick="applyT('violet')"><div class="theme-dot" style="background:#9b59b6"></div> VIOLET_DREAMS</button>
+    <button class="theme-btn" onclick="applyT('blood')"><div class="theme-dot" style="background:#ff0000"></div> BLOOD_MOON_RISEN</button>
+    <button class="theme-btn" onclick="applyT('clay')"><div class="theme-dot" style="background:#3498db"></div> CLAY_NEUMORPHIC</button>
+    <button class="theme-btn" onclick="applyT('plasma')"><div class="theme-dot" style="background:#6200ea"></div> PLASMA_CORE_DRV</button>
+    <button class="theme-btn" onclick="applyT('retro')"><div class="theme-dot" style="background:#e67e22"></div> RETRO_CASSETTE_V</button>
+    <button class="theme-btn" onclick="applyT('nord')"><div class="theme-dot" style="background:#88c0d0"></div> NORDIC_STORM_X</button>
+</div>
+
+<div class="settings-win" id="settingsWin">
+    <h3 style="font-family: var(--font-mono); font-size: 14px; color: var(--accent); margin-bottom: 20px;">// SYSTEM_PROPERTIES</h3>
+    <div class="s-item"><span>MASTER_AUDIO</span> <div class="toggle-box active" id="audioTog" onclick="toggleAudioSys()"></div></div>
+    <div class="s-item"><span>UI_ANIMATIONS</span> <div class="toggle-box active" id="animTog" onclick="toggleAnimSys()"></div></div>
+    <div class="s-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+        <span>OUTPUT_VOLUME</span>
+        <input type="range" id="volRange" min="0" max="1" step="0.1" value="0.5" style="width: 100%; accent-color: var(--accent);" oninput="updateVol(this.value)">
+    </div>
+    <div class="s-item"><span>GLITCH_LEVEL</span> <input type="range" min="0" max="1" step="0.1" value="0.5" style="width: 100px; accent-color: var(--accent);"></div>
+    <button onclick="toggleUI('settingsWin')" style="background: var(--accent); border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px;">APPLY_AND_CLOSE</button>
+</div>
 
 <div id="home" class="page active">
     <div class="bento-grid">
-        <div class="bento-card hero-card">
-            <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.4_FINAL_HELL</p>
-                <h1>FERUM<span>.OS</span></h1>
-                
-                <div class="radio-stack">
-                    <div class="player-bar">
-                        <button class="p-play" onclick="toggleAudio(0, this)">▶</button>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">RADIO_INFUSION (Lofi)</div>
-                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
-                        </div>
-                    </div>
-                    <div class="player-bar">
-                        <button class="p-play" onclick="toggleAudio(1, this)">▶</button>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">TOKYO_DRIFT (J-Rock)</div>
-                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
-                <div style="font-size: 8rem; font-weight: 900; opacity: 0.05; letter-spacing: -10px;">FRM</div>
-                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.4.12 // SEC: ALPHA</p>
-            </div>
-            
-            <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ SYSTEM_LIVE ]</div>
-                <div>UPTIME: <span id="uptime">00:00:00</span></div>
+        <div class="bento-card hero-box">
+            <div class="hero-sub">// FERUM_OS_v6.6.6_STABLE</div>
+            <h1>FERUM<span>.OS</span></h1>
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <a href="#" class="action-btn">GIT_HUB</a>
+                <a href="#" class="action-btn">TELEGRAM</a>
+                <button class="action-btn" style="border-color: var(--accent);" onclick="openComm()">OPEN_COMM_LINK</button>
             </div>
         </div>
 
         <div class="bento-card">
-            <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
-            <div style="margin-top: 35px; font-size: 14px; color: var(--text-dim); line-height: 2.5; font-family: var(--font-mono);">
-                > UI_ARCHITECTURE: [ HIGH ]<br>
-                > GLITCH_FX: [ MASTER ]<br>
-                > SUPABASE_DB: [ READY ]<br>
-                > LINEAR_MATH: [ VARIANT_7 ]<br>
-                > GAME_LOGIC: [ STALKER ]
+            <h3 style="color: var(--accent); font-family: var(--font-mono); font-size: 18px;">Uptime_Log</h3>
+            <div style="margin-top: 30px; font-family: var(--font-mono); font-size: 14px; line-height: 2;">
+                SYS_UPTIME: <span id="uptimeCounter" style="color: #fff;">00:00:00</span><br>
+                KERNEL: 6.6.6-X<br>
+                DB_CONN: <span style="color: #00ff00;">ESTABLISHED</span><br>
+                USER: FERUM_ROOT
             </div>
         </div>
 
-        <div class="bento-card" style="display: flex; align-items: center; justify-content: center;">
-             <button onclick="toggleWin(true)" style="width:100%; height:100%; background:var(--text-main); color:var(--bg); border:none; border-radius:var(--radius); font-weight:900; font-size:20px; cursor:pointer;">CONNECT_DB</button>
+        <div class="bento-card skills-container">
+            <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills_Archive.exe</h3>
+            <div class="skill-grid">
+                <div class="skill-tag">HTML5 / CSS3</div><div class="skill-tag">JAVA_SCRIPT</div>
+                <div class="skill-tag">PYTHON_CORE</div><div class="skill-tag">C#_NET</div>
+                <div class="skill-tag">SQL_DATABASE</div><div class="skill-tag">MS_ACCESS</div>
+                <div class="skill-tag">1C_ENTERPRISE</div><div class="skill-tag">VIDEO_EDITING</div>
+                <div class="skill-tag">GAME_DESIGN</div><div class="skill-tag">STALKER_RP</div>
+                <div class="skill-tag">ARG_MYSTERIES</div><div class="skill-tag">UI_UX_ARCH</div>
+            </div>
+        </div>
+
+        <div class="bento-card">
+            <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent); margin-bottom: 20px; box-shadow: 0 0 40px var(--glow);"></div>
+                <p style="font-weight: 800; font-size: 18px; text-transform: uppercase;">Security_Level: High</p>
+                <p style="color: var(--text-dim); font-size: 10px; margin-top: 10px;">ID: 219042A1-FERUM</p>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <div id="forum-feed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;"></div>
+    <div id="archiveFeed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px;">
+        </div>
 </div>
 
 <div id="terminal" class="page">
-    <div id="term-body">
-        <div class="t-row">FERUM.OS [Version 5.4.REBORN]</div>
-        <div class="t-row">Unauthorized access is prohibited.</div>
-        <div class="t-row">Type 'help' to begin.</div>
-    </div>
-    <div class="t-input-wrap">
-        <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
-        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" autocomplete="off" spellcheck="false">
-    </div>
-</div>
-
-<div id="secret" class="page">
-    <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
-        <h2 style="color: var(--accent); margin-bottom: 30px; font-family: var(--font-mono);">DECRYPT_SUCCESS: NO_GIVE_UP</h2>
-        <iframe width="100%" height="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
-    </div>
-</div>
-
-<div id="modal">
-    <button class="close-m" onclick="closeM()">[ CLOSE_X ]</button>
-    <div class="modal-container">
-        <div class="modal-img-wrap" id="mImgWrap"></div>
-        <div class="modal-body">
-            <h2 id="mTitle"></h2>
-            <div class="modal-text" id="mText"></div>
+    <div id="term-wrap">
+        <div id="term-body">
+            <div>FERUM.OS [Version 6.6.6.1337]</div>
+            <div>(c) 2026 Ferum Industries. All rights reserved.</div>
+            <br>
+            <div>Initializing kernel modules... DONE</div>
+            <div>Establishing uplink to Supabase... DONE</div>
+            <div>Loading design patterns... DONE</div>
+            <br>
+            <div>Welcome back, root. Type 'help' for available commands.</div>
+        </div>
+        <div class="term-input-line">
+            <span style="color: var(--accent); font-family: var(--font-mono); font-weight: 800;">$</span>
+            <input type="text" id="terminalInput" class="term-input" onkeydown="handleTerminal(event)" placeholder="Enter command..." autocomplete="off">
         </div>
     </div>
 </div>
 
-<div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000; box-shadow:0 40px 80px #000;">
-    <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
-        <span>UPLINK_SESSION</span>
-        <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
+<div id="secret" class="page">
+    <div class="vhs-container">
+        <div class="vhs-header">REC ● RECOVERY_09.AVI</div>
+        <div class="vhs-overlay"></div>
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&showinfo=0" frameborder="0" allow="autoplay"></iframe>
     </div>
-    <div style="padding:30px;">
-        <input type="text" id="db-n" placeholder="NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
-        <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
-        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800; cursor:pointer;">SEND_PACKET</button>
+    <div class="bento-card" style="margin-top: 25px;">
+        <h2 style="font-family: var(--font-mono); color: var(--accent);">[ ERROR_CODE: NO_SURRENDER ]</h2>
+        <p style="margin-top: 15px; line-height: 1.6; color: var(--text-dim);">Файл был восстановлен из поврежденного сектора памяти. Информация является критически важной для поддержания боевого духа системы. Не отключайте питание во время воспроизведения.</p>
     </div>
 </div>
 
-<audio id="r0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
-<audio id="r1" loop src="https://listen.moe/stream"></audio>
-
 <script>
-    const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
-    
-    // SOUND ENGINE
-    const sfx = {
-        key: new Audio('https://opengameart.org/sites/default/files/click_0.wav'),
-        click: new Audio('https://opengameart.org/sites/default/files/menu_click_0.wav'),
-        boot: new Audio('https://opengameart.org/sites/default/files/power_up.wav')
-    };
+    // === INITIALIZATION ===
+    const supabaseClient = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
+    let audioEnabled = true, animationsEnabled = true, masterVolume = 0.5;
+    const clickSfx = new Audio('https://opengameart.org/sites/default/files/menu_click_0.wav');
 
-    let audioOk = false;
-    function unlockAudio() {
-        if(!audioOk) {
-            Object.values(sfx).forEach(s => { s.play().then(()=>s.pause()); });
-            audioOk = true;
-            sfx.boot.play();
-            console.log("Audio Unlocked");
+    function startEngine() {
+        if (audioEnabled) {
+            clickSfx.play().catch(() => {});
+            console.log("FERUM_OS: Audio engine unlocked.");
         }
     }
 
-    function playSnd(t) { if(audioOk) { let s = sfx[t].cloneNode(); s.volume = 0.2; s.play(); } }
-
-    // THEMES
-    const themes = {
-        crimson: { bg: '#030303', card: '#0e0e11', accent: '#ff0055', text: '#f0f0f0' },
-        arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0' },
-        void: { bg: '#000', card: '#050505', accent: '#ff7b00', text: '#fff' },
-        ghost: { bg: '#f0f0f2', card: '#ffffff', accent: '#000', text: '#000', mode: 'ghost' },
-        stalker: { bg: '#0a0b08', card: '#14160f', accent: '#7c8a4f', text: '#c8d4a5' },
-        win98: { bg: '#008080', card: '#c0c0c0', accent: '#000080', text: '#000' },
-        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' }
-    };
-
-    function applyTheme(t) {
-        const th = themes[t]; const r = document.documentElement.style;
-        r.setProperty('--bg', th.bg); r.setProperty('--card', th.card); r.setProperty('--accent', th.accent);
-        r.setProperty('--text-main', th.text);
-        document.body.className = th.mode === 'ghost' ? 'ghost-mode' : '';
-        document.getElementById('tMenu').classList.remove('show');
-        playSnd('click');
+    // === UI CONTROLS ===
+    function showTab(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+        playSfx();
+        if(id === 'forum') loadArchive();
     }
 
-    // TERMINAL ENGINE
-    function runTerm(e) {
+    function toggleUI(id) {
+        const el = document.getElementById(id);
+        const isHidden = el.style.display === 'none' || el.style.display === '';
+        el.style.display = isHidden ? (id === 'themeMenu' ? 'grid' : 'flex') : 'none';
+        playSfx();
+    }
+
+    function applyT(theme) {
+        document.body.className = `t-${theme}`;
+        if(!animationsEnabled) document.body.classList.remove('enable-anim');
+        else document.body.classList.add('enable-anim');
+        toggleUI('themeMenu');
+        playSfx();
+    }
+
+    // === SETTINGS LOGIC ===
+    function toggleAudioSys() {
+        audioEnabled = !audioEnabled;
+        document.getElementById('audioTog').classList.toggle('active');
+    }
+
+    function toggleAnimSys() {
+        animationsEnabled = !animationsEnabled;
+        document.body.classList.toggle('enable-anim');
+        document.getElementById('animTog').classList.toggle('active');
+    }
+
+    function updateVol(v) {
+        masterVolume = v;
+        clickSfx.volume = v;
+    }
+
+    function playSfx() {
+        if(audioEnabled) {
+            let s = clickSfx.cloneNode();
+            s.volume = masterVolume;
+            s.play();
+        }
+    }
+
+    // === TERMINAL LOGIC ===
+    function handleTerminal(e) {
         if(e.key === 'Enter') {
-            const out = document.getElementById('term-body');
-            const cmd = e.target.value.toLowerCase().trim();
-            out.innerHTML += `<div class="t-row"><span style="color:var(--text-dim)">$</span> ${cmd}</div>`;
+            const input = e.target.value.toLowerCase().trim();
+            const output = document.getElementById('term-body');
+            output.innerHTML += `<div style="margin-top:10px;"><span style="color:var(--text-dim)">$</span> ${input}</div>`;
             
-            const log = (msg, col = 'var(--accent)') => {
-                out.innerHTML += `<div class="t-row" style="color:${col}">${msg}</div>`;
+            const print = (txt, color = 'var(--accent)') => {
+                output.innerHTML += `<div style="color:${color}">${txt}</div>`;
             };
 
-            switch(cmd) {
-                case 'help': log("Commands: ls, clear, whoami, fetch, sys_info, reboot, matrix"); break;
-                case 'ls': log("drwxr-xr-x  projects<br>-rw-r--r--  ferum_id.key<br>-rwxr-xr-x  os_core.sh"); break;
-                case 'clear': out.innerHTML = '<div class="t-row">Terminal cleared.</div>'; break;
-                case 'whoami': log("User: ferum | UID: 007 | Permissions: ROOT"); break;
-                case 'reboot': log("System reboot initiated...", "red"); setTimeout(()=>location.reload(), 1000); break;
-                case 'matrix': applyTheme('matrix'); log("Reality shifted."); break;
-                case 'fetch': log("OS: FERUM.OS v5.4<br>Uptime: "+document.getElementById('uptime').innerText+"<br>Shell: ferum_sh v1.2"); break;
-                default: log("Unknown command: " + cmd, "red");
+            switch(input) {
+                case 'help': 
+                    print("COMMANDS LIST:");
+                    print("> ls - List directory files");
+                    print("> clear - Clear terminal buffer");
+                    print("> whoami - Display current user info");
+                    print("> sys_info - Hardware & Kernel status");
+                    print("> matrix - Initiate reality breach");
+                    print("> reboot - Force system restart");
+                    break;
+                case 'ls': print("archive.db<br>ferum_id.key<br>system_logs.txt<br>skills.exe"); break;
+                case 'clear': output.innerHTML = '<div>Terminal buffer cleared.</div>'; break;
+                case 'whoami': print("USER: FERUM_ROOT<br>PERMISSIONS: ALL_ACCESS<br>LOC: SECTOR_7"); break;
+                case 'sys_info': print("OS: FERUM.OS v6.6.6<br>MEMORY: 16384KB / 65536KB<br>CPU: CORE_REBIRTH_X8"); break;
+                case 'reboot': print("Rebooting...", "red"); setTimeout(()=>location.reload(), 1000); break;
+                case 'matrix': applyT('matrix'); print("REALITY_OVERRIDE_ENABLED"); break;
+                default: print(`UNKNOWN_COMMAND: '${input}'`, "red");
             }
-            out.scrollTop = out.scrollHeight;
+            output.scrollTop = output.scrollHeight;
             e.target.value = '';
-            playSnd('key');
+            playSfx();
         }
     }
 
-    // MODAL FIX LOGIC
-    function openP(p) {
-        playSnd('click');
-        const imgWrap = document.getElementById('mImgWrap');
-        imgWrap.innerHTML = p.image_url ? `<img src="${p.image_url}">` : '';
-        document.getElementById('mTitle').innerText = p.name;
-        document.getElementById('mText').innerText = p.content || p.desc;
-        document.getElementById('modal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
+    // === ARCHIVE (FORUM) LOADER ===
+    async function loadArchive() {
+        const feed = document.getElementById('archiveFeed');
+        feed.innerHTML = '<div style="font-family:var(--font-mono);">FETCHING_DATA...</div>';
+        
+        const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
+        
+        if(error) {
+            feed.innerHTML = `<div style="color:red">ERROR: ${error.message}</div>`;
+            return;
+        }
 
-    function closeM() { 
-        document.getElementById('modal').style.display = 'none'; 
-        document.body.style.overflow = 'auto'; 
-    }
-
-    // FORUM LOAD
-    async function loadForum() {
-        const feed = document.getElementById('forum-feed');
-        const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
-        if(error) return;
-        feed.innerHTML = data.map(p => `
-            <div class="bento-card" style="padding:30px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
-                ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px;">` : ''}
-                <h3 style="font-size:20px;">${p.name}</h3>
-                <p style="color:var(--text-dim); font-size:12px; margin-top:10px;">${p.desc.substring(0, 100)}...</p>
+        feed.innerHTML = data.map(item => `
+            <div class="bento-card" style="padding: 30px; cursor: pointer;">
+                ${item.image_url ? `<img src="${item.image_url}" style="width:100%; height:250px; object-fit:cover; border-radius:20px; margin-bottom:20px; border:1px solid var(--border);">` : ''}
+                <h3 style="font-size: 24px; margin-bottom: 10px;">${item.name}</h3>
+                <p style="color: var(--text-dim); font-size: 14px; line-height: 1.6;">${item.desc || item.content}</p>
+                <div style="margin-top: 20px; font-family: var(--font-mono); font-size: 10px; color: var(--accent);">REF_ID: ${item.id}</div>
             </div>
         `).join('');
     }
 
-    // UTILS
-    function switchTab(id, btn) {
-        playSnd('click');
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); 
-        btn.classList.add('active');
-        if(id === 'forum') loadForum();
-    }
-
-    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); playSnd('click'); }
-    function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; playSnd('click'); }
-
-    // RADIO
-    let activeRad = null;
-    function toggleAudio(idx, btn) {
-        const auds = [document.getElementById('r0'), document.getElementById('r1')];
-        const stats = document.querySelectorAll('.r-stat');
-        const btns = document.querySelectorAll('.p-play');
-
-        if(activeRad === idx) {
-            auds[idx].pause(); btn.innerText = '▶'; stats[idx].innerText = 'STATUS: IDLE'; activeRad = null;
-        } else {
-            auds.forEach((a, i) => { a.pause(); btns[i].innerText = '▶'; stats[i].innerText = 'STATUS: IDLE'; });
-            auds[idx].play(); btn.innerText = '■'; stats[idx].innerText = 'STATUS: STREAMING'; activeRad = idx;
-        }
-        playSnd('click');
-    }
-
-    // UPTIME
-    let start = Date.now();
+    // === UPTIME COUNTER ===
+    let startTime = Date.now();
     setInterval(() => {
-        let diff = Math.floor((Date.now() - start)/1000);
-        let h = Math.floor(diff/3600).toString().padStart(2,'0'), 
-            m = Math.floor((diff%3600)/60).toString().padStart(2,'0'), 
-            s = (diff%60).toString().padStart(2,'0');
-        document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
+        let diff = Math.floor((Date.now() - startTime) / 1000);
+        let h = Math.floor(diff / 3600).toString().padStart(2, '0');
+        let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+        let s = (diff % 60).toString().padStart(2, '0');
+        document.getElementById('uptimeCounter').innerText = `${h}:${m}:${s}`;
     }, 1000);
 
-    // DRAG
-    const dWin = document.getElementById('drag-win'), dH = document.getElementById('win-handle');
-    let isD = false, off = [0,0];
-    dH.onmousedown = (e) => { isD = true; off = [dWin.offsetLeft - e.clientX, dWin.offsetTop - e.clientY]; };
-    document.onmousemove = (e) => { if(isD) { dWin.style.left = (e.clientX + off[0]) + 'px'; dWin.style.top = (e.clientY + off[1]) + 'px'; } };
-    document.onmouseup = () => isD = false;
-
-    async function send() {
-        const n = document.getElementById('db-n').value, m = document.getElementById('db-m').value;
-        if(!n || !m) return;
-        await sb.from('projects').insert([{ name: n, desc: m }]);
-        toggleWin(false); loadForum();
+    function openComm() {
+        alert("CRITICAL: Communication uplink is currently being redirected via TOR.");
     }
 
-    console.log("FERUM.OS v5.4.REBORN INITIALIZED");
+    console.log("FERUM.OS INITIALIZED. NO OPTIMIZATION FOUND. ENJOY THE BLOAT.");
 </script>
 </body>
 </html>
