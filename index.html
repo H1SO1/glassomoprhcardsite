@@ -3,47 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FERUM.OS // VIBE_RESTORATION</title>
+    <title>rh1so // FERUM.OS v4.5.FIXED</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030303; --card: #0e0e11; --accent: #00ffa3; --border: rgba(255, 255, 255, 0.06);
+            --bg: #030303; --card: #0e0e11; --accent: #ff0055; --border: rgba(255, 255, 255, 0.06);
             --text-main: #f0f0f0; --text-dim: #71717a; --radius: 32px;
             --font-main: 'Plus Jakarta Sans', sans-serif; --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.4s; }
-        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.4s, border-color 0.4s, color 0.4s; }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* NAV (БЕЗ ИЗМЕНЕНИЙ) */
-        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: rgba(var(--card-rgb), 0.7); backdrop-filter: blur(25px); padding: 8px; border-radius: 20px; border: 1px solid var(--border); display: flex; gap: 5px; z-index: 1000; }
+        /* --- NAVIGATION --- */
+        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px); padding: 8px; border-radius: 20px; border: 1px solid var(--border); display: flex; gap: 5px; z-index: 1000; }
         .nav-btn { padding: 12px 28px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 14px; cursor: pointer; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* BENTO (ТВОЙ v4.5) */
+        /* --- PAGES --- */
         .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: fadeInUp 0.5s ease; }
         .page.active { display: block; }
+
+        /* --- BENTO GRID --- */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
         .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; }
-        .bento-card:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.1); }
-        .hero-card { grid-column: span 2; }
+        .bento-card:hover { border-color: var(--accent); }
+        .hero-card { grid-column: span 2; display: flex; justify-content: space-between; }
         .hero-card h1 { font-size: 4rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
         .hero-card h1 span { color: var(--accent); }
 
-        /* THEME LIST */
-        .theme-list { position: absolute; top: 65px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 10px; display: none; flex-direction: column; gap: 5px; min-width: 160px; z-index: 1001; }
+        /* --- ARCHIVE (FORUM) --- */
+        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 25px; overflow: hidden; cursor: pointer; transition: 0.3s; }
+        .post-card:hover { border-color: var(--accent); transform: scale(1.01); }
+        .post-img { width: 100%; height: 350px; object-fit: cover; border-top: 1px solid var(--border); }
+
+        /* --- TERMINAL --- */
+        #term-body { background: #000; border: 1px solid var(--border); border-radius: 24px; padding: 30px; font-family: var(--font-mono); height: 400px; overflow-y: auto; color: var(--accent); margin-bottom: 15px; }
+        .term-input-wrap { display: flex; gap: 10px; background: #0a0a0c; padding: 15px 25px; border-radius: 16px; border: 1px solid var(--border); }
+
+        /* --- MODAL --- */
+        #modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
+        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); color: #fff; cursor: pointer; }
+
+        /* --- THEME DROPDOWN --- */
+        .theme-list { position: absolute; top: 65px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 10px; display: none; flex-direction: column; gap: 5px; min-width: 150px; }
         .theme-list.show { display: flex; }
         .t-opt { padding: 10px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: var(--font-mono); display: flex; align-items: center; gap: 10px; }
-        .t-opt:hover { background: rgba(255,255,255,0.05); }
-
-        /* CHAT / MODAL */
-        #modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
-        .chat-input { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 20px; color: #fff; width: 100%; font-family: var(--font-mono); margin-bottom: 15px; }
-        .chat-input:focus { border-color: var(--accent); }
-        .status-msg { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-top: 10px; display: none; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .matrix-mode { filter: sepia(1) hue-rotate(330deg) brightness(1.1) contrast(1.2) !important; text-shadow: 0 0 5px var(--accent); }
     </style>
 </head>
 <body onwheel="playSnd('scroll')">
@@ -55,8 +64,8 @@
     <div style="position:relative;">
         <button class="nav-btn" onclick="toggleT()">Design</button>
         <div class="theme-list" id="tList">
-            <div class="t-opt" onclick="applyTheme('arsenic')"><div style="width:8px;height:8px;border-radius:50%;background:#00ffa3"></div> Arsenic</div>
             <div class="t-opt" onclick="applyTheme('crimson')"><div style="width:8px;height:8px;border-radius:50%;background:#ff0055"></div> Crimson</div>
+            <div class="t-opt" onclick="applyTheme('arsenic')"><div style="width:8px;height:8px;border-radius:50%;background:#00ffa3"></div> Arsenic</div>
             <div class="t-opt" onclick="applyTheme('void')"><div style="width:8px;height:8px;border-radius:50%;background:#ff7b00"></div> Void (OLED)</div>
             <div class="t-opt" onclick="applyTheme('ghost')"><div style="width:8px;height:8px;border-radius:50%;background:#000;border:1px solid #ccc"></div> Ghost</div>
         </div>
@@ -65,9 +74,9 @@
 
 <div id="home" class="page active">
     <div class="bento-grid">
-        <div class="bento-card hero-card" style="display: flex; justify-content: space-between;">
+        <div class="bento-card hero-card">
             <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 800;">// FERUM_OS_v4.5.VIBE</p>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 800;">// FERUM_OS_v4.5.STABLE</p>
                 <h1 style="margin-top: 15px;">FERUM<span>.OS</span></h1>
                 <div style="margin-top: 40px; display: flex; gap: 15px; align-items: center;">
                     <button onclick="toggleAudio()" id="pBtn" style="width:50px; height:50px; border-radius:50%; border:none; background:var(--accent); cursor:pointer;">▶</button>
@@ -75,8 +84,9 @@
                 </div>
             </div>
             <div style="text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ SYSTEM_HEALTH ]</div>
+                <div style="color: var(--accent); margin-bottom: 10px;">[ SYSTEM_MONITOR ]</div>
                 <div>UPTIME: <span id="uptime">00:00:00</span></div>
+                <div>DATE: 2026.03.22</div>
             </div>
         </div>
         <div class="bento-card">
@@ -84,20 +94,32 @@
             <button onclick="openChat()" style="width:100%; margin-top:20px; padding:18px; border-radius:14px; border:none; background:var(--text-main); font-weight:800; cursor:pointer;">WRITE_LOG</button>
         </div>
         <div class="bento-card">
-            <h3>Skills</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">UI Architecture / C# / Supabase</p>
+            <h3>Skills_Set</h3>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 15px; line-height: 2;">
+                > UI/UX Architecture<br>
+                > Game Theory (STALKER/DayZ)<br>
+                > Supabase Integration
+            </p>
         </div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <h2 style="font-size: 3rem; margin-bottom: 30px;">Archive</h2>
+    <h2 style="font-size: 3rem; margin-bottom: 40px; letter-spacing: -3px;">Archive_Log</h2>
     <div id="forum-feed"></div>
 </div>
 
+<div id="terminal" class="page">
+    <div id="term-body">Establishing connection... Type 'help' for commands.</div>
+    <div class="term-input-wrap">
+        <span style="color: var(--accent)">$</span>
+        <input type="text" id="t-in" onkeydown="runCmd(event)" style="background:transparent; border:none; color:#fff; flex:1; font-family:var(--font-mono);">
+    </div>
+</div>
+
 <div id="modal">
-    <div onclick="closeM()" style="position:fixed; top:30px; right:30px; cursor:pointer; font-weight:800;">[ CLOSE ]</div>
-    <div id="mContent" style="max-width: 600px; margin: 0 auto;"></div>
+    <div class="close-btn" onclick="closeM()">[ CLOSE ]</div>
+    <div id="mContent" style="max-width: 800px; margin: 0 auto;"></div>
 </div>
 
 <audio id="player" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
@@ -105,79 +127,80 @@
 <script>
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
     
-    // --- SOUNDS (FIXED) ---
+    // --- SOUND ENGINE ---
     const snds = {
         key: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
         click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
         scroll: new Audio('https://assets.mixkit.co/active_storage/sfx/2562/2562-preview.mp3')
     };
-
-    function playSnd(type) {
-        let s = snds[type].cloneNode();
-        s.volume = (type === 'scroll') ? 0.05 : 0.2;
-        s.play().catch(() => {}); // Игнорим если браузер блочит до первого клика
-    }
+    function playSnd(t) { let s = snds[t].cloneNode(); s.volume = (t==='scroll')?0.05:0.2; s.play().catch(()=>{}); }
 
     // --- THEMES ---
     const themes = {
-        arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0', dim: '#71717a' },
         crimson: { bg: '#080204', card: '#120509', accent: '#ff0055', text: '#f0f0f0', dim: '#7a7174' },
+        arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0', dim: '#71717a' },
         void: { bg: '#000000', card: '#050505', accent: '#ff7b00', text: '#ffffff', dim: '#444444' },
-        ghost: { bg: '#f5f5f7', card: '#ffffff', accent: '#000000', text: '#121212', dim: '#666666' }
+        ghost: { bg: '#f5f5f7', card: '#ffffff', accent: '#121212', text: '#121212', dim: '#666666' }
     };
-
     function applyTheme(t) {
-        const theme = themes[t];
-        const r = document.documentElement.style;
-        r.setProperty('--bg', theme.bg);
-        r.setProperty('--card', theme.card);
-        r.setProperty('--accent', theme.accent);
-        r.setProperty('--text-main', theme.text);
-        r.setProperty('--text-dim', theme.dim);
-        playSnd('click');
-        toggleT();
+        const th = themes[t]; const r = document.documentElement.style;
+        r.setProperty('--bg', th.bg); r.setProperty('--card', th.card); r.setProperty('--accent', th.accent);
+        r.setProperty('--text-main', th.text); r.setProperty('--text-dim', th.dim);
+        playSnd('click'); toggleT();
     }
 
-    // --- UI ENGINE ---
-    function toggleT() { document.getElementById('tList').classList.toggle('show'); }
+    // --- CORE LOGIC ---
     function switchTab(id, btn) {
         playSnd('click');
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
+        if(id === 'forum') loadForum();
     }
+    function toggleT() { document.getElementById('tList').classList.toggle('show'); }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    function openChat() {
-        playSnd('click');
+    // --- FORUM LOAD ---
+    async function loadForum() {
+        const feed = document.getElementById('forum-feed');
+        feed.innerHTML = '<p style="color:var(--accent)">SYNCING_DATABASE...</p>';
+        const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
+        feed.innerHTML = data.map(p => `
+            <div class="post-card" onclick="openP(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                <div style="padding:40px;">
+                    <small style="color:var(--accent); font-family:var(--font-mono)">ID: #${p.id}</small>
+                    <h3 style="margin:10px 0">${p.name}</h3>
+                    <p style="color:var(--text-dim); font-size:14px;">${p.desc?.slice(0, 100)}...</p>
+                </div>
+                ${p.image_url ? `<img src="${p.image_url}" class="post-img">` : ''}
+            </div>
+        `).join('');
+    }
+    function openP(p) {
         document.getElementById('mContent').innerHTML = `
-            <h2 style="font-family:var(--font-mono); margin-bottom:20px;">Establishing Link...</h2>
-            <input type="text" id="db-name" class="chat-input" placeholder="HANDLE" onkeypress="playSnd('key')">
-            <textarea id="db-msg" class="chat-input" style="height:150px; resize:none;" placeholder="DATA_PACKET" onkeypress="playSnd('key')"></textarea>
-            <div id="status" class="status-msg">ENCRYPTING_AND_SENDING...</div>
-            <button onclick="sendToDB()" style="width:100%; padding:20px; border-radius:16px; border:none; background:var(--accent); font-weight:800; cursor:pointer;">PUSH_DATA</button>
+            ${p.image_url ? `<img src="${p.image_url}" style="width:100%; border-radius:24px; margin-bottom:30px;">` : ''}
+            <h1>${p.name}</h1>
+            <div style="margin-top:20px; line-height:1.8; white-space:pre-wrap;">${p.content || p.desc}</div>
         `;
         document.getElementById('modal').style.display = 'block';
     }
 
-    async function sendToDB() {
-        const name = document.getElementById('db-name').value;
-        const msg = document.getElementById('db-msg').value;
-        const st = document.getElementById('status');
-        if(!name || !msg) return;
-        
-        st.style.display = 'block';
-        const { error } = await sb.from('guestbook').insert([{ name, message: msg }]);
-        
-        if(!error) {
-            st.innerText = "PACKET_SENT_SUCCESSFULLY.";
-            setTimeout(() => { closeM(); }, 1500);
+    // --- TERMINAL ENGINE ---
+    const tOut = document.getElementById('term-body');
+    function runCmd(e) {
+        if(e.key === 'Enter') {
+            const cmd = e.target.value.toLowerCase().trim();
+            let res = (cmd === 'help') ? 'Available: help, matrix, clear, neofetch' : `Command not found: ${cmd}`;
+            if(cmd === 'matrix') document.body.classList.toggle('matrix-mode');
+            if(cmd === 'clear') { tOut.innerHTML = ''; e.target.value = ''; return; }
+            playSnd('key');
+            tOut.innerHTML += `<div><span style="color:var(--text-dim)">$</span> ${cmd}</div><div style="margin-bottom:10px">${res}</div>`;
+            tOut.scrollTop = tOut.scrollHeight; e.target.value = '';
         }
     }
 
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-
-    // --- SYSTEM ---
+    // --- SYSTEM TIMER ---
     let start = Date.now();
     setInterval(() => {
         let diff = Math.floor((Date.now() - start)/1000);
