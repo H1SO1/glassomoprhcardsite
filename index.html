@@ -6,8 +6,8 @@
     <title>ferum // FERUM.OS v6.0.7_MAX_STABLE</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-     :root {
+     <style>
+        :root {
     --bg: #030303;
     --card: #0e0e11;
     --accent: #ff0055;
@@ -21,150 +21,339 @@
     --font-main: 'Plus Jakarta Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --win-bg: rgba(10, 10, 12, 0.98);
+    --vhs-bg: #0a0a0c;
     --shadow-glow: 0 0 30px rgba(var(--accent-rgb), 0.2);
+    --transition-fast: 0.2s cubic-bezier(0.23, 1, 0.32, 1);
     --transition-mid: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-slow: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; outline: none; cursor: none !important; user-select: none; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    cursor: none !important;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
 
-body { background-color: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; overflow-x: hidden; line-height: 1.6; }
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
 
-/* КУРСОР И ДЕКОР */
-#c-cursor { width: 12px; height: 12px; border: 2px solid var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; transition: transform 0.15s, background 0.2s; mix-blend-mode: difference; }
-.c-hover { transform: scale(4); background-color: var(--accent); border-color: transparent; }
+/* КОРРЕКТНЫЙ КУРСОР */
+#c-cursor {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none; /* Исправлено: теперь не мешает кликам */
+    z-index: 10000;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+    mix-blend-mode: difference;
+    will-change: transform;
+}
 
-.ascii-bg { position: fixed; inset: 0; font-family: var(--font-mono); font-size: 11px; color: var(--accent); opacity: 0.03; z-index: -1; white-space: pre; pointer-events: none; overflow: hidden; }
-.scanlines, .vignette { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
-.scanlines { background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 50%); background-size: 100% 4px; opacity: 0.5; }
-.vignette { background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 150%); }
+.c-hover {
+    transform: scale(4);
+    background-color: var(--accent);
+    border-color: transparent;
+}
+.skill-node {
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    transition: var(--transition-fast);
+}
+
+.skill-node:hover {
+    background-color: var(--accent);
+    color: #000;
+    transform: translateY(-4px);
+}
+.ascii-bg {
+    position: fixed;
+    inset: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.03;
+    z-index: -1;
+    white-space: pre;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.scanlines, .vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.scanlines {
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    opacity: 0.5;
+}
+
+.vignette {
+    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 150%);
+}
 
 /* УВЕДОМЛЕНИЯ */
-#toast-container { position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
-.toast { background: var(--win-bg); border: 1px solid var(--accent); padding: 20px 25px; border-radius: var(--radius-md); transform: translateX(120%); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: all; backdrop-filter: blur(20px); }
+#toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--win-bg);
+    border: 1px solid var(--accent);
+    padding: 20px 25px;
+    border-radius: var(--radius-md);
+    transform: translateX(120%);
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: all;
+    backdrop-filter: blur(20px);
+}
+
 .toast.show { transform: translateX(0); }
 
 /* НАВИГАЦИЯ */
-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 15, 18, 0.7); backdrop-filter: blur(40px); padding: 10px; border-radius: 26px; border: 1px solid var(--border); display: flex; gap: 6px; z-index: 2000; }
-.nav-btn { padding: 14px 24px; border-radius: 18px; border: none; background: transparent; color: var(--text-dim); font-weight: 800; font-size: 12px; transition: var(--transition-mid); }
-.nav-btn.active { background-color: var(--accent); color: #000; }
+nav {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 15, 18, 0.7);
+    backdrop-filter: blur(40px);
+    padding: 10px;
+    border-radius: 26px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 6px;
+    z-index: 2000;
+}
 
-/* СТРАНИЦЫ И СЕТКИ */
-.page { display: none; padding: 80px 30px 160px; max-width: 1400px; margin: 0 auto; }
+.nav-btn {
+    padding: 14px 24px;
+    border-radius: 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-weight: 800;
+    font-size: 12px;
+    transition: var(--transition-mid);
+}
+
+.nav-btn.active {
+    background-color: var(--accent);
+    color: #000;
+}
+
+/* СТРАНИЦЫ */
+.page {
+    display: none;
+    padding: 80px 30px 160px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .page.active { display: block; animation: pageReveal 0.8s var(--transition-mid); }
-@keyframes pageReveal { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ОБЩИЕ СТИЛИ КАРТОЧКИ (BENTO И АРХИВ) */
-.bento-card, .archive-post-card {
+@keyframes pageReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* БЕНТО СЕТКА И КАРТОЧКИ */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 25px;
+}
+
+.bento-card {
     background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    padding: 45px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     transition: var(--transition-mid);
     z-index: 1;
 }
 
-.bento-card:hover, .archive-post-card:hover {
+.bento-card:hover {
     border-color: rgba(var(--accent-rgb), 0.4);
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     box-shadow: var(--shadow-glow);
 }
 
-.bento-card::after, .archive-post-card::after {
-    content: ""; position: absolute; inset: 0;
+/* Исправленный градиент внутри карточки */
+.bento-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
     background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.15), transparent 70%);
-    opacity: 0; transition: var(--transition-mid); pointer-events: none; z-index: 0;
-}
-.bento-card:hover::after, .archive-post-card:hover::after { opacity: 1; }
-.bento-card:active, .archive-post-card:active { transform: scale(0.98); }
-
-/* Контент внутри карточки всегда поверх градиента */
-.bento-card > *, .archive-post-card > * { position: relative; z-index: 2; }
-
-/* СПЕЦИФИКА BENTO (ГЛАВНАЯ) */
-.bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 25px; }
-.bento-card { padding: 45px; display: flex; flex-direction: column; justify-content: space-between; }
-.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; }
-
-/* --- СПЕЦИФИКА АРХИВА (ФОРУМНЫЕ ПОСТЫ) --- */
-#archive-grid {
-    display: flex; /* Смена сетки на flex-список */
-    flex-direction: column;
-    gap: 20px; /* Отступ между постами */
+    opacity: 0;
+    transition: var(--transition-mid);
+    pointer-events: none; /* Пропускает клики */
+    z-index: 0;
 }
 
-.archive-post-card {
-    width: 100%; /* На всю ширину */
-    padding: 30px;
+.bento-card:hover::after { opacity: 1; }
+
+.bento-card:active { transform: scale(0.97); }
+
+/* Чтобы всё внутри карточки было кликабельным */
+.bento-card > * {
+    position: relative;
+    z-index: 2;
 }
 
-/* Контейнер для горизонтальной компоновки */
-.post-layout {
-    display: flex;
-    gap: 30px; /* Отступ между картинкой и текстом */
-    align-items: flex-start;
-}
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
 
-/* Стили картинки слева */
-.post-image-wrapper {
-    width: 180px; /* Фиксированная ширина превью */
-    height: 120px; /* Фиксированная высота превью */
+/* ТЕРМИНАЛ И ИНПУТЫ */
+#term-container {
+    background: #000;
+    padding: 35px;
+    height: 550px;
+    overflow-y: auto;
     border-radius: var(--radius-md);
-    overflow: hidden;
     border: 1px solid var(--border);
-    flex-shrink: 0; /* Не даем картинке сжиматься */
-}
-
-.post-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Картинка заполняет область без искажений */
-    pointer-events: none;
-}
-
-/* Стили текстового блока справа */
-.post-content {
-    flex: 1; /* Занимает все оставшееся пространство */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-.post-title {
-    margin-bottom: 8px;
-    font-weight: 900;
-    font-size: 20px;
-    color: var(--text-main);
-}
-
-.post-desc {
-    font-size: 14px;
-    color: var(--text-dim);
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-.post-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
     color: var(--accent);
-    letter-spacing: 1px;
+    font-family: var(--font-mono);
 }
 
-/* Модалка */
-.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; display: none; place-items: center; backdrop-filter: blur(15px); }
-.win-frame { width: 90%; max-width: 650px; background: var(--win-bg); border: 1px solid var(--accent); padding: 40px; border-radius: var(--radius-lg); }
+.t-input-wrapper {
+    margin-top: 25px;
+    display: flex;
+    padding: 22px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+}
 
-/* Прочее */
-.skill-matrix { display: flex; flex-wrap: wrap; gap: 10px; }
-.skill-node { padding: 8px 16px; background: rgba(255,255,255,0.04); border-radius: 10px; color: var(--accent); font-size: 11px; font-family: var(--font-mono); border: 1px solid var(--border); transition: 0.3s; }
-.skill-node:hover { background: var(--accent); color: #000; transform: translateY(-3px); }
+#t-field, .win-field {
+    background: transparent;
+    border: none;
+    color: #fff;
+    flex: 1;
+    font-family: var(--font-mono);
+}
 
-/* Адаптив для архива */
-@media (max-width: 768px) {
-    .post-layout { flex-direction: column; gap: 15px; }
-    .post-image-wrapper { width: 100%; height: 180px; }
-    .bento-card { padding: 30px; }
+.win-field {
+    width: 100%;
+    padding: 20px;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-action {
+    width: 100%;
+    padding: 20px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+/* МОДАЛКИ */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 5000;
+    display: none;
+    place-items: center;
+    backdrop-filter: blur(15px);
+}
+
+.win-frame {
+    width: 90%;
+    max-width: 650px;
+    background: var(--win-bg);
+    border: 1px solid var(--accent);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+}
+
+/* ПРОЧЕЕ */
+.hero-title {
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -5px;
+}
+
+.hero-title span { color: var(--accent); }
+
+.skill-matrix { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-node {
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 10px;
+    font-family: var(--font-mono);
+}
+
+.theme-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.theme-item {
+    padding: 15px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 10px;
+}
+
+/* СКРОЛЛБАР */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--accent); }
+
+@media (max-width: 1000px) {
+    .span-8, .span-4, .span-6 { grid-column: span 12; }
 }
     </style>
 </head>
@@ -661,43 +850,46 @@ closeProjectModal() {
         }
     }
 
-  async fetchDataArchive() {
+   async fetchDataArchive() {
         const grid = document.getElementById('archive-grid');
+        // Очищаем grid перед началом запроса
         grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ QUERYING_REMOTE_INDEX... ]</div>';
         
         const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
         
         if(error) {
             this.sendNotification("FETCH_ERROR", "Could not synchronize archive.");
-            console.error(error);
+            console.error(error); // Полезно для отладки
+            grid.innerHTML = '<div class="span-12" style="text-align:center; color:var(--accent);">[ ERROR_SYNCHRONIZING ]</div>';
             return;
         }
         
         if(data && data.length > 0) {
             grid.innerHTML = data.map(item => {
+                // Создаем обрезанное описание
                 const descText = item.content || item.desc || "";
-                
-                const shortDesc = descText.length > 180 ? descText.slice(0, 180) + "..." : descText;
+                const shortDesc = descText.length > 120 ? descText.slice(0, 120) + "..." : descText;
                 
                 return `
-                    <div class="archive-post-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
-                        <div class="post-layout" onclick="event.stopPropagation()">
-                            
+                    <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
+                        <div onclick="event.stopPropagation()">
+                            <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">
+                                OBJECT_REF: ${item.id}
+                            </p>
+                            <h3 style="margin-bottom:12px; font-weight:900; font-size:18px;">
+                                ${item.name}
+                            </h3>
+                            <p style="font-size:13px; color:var(--text-dim);">
+                                ${shortDesc}
+                            </p>
                             ${item.image ? `
-                                <div class="post-image-wrapper">
-                                    <img src="${item.image}">
-                                </div>
+                                <img src="${item.image}" 
+                                style="width:100%; margin-top:15px; border-radius:12px; pointer-events:none; border: 1px solid var(--border);">
                             ` : ''}
-                            
-                            <div class="post-content">
-                                <h3 class="post-title">${item.name}</h3>
-                                <p class="post-desc">${shortDesc}</p>
-                                <p class="post-meta">OBJECT_REF: ${item.id} // DECRYPTED_PACKET_0${item.id}</p>
-                            </div>
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).join(''); 
         } else {
              grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ NO_OBJECTS_FOUND ]</div>';
         }
