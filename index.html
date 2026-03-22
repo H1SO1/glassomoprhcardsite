@@ -3,40 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FERUM.OS v7.0 // REFINED_CORE</title>
+    <title>rh1so // FERUM.OS v5.3.ULTRA</title>
+    <title>rh1so // FERUM.OS v5.4.REBORN</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
+
     <style>
-        /* === SYSTEM VARIABLES (NO GLOW) === */
+        /* === CORE VARIABLES === */
         :root {
-            --bg: #050505;
-            --card: rgba(20, 20, 23, 0.6);
-            --accent: #ff0055;
-            --border: rgba(255, 255, 255, 0.1);
-            --text-main: #f0f0f0;
-            --text-dim: #88888e;
-            --radius: 24px;
-            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg: #030303; 
+            --card: #0e0e11; 
+            --accent: #ff0055; 
+            --border: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f0f0; 
+            --text-dim: #71717a; 
+            --radius: 32px;
+            --font-main: 'Plus Jakarta Sans', sans-serif; 
             --font-mono: 'JetBrains Mono', monospace;
-            --glass: blur(20px);
+            --win-bg: rgba(10, 10, 12, 0.98);
         }
 
-        /* === THEMES (STRIPPED OF BLOOM) === */
-        .t-crimson { --accent: #ff0055; }
-        .t-matrix  { --accent: #00ff41; }
-        .t-toxic   { --accent: #adff2f; }
-        .t-cyber   { --accent: #00f2ff; }
-        .t-gold    { --accent: #ffd700; }
-        .t-ocean   { --accent: #00b4d8; }
-        .t-stalker { --accent: #7c8a4f; }
-        .t-win98   { --accent: #000080; }
-        .t-violet  { --accent: #9b59b6; }
-        .t-nord    { --accent: #88c0d0; }
-        /* ... (остальные 10 тем применяются через JS аналогично) */
-
+        /* ГЛОБАЛЬНЫЕ СТИЛИ */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s, color 0.3s; }
         /* === RESET & BASE === */
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s; }
         
         body { 
             background: var(--bg); 
@@ -44,316 +35,772 @@
             font-family: var(--font-main); 
             min-height: 100vh; 
             overflow-x: hidden; 
-            line-height: 1.5;
+            cursor: crosshair;
         }
+
+        /* НАВИГАЦИЯ */
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
         /* === NAVIGATION === */
         nav { 
-            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
-            background: rgba(15, 15, 18, 0.8); backdrop-filter: var(--glass); 
-            padding: 8px; border-radius: 20px; border: 1px solid var(--border); 
-            display: flex; gap: 4px; z-index: 2000; 
+            position: fixed; 
+            top: 25px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(17, 17, 19, 0.8); 
+            backdrop-filter: blur(25px); 
+            padding: 8px; 
+            border-radius: 20px; 
+            background: rgba(17, 17, 19, 0.85); 
+            backdrop-filter: blur(30px); 
+            padding: 10px; 
+            border-radius: 22px; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            gap: 5px; 
+            gap: 8px; 
+            z-index: 1000; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         .nav-btn { 
-            padding: 10px 20px; border-radius: 15px; border: none; background: transparent; 
-            color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer;
+            padding: 12px 25px; 
+            border-radius: 14px; 
+            padding: 14px 28px; 
+            border-radius: 16px; 
+            border: none; 
+            background: transparent; 
+            color: var(--text-dim); 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            font-family: var(--font-main);
             transition: 0.2s;
         }
         .nav-btn.active { background: var(--accent); color: #000; }
+        .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* === BENTO GRID === */
-        .page { display: none; padding: 120px 20px 80px; max-width: 1300px; margin: 0 auto; }
+        /* МЕНЮ ДИЗАЙНА */
+        /* === THEME MENU === */
+        .theme-menu { 
+            position: absolute; 
+            top: 75px; 
+            top: 80px; 
+            right: 0; 
+            background: var(--card); 
+            background: var(--win-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 20px; 
+            padding: 15px; 
+            border-radius: 24px; 
+            padding: 18px; 
+            display: none; 
+            flex-direction: column; 
+            gap: 8px; 
+            min-width: 240px; 
+            max-height: 450px; 
+            gap: 10px; 
+            min-width: 260px; 
+            max-height: 480px; 
+            overflow-y: auto; 
+            z-index: 1001; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        }
+        .theme-menu.show { display: flex; }
+        .t-item { 
+            padding: 12px; 
+            border-radius: 12px; 
+            padding: 14px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-family: var(--font-mono); 
+            font-size: 11px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            background: rgba(255,255,255,0.02); 
+            gap: 14px; 
+            background: rgba(255,255,255,0.03); 
+        }
+        .t-item:hover { background: var(--accent); color: #000; }
+        .t-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        /* СТРАНИЦЫ */
+        .page { display: none; padding: 140px 20px 80px; max-width: 1100px; margin: 0 auto; animation: fadeInUp 0.5s ease; }
+        /* === PAGES === */
+        .page { display: none; padding: 160px 20px 100px; max-width: 1200px; margin: 0 auto; animation: pageIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         .page.active { display: block; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        /* БЕНТО СЕТКА */
+        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; }
+        /* === BENTO GRID === */
+        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
         .bento-card { 
-            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); 
-            padding: 40px; position: relative; backdrop-filter: var(--glass);
-        }
-        
-        .hero { grid-column: span 3; min-height: 450px; display: flex; flex-direction: column; justify-content: center; }
-        .hero h1 { font-size: 7rem; font-weight: 800; letter-spacing: -8px; line-height: 0.9; }
-        .hero h1 span { color: var(--accent); }
-
-        /* === SKILLS === */
-        .skills-grid { grid-column: span 2; }
-        .skill-tags { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .tag { 
-            background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; 
-            font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--border); 
-            text-align: center; color: var(--text-dim);
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            padding: 40px; 
+            padding: 45px; 
+            position: relative; 
+            overflow: hidden; 
         }
 
-        /* === FIXED MODAL SYSTEM === */
-        #modal-root {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            display: none; z-index: 5000; backdrop-filter: blur(10px);
-            justify-content: center; align-items: flex-start; overflow-y: auto; padding: 60px 20px;
+        /* КАРТОЧКА ГЕРОЯ */
+        .hero-card { grid-column: span 2; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hero-card h1 { font-size: 6.5rem; letter-spacing: -6px; font-weight: 800; line-height: 0.9; margin: 20px 0; }
+        .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; }
+        .hero-card h1 span { color: var(--accent); }
+
+        .social-row { display: flex; gap: 12px; margin: 20px 0; }
+        .social-btn { 
+            padding: 16px 32px; 
+            border-radius: 18px; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid var(--border); 
+            color: #fff; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 14px; 
+            transition: 0.3s;
         }
+        .social-btn:hover { background: #fff; color: #000; transform: translateY(-3px); }
+
+        /* РАДИО ПЛЕЕР */
+        .radio-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; position: relative; z-index: 10; }
+        /* === PLAYER === */
+        .radio-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; position: relative; z-index: 10; }
+        .player-bar { 
+            background: rgba(255,255,255,0.02); 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid var(--border); 
+            border-radius: 24px; 
+            padding: 12px 20px; 
+            border-radius: 26px; 
+            padding: 14px 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            gap: 18px; 
+            width: fit-content; 
+            min-width: 320px; 
+            min-width: 340px; 
+        }
+        .p-play { 
+            width: 44px; 
+            height: 44px; 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 50%; 
+            border: none; 
+            background: var(--accent); 
+            color: var(--bg); /* Чтобы ▶ было видно */
+            color: #000; 
+            cursor: pointer; 
+            font-size: 18px; 
+            font-size: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-shrink: 0; 
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(255, 0, 85, 0.2);
+        }
+        .p-play:hover { transform: scale(1.1); }
+
+        /* ASCII ART */
+        .hero-art { position: absolute; right: 40px; bottom: 40px; text-align: right; pointer-events: none; }
+        .frm-txt { font-size: 11rem; font-weight: 900; letter-spacing: -15px; line-height: 1; opacity: 0.08; }
+
+        /* ЦЕНТРИРОВАНИЕ КНОПКИ ЧАТА */
+        .db-center { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .btn-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+        /* ОКНО КОММУНИКАЦИИ */
+        #drag-win { 
+        /* === MODAL REFIX === */
+        #modal { 
+            position: fixed; 
+            top: 20%; 
+            left: 35%; 
+            width: 440px; 
+            background: rgba(14, 14, 17, 0.95); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid var(--accent); 
+            border-radius: 28px; 
+            z-index: 3000; 
+            inset: 0; 
+            background: rgba(3, 3, 3, 0.98); 
+            display: none; 
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+        }
+        .win-header { 
+            padding: 20px 25px; 
+            cursor: move; 
+            display: flex; 
+            justify-content: space-between; 
+            border-bottom: 1px solid var(--border); 
+            font-family: var(--font-mono); 
+            font-size: 11px; 
+            color: var(--accent);
+            z-index: 5000; 
+            overflow-y: auto; 
+            backdrop-filter: blur(15px);
+            padding: 80px 20px;
+        }
+        .win-body { padding: 30px; }
+        .win-input { 
+            width: 100%; 
+            padding: 18px; 
+            background: rgba(0,0,0,0.5); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            font-family: var(--font-mono); 
+            font-size: 13px;
         .modal-container {
-            width: 100%; max-width: 800px; background: #0f0f12; border: 1px solid var(--border);
-            border-radius: 32px; overflow: hidden; animation: modIn 0.3s ease-out;
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
-        @keyframes modIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-img { width: 100%; max-height: 450px; object-fit: contain; background: #000; display: block; }
-        .modal-content { padding: 40px; }
-        .modal-title { font-size: 2.5rem; margin-bottom: 20px; letter-spacing: -1px; }
-        .modal-desc { color: var(--text-dim); line-height: 1.8; font-size: 1rem; white-space: pre-wrap; }
-        .close-btn { 
-            position: fixed; top: 30px; right: 30px; padding: 15px 25px; 
-            background: var(--accent); color: #000; border: none; border-radius: 14px;
-            font-weight: 800; cursor: pointer; font-family: var(--font-mono);
+        .win-btn { 
+            width: 100%; 
+            padding: 22px; 
+            border-radius: 18px; 
+            border: none; 
+        .modal-img-wrap { width: 100%; max-height: 500px; overflow: hidden; background: #000; }
+        .modal-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        .modal-body { padding: 60px; }
+        .modal-body h2 { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 25px; line-height: 1; }
+        .modal-text { color: var(--text-dim); font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap; }
+        .close-m { 
+            position: fixed; 
+            top: 40px; 
+            right: 40px; 
+            padding: 18px 30px; 
+            background: var(--accent); 
+            color: var(--bg); 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: 0.3s;
+            border: none; 
+            border-radius: 18px; 
+            color: #000; 
+            font-family: var(--font-mono); 
+            font-weight: 800;
+            cursor: pointer;
+            z-index: 5001;
         }
+        .win-btn:hover { letter-spacing: 2px; }
 
-        /* === COMPACT DB BUTTON === */
-        .db-action-area { 
-            display: flex; flex-direction: column; gap: 15px; margin-top: 20px;
-        }
-        .db-btn {
-            padding: 14px 24px; background: var(--text-main); color: var(--bg);
-            border: none; border-radius: 14px; font-weight: 800; font-size: 14px;
-            cursor: pointer; width: fit-content; transition: 0.2s;
-        }
-        .db-btn:hover { background: var(--accent); color: #000; }
-
+        /* ТЕРМИНАЛ */
         /* === TERMINAL === */
-        #terminal-ui {
-            background: #000; border-radius: 20px; border: 1px solid var(--border);
-            height: 550px; display: flex; flex-direction: column; padding: 25px;
+        #term-body { 
+            background: #000; 
+            border-radius: 24px; 
+            padding: 30px; 
+            border-radius: 28px; 
+            padding: 40px; 
+            font-family: var(--font-mono); 
+            height: 480px; 
+            height: 500px; 
+            overflow-y: auto; 
+            color: var(--accent); 
+            border: 1px solid var(--border); 
+            font-size: 14px; 
+            line-height: 1.6; 
+            scrollbar-width: thin;
+            line-height: 1.7; 
         }
-        #term-log { flex: 1; overflow-y: auto; font-family: var(--font-mono); font-size: 14px; color: var(--accent); }
-        .term-prompt { display: flex; gap: 12px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .term-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); }
+        .t-prompt { color: var(--accent); margin-right: 10px; }
+        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        /* === SETTINGS === */
-        .settings-box {
-            position: fixed; bottom: 25px; right: 25px; background: rgba(15,15,18,0.9);
-            border: 1px solid var(--border); border-radius: 20px; padding: 20px;
-            width: 280px; display: none; flex-direction: column; gap: 15px; z-index: 1000;
+        /* МОДАЛКА */
+        #modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 4000; padding: 100px 20px; overflow-y: auto; }
+        .close-m { 
+            position: fixed; 
+            top: 40px; 
+            right: 40px; 
+            padding: 15px 25px; 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            color: #fff; 
+            cursor: pointer; 
+            font-family: var(--font-mono); 
+            z-index: 4001; 
+        .t-row { margin-bottom: 8px; }
+        .t-input-wrap {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            background: rgba(255,255,255,0.03);
+            padding: 25px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
         }
-        .s-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-family: var(--font-mono); }
-        .tog { width: 40px; height: 20px; background: #333; border-radius: 10px; cursor: pointer; position: relative; }
-        .tog.on { background: var(--accent); }
-        .tog::after { content: ''; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; }
-        .tog.on::after { left: 22px; }
+        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        /* === SECRET (CLEAN VHS) === */
-        .vhs-wrap { width: 100%; height: 500px; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); }
-        
-        /* === UI HELPERS === */
-        .hidden { display: none !important; }
-        .enable-anim .bento-card { transition: transform 0.4s ease, border-color 0.4s ease; }
-        .enable-anim .bento-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        /* КОРРЕКЦИЯ ДЛЯ GHOST ТЕМЫ */
+        .ghost-mode .social-btn { border-color: #000; color: #000; }
+        /* === GHOST MODE FIXES === */
+        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); }
+        .ghost-mode .p-play { background: #000 !important; color: #fff !important; }
+        .ghost-mode .nav-btn.active { color: #fff; }
+
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
     </style>
 </head>
-<body class="enable-anim" onclick="unlockAudio()">
+<body onclick="initAudio()" onwheel="playSnd('scroll')">
+<body onclick="unlockAudio()">
 
 <nav>
-    <button class="nav-btn active" onclick="nav('home', this)">Home</button>
-    <button class="nav-btn" onclick="nav('forum', this)">Forum</button>
-    <button class="nav-btn" onclick="nav('terminal', this)">Terminal</button>
-    <button class="nav-btn" onclick="nav('secret', this)">Secret</button>
-    <button class="nav-btn" onclick="toggleMenu('tMenu')">Design</button>
-    <button class="nav-btn" onclick="toggleMenu('sMenu')">Settings</button>
+    <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
+@@ -269,14 +236,11 @@
+        <div class="theme-menu" id="tMenu">
+            <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
+            <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
+            <div class="t-item" onclick="applyTheme('vapor')"><span class="t-dot" style="background:#ff00ff"></span> VAPOR_WAVE</div>
+            <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
+            <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
+            <div class="t-item" onclick="applyTheme('cobalt')"><span class="t-dot" style="background:#0066ff"></span> COBALT_DRIVE</div>
+            <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
+            <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
+            <div class="t-item" onclick="applyTheme('matrix')"><span class="t-dot" style="background:#00ff41"></span> MATRIX_RAIN</div>
+            <div class="t-item" onclick="applyTheme('night')"><span class="t-dot" style="background:#7a00ff"></span> NIGHT_CITY</div>
+        </div>
+    </div>
 </nav>
-
-<div id="tMenu" style="position:fixed; top:85px; right:50%; transform:translateX(50%); display:none; background:rgba(10,10,12,0.95); border:1px solid var(--border); border-radius:20px; padding:20px; grid-template-columns: repeat(4, 1fr); gap:10px; z-index:2100; backdrop-filter:blur(10px);">
-    </div>
-
-<div class="settings-box" id="sMenu">
-    <div class="s-row"><span>AUDIO_OUTPUT</span> <div class="tog on" id="tog-audio" onclick="togAud()"></div></div>
-    <div class="s-row"><span>UI_ANIMATIONS</span> <div class="tog on" id="tog-anim" onclick="togAnim()"></div></div>
-    <div class="s-row" style="flex-direction:column; align-items:start; gap:8px;">
-        <span>VOL_LEVEL</span>
-        <input type="range" id="vol-ctrl" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)" style="width:100%; accent-color:var(--accent);">
-    </div>
-    <button onclick="toggleMenu('sMenu')" style="background:var(--accent); border:none; padding:10px; border-radius:10px; font-weight:800; cursor:pointer; width:100%;">CLOSE</button>
-</div>
-
-<div id="home" class="page active">
+@@ -285,266 +249,204 @@
     <div class="bento-grid">
-        <div class="bento-card hero">
-            <p style="color:var(--accent); font-family:var(--font-mono); font-size:12px; margin-bottom:10px;">// SYSTEM_ID: FERUM_6.7</p>
-            <h1>FERUM<span>.OS</span></h1>
-            <div style="display:flex; gap:12px; margin-top:30px;">
-                <button class="db-btn" onclick="openDB()">CONNECT_DB</button>
-                <a href="#" style="padding:14px; border:1px solid var(--border); border-radius:14px; text-decoration:none; color:var(--text-main); font-family:var(--font-mono); font-size:12px;">GH</a>
-                <a href="#" style="padding:14px; border:1px solid var(--border); border-radius:14px; text-decoration:none; color:var(--text-main); font-family:var(--font-mono); font-size:12px;">TG</a>
+        <div class="bento-card hero-card">
+            <div>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.3_PRO_RESTORED</p>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.4_FINAL_HELL</p>
+                <h1>FERUM<span>.OS</span></h1>
+                <div class="social-row">
+                    <a href="#" class="social-btn">GitHub</a>
+                    <a href="#" class="social-btn">Telegram</a>
+                </div>
+                
+                <div class="radio-stack">
+                    <div class="player-bar">
+                        <button class="p-play" onclick="toggleAudio(0, this)">▶</button>
+                        <div>
+                            <div style="font-weight: 800; font-size: 12px;">RADIO_INFUSION (Lofi)</div>
+                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
+                            <div style="font-weight: 800; font-size: 13px;">RADIO_INFUSION (Lofi)</div>
+                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
+                        </div>
+                    </div>
+                    <div class="player-bar" style="margin-top: 5px;">
+                    <div class="player-bar">
+                        <button class="p-play" onclick="toggleAudio(1, this)">▶</button>
+                        <div>
+                            <div style="font-weight: 800; font-size: 12px;">TOKYO_DRIFT (J-Rock)</div>
+                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
+                            <div style="font-weight: 800; font-size: 13px;">TOKYO_DRIFT (J-Rock)</div>
+                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-art">
+                <div class="frm-txt">FRM</div>
+                <p style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; opacity: 0.3; margin-top: -10px;">SECURITY_LEVEL: ALPHA_7</p>
+
+            <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
+                <div style="font-size: 8rem; font-weight: 900; opacity: 0.05; letter-spacing: -10px;">FRM</div>
+                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.4.12 // SEC: ALPHA</p>
+            </div>
+
+            <div style="position: absolute; top: 40px; right: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
+                <div style="color: var(--accent)">[ SYSTEM_HEALTH ]</div>
+            <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
+                <div style="color: var(--accent)">[ SYSTEM_LIVE ]</div>
+                <div>UPTIME: <span id="uptime">00:00:00</span></div>
+                <div>MEM_LOAD: 24%</div>
             </div>
         </div>
 
         <div class="bento-card">
-            <h3 style="font-family:var(--font-mono); font-size:14px; color:var(--accent);">SYS_UPTIME</h3>
-            <div id="timer" style="font-size:32px; font-weight:800; margin-top:20px;">00:00:00</div>
-            <p style="color:var(--text-dim); font-size:10px; font-family:var(--font-mono); margin-top:10px;">STATUS: STABLE_V7</p>
-        </div>
-
-        <div class="bento-card skills-grid">
-            <h3 style="font-family:var(--font-mono); font-size:14px; color:var(--accent);">SKILLS_ARCHIVE</h3>
-            <div class="skill-tags">
-                <div class="tag">HTML / CSS / JS</div><div class="tag">PYTHON / C#</div>
-                <div class="tag">1C / ACCESS / SQL</div><div class="tag">VIDEO_PROD</div>
-                <div class="tag">STALKER_RP</div><div class="tag">MATH_MODELS</div>
+            <h3 style="color: var(--accent); font-family: var(--font-mono);">Core_Skills</h3>
+            <div style="margin-top: 30px; font-size: 13px; color: var(--text-dim); line-height: 2.3; font-family: var(--font-mono);">
+                > UI/UX Architecture<br>
+                > Game Theory (STALKER)<br>
+                > Glitch Visual Design<br>
+                > Database Management<br>
+                > Linear Optimization
+            <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
+            <div style="margin-top: 35px; font-size: 14px; color: var(--text-dim); line-height: 2.5; font-family: var(--font-mono);">
+                > UI_ARCHITECTURE: [ HIGH ]<br>
+                > GLITCH_FX: [ MASTER ]<br>
+                > SUPABASE_DB: [ READY ]<br>
+                > LINEAR_MATH: [ VARIANT_7 ]<br>
+                > GAME_LOGIC: [ STALKER ]
             </div>
         </div>
 
-        <div class="bento-card">
-            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
-                 <div style="width:10px; height:10px; border-radius:50%; background:var(--accent); margin-bottom:15px;"></div>
-                 <p style="font-family:var(--font-mono); font-size:11px; text-align:center;">FERUM_ROOT<br>SECURED_CONN</p>
+        <div class="bento-card db-center">
+            <h3 style="color: var(--accent); font-family: var(--font-mono);">Support_DB</h3>
+            <div class="btn-wrap">
+                <button onclick="toggleWin(true)" style="width:100%; padding:24px; border-radius:20px; border:none; background:var(--text-main); color: var(--bg); font-weight:800; cursor:pointer; transition: 0.3s;">OPEN_COMM_LINK</button>
             </div>
+        <div class="bento-card" style="display: flex; align-items: center; justify-content: center;">
+             <button onclick="toggleWin(true)" style="width:100%; height:100%; background:var(--text-main); color:var(--bg); border:none; border-radius:var(--radius); font-weight:900; font-size:20px; cursor:pointer;">CONNECT_DB</button>
         </div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <div id="forum-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap:25px;"></div>
+    <div id="forum-feed"></div>
+    <div id="forum-feed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;"></div>
 </div>
 
 <div id="terminal" class="page">
-    <div id="terminal-ui">
-        <div id="term-log">
-            <div>FERUM.OS [Version 7.0.01]</div>
-            <div>Authorized access only. Type 'help' to start.</div>
-        </div>
-        <div class="term-prompt">
-            <span style="color:var(--accent); font-family:var(--font-mono);">$</span>
-            <input type="text" id="term-input" class="term-in" onkeydown="execTerm(event)" autocomplete="off">
-        </div>
+    <div id="term-body">
+        FERUM.OS [Terminal v5.3] - User: ferum - Access: Granted<br>
+        Type 'help' to see available commands.
+        <div class="t-row">FERUM.OS [Version 5.4.REBORN]</div>
+        <div class="t-row">Unauthorized access is prohibited.</div>
+        <div class="t-row">Type 'help' to begin.</div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:20px; background:rgba(255,255,255,0.03); padding:24px; border-radius:22px; border:1px solid var(--border); align-items: center;">
+        <span class="t-prompt">$</span>
+        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" oninput="playSnd('key')" spellcheck="false" autocomplete="off">
+    <div class="t-input-wrap">
+        <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
+        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" autocomplete="off" spellcheck="false">
     </div>
 </div>
 
 <div id="secret" class="page">
-    <div class="vhs-wrap">
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+    <div class="bento-card" style="min-height: 600px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px dashed var(--accent);">
+        <div>
+            <h1 style="font-size: 5rem; color: var(--accent);">ENCRYPTED</h1>
+            <p style="font-family: var(--font-mono); margin-top: 20px; opacity: 0.5;">Waiting for correct terminal sequence...</p>
+        </div>
+    <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
+        <h2 style="color: var(--accent); margin-bottom: 30px; font-family: var(--font-mono);">DECRYPT_SUCCESS: NO_GIVE_UP</h2>
+        <iframe width="100%" height="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
     </div>
 </div>
 
-<div id="modal-root" onclick="closeM(event)">
-    <button class="close-btn" onclick="document.getElementById('modal-root').style.display='none'">[ CLOSE_X ]</button>
-    <div class="modal-container" onclick="event.stopPropagation()">
-        <div id="m-img-box"></div>
-        <div class="modal-content">
-            <h2 class="modal-title" id="m-title"></h2>
-            <div class="modal-desc" id="m-desc"></div>
+<div id="modal">
+    <button class="close-m" onclick="closeM()">[ ESC_CLOSE ]</button>
+    <div class="modal-content" id="mContent"></div>
+    <button class="close-m" onclick="closeM()">[ CLOSE_X ]</button>
+    <div class="modal-container">
+        <div class="modal-img-wrap" id="mImgWrap"></div>
+        <div class="modal-body">
+            <h2 id="mTitle"></h2>
+            <div class="modal-text" id="mText"></div>
         </div>
     </div>
 </div>
 
-<div id="db-win" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:400px; background:#111; border:1px solid var(--border); border-radius:24px; padding:30px; display:none; z-index:4000;">
-    <h4 style="font-family:var(--font-mono); color:var(--accent); margin-bottom:20px;">UPLINK_DB</h4>
-    <input type="text" id="db-name" placeholder="OBJECT_ID" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:12px; color:#fff; margin-bottom:15px;">
-    <textarea id="db-msg" placeholder="PAYLOAD_CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:12px; color:#fff; margin-bottom:15px; resize:none;"></textarea>
-    <button onclick="sendData()" style="width:100%; padding:15px; background:var(--accent); color:#000; border:none; border-radius:12px; font-weight:800; cursor:pointer;">SEND_PACKET</button>
+<div id="drag-win">
+    <div class="win-header" id="win-handle">
+        <span>UPLINK_COMM_v1.2</span>
+        <span onclick="toggleWin(false)" style="cursor:pointer; color: #fff;">[ X ]</span>
+<div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000; box-shadow:0 40px 80px #000;">
+    <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
+        <span>UPLINK_SESSION</span>
+        <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
+    </div>
+    <div class="win-body">
+        <input type="text" id="db-n" class="win-input" placeholder="IDENTIFIER (NAME)">
+        <textarea id="db-m" class="win-input" style="height:140px; resize:none;" placeholder="DATA_PACKET (MESSAGE)"></textarea>
+        <button class="win-btn" onclick="send()">PUSH_TO_CORE</button>
+    <div style="padding:30px;">
+        <input type="text" id="db-n" placeholder="NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
+        <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
+        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800; cursor:pointer;">SEND_PACKET</button>
+    </div>
 </div>
 
+<audio id="r0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="r1" loop src="https://listen.moe/stream"></audio>
+
 <script>
+
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
-    let audioReady = false, audioMuted = false, masterVol = 0.5;
-    const clickSnd = new Audio('https://opengameart.org/sites/default/files/menu_click_0.wav');
 
-    function unlockAudio() { if(!audioReady) { audioReady = true; playSfx(); } }
-    function playSfx() { if(audioReady && !audioMuted) { let s = clickSnd.cloneNode(); s.volume = masterVol; s.play(); } }
+ 
+    const snds = {
+        key: new Audio('https://www.soundjay.com/communication/typing-mechanical-laptop-1.mp3'),
+        click: new Audio('https://www.soundjay.com/buttons/button-16.mp3'),
+        scroll: new Audio('https://www.soundjay.com/buttons/button-50.mp3')
+    // SOUND ENGINE
+    const sfx = {
+        key: new Audio('https://opengameart.org/sites/default/files/click_0.wav'),
+        click: new Audio('https://opengameart.org/sites/default/files/menu_click_0.wav'),
+        boot: new Audio('https://opengameart.org/sites/default/files/power_up.wav')
+    };
 
-    // THEMES
-    const themes = ['crimson', 'matrix', 'toxic', 'cyber', 'gold', 'ocean', 'stalker', 'win98', 'violet', 'nord', 'sunset', 'forest', 'frost', 'blood', 'clay', 'plasma', 'retro', 'carbon', 'slate', 'mint'];
-    const tMenu = document.getElementById('tMenu');
-    themes.forEach(t => {
-        let b = document.createElement('button');
-        b.className = 'nav-btn'; b.style.fontSize = '9px'; b.innerText = t.toUpperCase();
-        b.onclick = () => { document.body.className = 't-'+t; toggleMenu('tMenu'); playSfx(); };
-        tMenu.appendChild(b);
-    });
-
-    // NAVIGATION
-    function nav(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        playSfx();
-        if(id === 'forum') loadF();
-    }
-
-    // TERMINAL
-    function execTerm(e) {
-        if(e.key === 'Enter') {
-            const val = e.target.value.toLowerCase().trim();
-            const log = document.getElementById('term-log');
-            log.innerHTML += `<div><span style="color:var(--text-dim)">$</span> ${val}</div>`;
-            
-            const print = (m, c = 'var(--accent)') => log.innerHTML += `<div style="color:${c}">${m}</div>`;
-
-            if(val === 'help') print("CMD: ls, clear, whoami, reboot, skills");
-            else if(val === 'ls') print("archive.db<br>ferum_id.key<br>config.sys");
-            else if(val === 'clear') log.innerHTML = '<div>Buffer cleared.</div>';
-            else if(val === 'skills') print("LOADED: HTML, CSS, JS, Python, C#, SQL, 1C, VideoEditing");
-            else if(val === 'reboot') { print("Restarting...", "red"); setTimeout(()=>location.reload(), 1000); }
-            else print("UNKNOWN_COMMAND: " + val, "red");
-
-            log.scrollTop = log.scrollHeight;
-            e.target.value = ''; playSfx();
+    let audioUnlocked = false;
+    function initAudio() {
+        if(!audioUnlocked) {
+            Object.values(snds).forEach(s => { s.muted = true; s.play().then(() => { s.pause(); s.muted = false; }); });
+            audioUnlocked = true;
+    let audioOk = false;
+    function unlockAudio() {
+        if(!audioOk) {
+            Object.values(sfx).forEach(s => { s.play().then(()=>s.pause()); });
+            audioOk = true;
+            sfx.boot.play();
+            console.log("Audio Unlocked");
         }
     }
 
-    // MODAL LOGIC (FIXED)
-    function openM(item) {
-        const root = document.getElementById('modal-root');
-        const imgBox = document.getElementById('m-img-box');
-        imgBox.innerHTML = item.image_url ? `<img src="${item.image_url}" class="modal-img">` : '';
-        document.getElementById('m-title').innerText = item.name;
-        document.getElementById('m-desc').innerText = item.desc || item.content;
-        root.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        playSfx();
+    function playSnd(t) { 
+        if(!audioUnlocked) return;
+        let s = snds[t].cloneNode(); 
+        s.volume = (t==='scroll') ? 0.05 : 0.15; 
+        s.play().catch(e => console.log("Sound block")); 
+    }
+    function playSnd(t) { if(audioOk) { let s = sfx[t].cloneNode(); s.volume = 0.2; s.play(); } }
+
+    
+    // THEMES
+    const themes = {
+        crimson: { bg: '#030303', card: '#0e0e11', accent: '#ff0055', text: '#f0f0f0' },
+        arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0' },
+        vapor: { bg: '#080008', card: '#1a001a', accent: '#ff00ff', text: '#ffe0ff' },
+        void: { bg: '#000', card: '#050505', accent: '#ff7b00', text: '#fff' },
+        ghost: { bg: '#f5f5f7', card: '#fff', accent: '#000', text: '#000', mode: 'ghost' },
+        cobalt: { bg: '#00050a', card: '#001020', accent: '#0066ff', text: '#e0f0ff' },
+        ghost: { bg: '#f0f0f2', card: '#ffffff', accent: '#000', text: '#000', mode: 'ghost' },
+        stalker: { bg: '#0a0b08', card: '#14160f', accent: '#7c8a4f', text: '#c8d4a5' },
+        win98: { bg: '#008080', card: '#c0c0c0', accent: '#000080', text: '#000' },
+        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' },
+        night: { bg: '#05050a', card: '#0d0d1a', accent: '#7a00ff', text: '#f0f0ff' }
+        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' }
+    };
+
+    function applyTheme(t) {
+        const th = themes[t]; const r = document.documentElement.style;
+        r.setProperty('--bg', th.bg); r.setProperty('--card', th.card); r.setProperty('--accent', th.accent);
+        r.setProperty('--text-main', th.text);
+        document.body.className = th.mode === 'ghost' ? 'ghost-mode' : '';
+        toggleT(); playSnd('click');
+        document.getElementById('tMenu').classList.remove('show');
+        playSnd('click');
     }
 
-    function closeM(e) { 
-        document.getElementById('modal-root').style.display = 'none'; 
+   
+    // TERMINAL ENGINE
+    function runTerm(e) {
+        if(e.key === 'Enter') {
+            const out = document.getElementById('term-body');
+            const val = e.target.value.toLowerCase().trim();
+            out.innerHTML += `<div><span style="color:var(--text-dim)">$</span> ${val}</div>`;
+            const cmd = e.target.value.toLowerCase().trim();
+            out.innerHTML += `<div class="t-row"><span style="color:var(--text-dim)">$</span> ${cmd}</div>`;
+
+            switch(val) {
+                case 'help': 
+                    out.innerHTML += `<div style="color:#fff">Commands: help, ls, cat, whoami, fetch, socials, matrix, clear, date, reboot</div>`;
+                    break;
+                case 'ls':
+                    out.innerHTML += `<div>total 3<br>-rwxr-xr-x  ferum_data.sys<br>-rw-r--r--  secret_note.txt<br>drwxr-xr-x  core_logs</div>`;
+                    break;
+                case 'cat secret_note.txt':
+                    out.innerHTML += `<div style="color:var(--accent)">"Everything you see is just a reflection of the code."</div>`;
+                    break;
+                case 'whoami':
+                    out.innerHTML += `<div>User: ferum | Rank: Administrator | Status: Online</div>`;
+                    break;
+                case 'matrix':
+                    out.innerHTML += `<div style="color:#00ff41">Wake up, ferum... The Matrix has you...</div>`;
+                    applyTheme('matrix');
+                    break;
+                case 'fetch':
+                    out.innerHTML += `<div>OS: FERUM.OS v5.3<br>Kernel: 6.8.0-Pro<br>Shell: FerumShell v1.0<br>Uptime: ${document.getElementById('uptime').innerText}</div>`;
+                    break;
+                case 'date':
+                    out.innerHTML += `<div>${new Date().toLocaleString()}</div>`;
+                    break;
+                case 'clear':
+                    out.innerHTML = 'Terminal cleared.';
+                    break;
+                case 'reboot':
+                    out.innerHTML += `<div>Rebooting system...</div>`;
+                    setTimeout(() => location.reload(), 1500);
+                    break;
+                case 'ferum':
+                    out.innerHTML += `<div style="font-size:10px">01000110 01000101 01010010 01010101 01001101</div>`;
+                    break;
+                default:
+                    out.innerHTML += `<div style="color:red">Error: Command '${val}' not found.</div>`;
+            const log = (msg, col = 'var(--accent)') => {
+                out.innerHTML += `<div class="t-row" style="color:${col}">${msg}</div>`;
+            };
+
+            switch(cmd) {
+                case 'help': log("Commands: ls, clear, whoami, fetch, sys_info, reboot, matrix"); break;
+                case 'ls': log("drwxr-xr-x  projects<br>-rw-r--r--  ferum_id.key<br>-rwxr-xr-x  os_core.sh"); break;
+                case 'clear': out.innerHTML = '<div class="t-row">Terminal cleared.</div>'; break;
+                case 'whoami': log("User: ferum | UID: 007 | Permissions: ROOT"); break;
+                case 'reboot': log("System reboot initiated...", "red"); setTimeout(()=>location.reload(), 1000); break;
+                case 'matrix': applyTheme('matrix'); log("Reality shifted."); break;
+                case 'fetch': log("OS: FERUM.OS v5.4<br>Uptime: "+document.getElementById('uptime').innerText+"<br>Shell: ferum_sh v1.2"); break;
+                default: log("Unknown command: " + cmd, "red");
+            }
+            out.scrollTop = out.scrollHeight; e.target.value = '';
+            out.scrollTop = out.scrollHeight;
+            e.target.value = '';
+            playSnd('key');
+        }
+    }
+
+    let activeRad = null;
+    function toggleAudio(idx, btn) {
+        const audios = [document.getElementById('r0'), document.getElementById('r1')];
+        const allStats = document.querySelectorAll('.r-stat');
+        const allBtns = document.querySelectorAll('.p-play');
+
+        if (activeRad === idx) {
+            audios[idx].pause();
+            btn.innerText = '▶';
+            allStats[idx].innerText = 'STATUS: IDLE';
+            activeRad = null;
+        } else {
+            audios.forEach((a, i) => { a.pause(); allBtns[i].innerText = '▶'; allStats[i].innerText = 'STATUS: IDLE'; });
+            audios[idx].play();
+            btn.innerText = '■';
+            allStats[idx].innerText = 'STATUS: STREAMING';
+            activeRad = idx;
+        }
+    // MODAL FIX LOGIC
+    function openP(p) {
+        playSnd('click');
+        const imgWrap = document.getElementById('mImgWrap');
+        imgWrap.innerHTML = p.image_url ? `<img src="${p.image_url}">` : '';
+        document.getElementById('mTitle').innerText = p.name;
+        document.getElementById('mText').innerText = p.content || p.desc;
+        document.getElementById('modal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+ 
+    const win = document.getElementById('drag-win'), handle = document.getElementById('win-handle');
+    let isD = false, off = [0,0];
+    handle.onmousedown = (e) => { isD = true; off = [win.offsetLeft - e.clientX, win.offsetTop - e.clientY]; };
+    document.onmousemove = (e) => { if(isD) { win.style.left = (e.clientX + off[0]) + 'px'; win.style.top = (e.clientY + off[1]) + 'px'; } };
+    document.onmouseup = () => isD = false;
+
+    function toggleWin(s) { playSnd('click'); win.style.display = s ? 'block' : 'none'; }
+    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+
+    function closeM() { 
+        document.getElementById('modal').style.display = 'none'; 
         document.body.style.overflow = 'auto'; 
     }
 
     // FORUM LOAD
-    async function loadF() {
-        const f = document.getElementById('forum-list');
-        f.innerHTML = '<div>SYNCING...</div>';
+    async function loadForum() {
+        const feed = document.getElementById('forum-feed');
         const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
         if(error) return;
-        f.innerHTML = data.map(i => `
-            <div class="bento-card" style="padding:25px; cursor:pointer;" onclick='openM(${JSON.stringify(i).replace(/'/g, "&apos;")})'>
-                ${i.image_url ? `<img src="${i.image_url}" style="width:100%; height:200px; object-fit:cover; border-radius:16px; margin-bottom:15px; border:1px solid var(--border);">` : ''}
-                <h4 style="font-size:18px;">${i.name}</h4>
-                <p style="color:var(--text-dim); font-size:12px; margin-top:8px;">${(i.desc || '').substring(0, 80)}...</p>
+        feed.innerHTML = data.map(p => `
+            <div class="bento-card" style="margin-bottom:25px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:300px; object-fit:cover; border-radius:24px; margin-bottom:20px;">` : ''}
+                <h3>${p.name}</h3><p style="color:var(--text-dim); margin-top:10px;">${p.desc}</p>
+            <div class="bento-card" style="padding:30px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px;">` : ''}
+                <h3 style="font-size:20px;">${p.name}</h3>
+                <p style="color:var(--text-dim); font-size:12px; margin-top:10px;">${p.desc.substring(0, 100)}...</p>
             </div>
         `).join('');
     }
 
-    // SETTINGS ACTIONS
-    function togAud() { audioMuted = !audioMuted; document.getElementById('tog-audio').classList.toggle('on'); playSfx(); }
-    function togAnim() { document.body.classList.toggle('enable-anim'); document.getElementById('tog-anim').classList.toggle('on'); playSfx(); }
-    function setVol(v) { masterVol = v; }
-    function toggleMenu(id) { let m = document.getElementById(id); m.style.display = (m.style.display === 'none' || m.style.display === '') ? (id === 'tMenu' ? 'grid' : 'flex') : 'none'; playSfx(); }
+    function openP(p) {
+        playSnd('click');
+        document.getElementById('mContent').innerHTML = `
+            ${p.image_url ? `<img src="${p.image_url}" style="width:100%; border-radius:32px; margin-bottom:40px;">` : ''}
+            <h1 style="font-size:4rem; letter-spacing:-3px;">${p.name}</h1>
+            <div style="margin-top:30px; font-size:18px; line-height:1.8; color:var(--text-dim);">${p.content || p.desc}</div>
+        `;
+        document.getElementById('modal').style.display = 'block';
+    }
 
-    function openDB() { document.getElementById('db-win').style.display = 'block'; playSfx(); }
-    async function sendData() {
-        const n = document.getElementById('db-name').value, m = document.getElementById('db-msg').value;
+    async function send() {
+        const n = document.getElementById('db-n').value, m = document.getElementById('db-m').value;
         if(!n || !m) return;
         await sb.from('projects').insert([{ name: n, desc: m }]);
-        document.getElementById('db-win').style.display = 'none';
-        if(document.getElementById('forum').classList.contains('active')) loadF();
-        playSfx();
+        document.getElementById('db-n').value = ''; document.getElementById('db-m').value = '';
+        toggleWin(false); loadForum();
+    }
+
+
+    // UTILS
+    function switchTab(id, btn) {
+        playSnd('click');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+@@ -554,7 +456,26 @@
+        if(id === 'forum') loadForum();
+    }
+
+   
+    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); playSnd('click'); }
+    function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; playSnd('click'); }
+
+    // RADIO
+    let activeRad = null;
+    function toggleAudio(idx, btn) {
+        const auds = [document.getElementById('r0'), document.getElementById('r1')];
+        const stats = document.querySelectorAll('.r-stat');
+        const btns = document.querySelectorAll('.p-play');
+
+        if(activeRad === idx) {
+            auds[idx].pause(); btn.innerText = '▶'; stats[idx].innerText = 'STATUS: IDLE'; activeRad = null;
+        } else {
+            auds.forEach((a, i) => { a.pause(); btns[i].innerText = '▶'; stats[i].innerText = 'STATUS: IDLE'; });
+            auds[idx].play(); btn.innerText = '■'; stats[idx].innerText = 'STATUS: STREAMING'; activeRad = idx;
+        }
+        playSnd('click');
     }
 
     // UPTIME
-    let s = Date.now();
+    let start = Date.now();
     setInterval(() => {
-        let d = Math.floor((Date.now()-s)/1000);
-        let h = Math.floor(d/3600).toString().padStart(2,'0'), m = Math.floor((d%3600)/60).toString().padStart(2,'0'), sec = (d%60).toString().padStart(2,'0');
-        document.getElementById('timer').innerText = `${h}:${m}:${sec}`;
+        let diff = Math.floor((Date.now() - start)/1000);
+@@ -564,7 +485,21 @@
+        document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
     }, 1000);
 
-    console.log("FERUM.OS v7.0 // CLEAN_BUILD // GLOW_DISABLED");
+    console.log("FERUM.OS INITIALIZED");
+    // DRAG
+    const dWin = document.getElementById('drag-win'), dH = document.getElementById('win-handle');
+    let isD = false, off = [0,0];
+    dH.onmousedown = (e) => { isD = true; off = [dWin.offsetLeft - e.clientX, dWin.offsetTop - e.clientY]; };
+    document.onmousemove = (e) => { if(isD) { dWin.style.left = (e.clientX + off[0]) + 'px'; dWin.style.top = (e.clientY + off[1]) + 'px'; } };
+    document.onmouseup = () => isD = false;
+
+    async function send() {
+        const n = document.getElementById('db-n').value, m = document.getElementById('db-m').value;
+        if(!n || !m) return;
+        await sb.from('projects').insert([{ name: n, desc: m }]);
+        toggleWin(false); loadForum();
+    }
+
+    console.log("FERUM.OS v5.4.REBORN INITIALIZED");
 </script>
 </body>
 </html>
