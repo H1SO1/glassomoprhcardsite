@@ -6,9 +6,7 @@
     <title>ferum // FERUM.OS v5.5.ULTRA_WIDE</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <style>
-        /* === CORE VARIABLES === */
         :root {
             --bg: #030303; 
             --card: #0e0e11; 
@@ -16,14 +14,13 @@
             --border: rgba(255, 255, 255, 0.08);
             --text-main: #f0f0f0; 
             --text-dim: #71717a; 
-            --radius: 32px;
+            --radius: 24px;
             --font-main: 'Plus Jakarta Sans', sans-serif; 
             --font-mono: 'JetBrains Mono', monospace;
             --win-bg: rgba(10, 10, 12, 0.98);
             --vhs-bg: #0a0a0c;
         }
 
-        /* === RESET & BASE === */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s; cursor: none !important; }
         
         body { 
@@ -34,126 +31,149 @@
             overflow-x: hidden; 
         }
 
-        /* === CUSTOM SYSTEM CURSOR === */
         #c-cursor {
-            width: 12px; height: 12px; border: 1.5px solid var(--accent); border-radius: 50%;
+            width: 10px; height: 10px; border: 1.5px solid var(--accent); border-radius: 50%;
             position: fixed; pointer-events: none; z-index: 10000;
-            transition: transform 0.15s ease, background 0.3s ease;
+            transition: transform 0.1s ease;
             mix-blend-mode: difference;
         }
-        .c-hover { transform: scale(2.5); background: var(--accent); border-color: #fff; }
 
-        /* === WATERMARKS === */
-        .frm-huge {
-            position: absolute; bottom: -20px; right: -10px;
-            font-size: 18rem; font-weight: 900; letter-spacing: -15px;
-            color: var(--accent); opacity: 0.03; z-index: 1; pointer-events: none;
-        }
+        .c-hover { transform: scale(3); background: var(--accent); }
+
         .ascii-bg {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: var(--font-mono); font-size: 10px; line-height: 9px;
-            color: var(--accent); opacity: 0.015; z-index: 0; pointer-events: none; white-space: pre;
+            font-family: var(--font-mono); font-size: 9px; line-height: 8px;
+            color: var(--accent); opacity: 0.012; z-index: 0; pointer-events: none; white-space: pre;
         }
 
-        /* === NAVIGATION === */
         nav { 
-            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
-            background: rgba(17, 17, 19, 0.85); backdrop-filter: blur(30px); 
-            padding: 10px; border-radius: 22px; border: 1px solid var(--border); 
-            display: flex; gap: 8px; z-index: 1000; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+            background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px); 
+            padding: 8px; border-radius: 20px; border: 1px solid var(--border); 
+            display: flex; gap: 5px; z-index: 1000;
         }
+
         .nav-btn { 
-            padding: 14px 28px; border-radius: 16px; border: none; background: transparent; 
-            color: var(--text-dim); font-weight: 700; font-size: 13px;
+            padding: 10px 20px; border-radius: 14px; border: none; background: transparent; 
+            color: var(--text-dim); font-weight: 700; font-size: 12px;
             font-family: var(--font-main); transition: 0.2s;
         }
+
         .nav-btn.active { background: var(--accent); color: #000; }
-        .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* === THEME MENU === */
         .theme-menu { 
-            position: absolute; top: 80px; right: 0; background: var(--win-bg); 
-            border: 1px solid var(--border); border-radius: 24px; padding: 18px; 
-            display: none; flex-direction: column; gap: 10px; min-width: 260px; 
-            max-height: 480px; overflow-y: auto; z-index: 1001; box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            position: absolute; top: 70px; right: 0; background: var(--win-bg); 
+            border: 1px solid var(--border); border-radius: 20px; padding: 15px; 
+            display: none; flex-direction: column; gap: 5px; min-width: 240px; 
+            max-height: 400px; overflow-y: auto; z-index: 1001; 
         }
+
+        .theme-menu::-webkit-scrollbar { width: 4px; }
+        .theme-menu::-webkit-scrollbar-thumb { background: var(--accent); }
+
         .theme-menu.show { display: flex; }
+
         .t-item { 
-            padding: 14px; border-radius: 14px; font-family: var(--font-mono); 
-            font-size: 11px; display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); 
+            padding: 10px; border-radius: 10px; font-family: var(--font-mono); 
+            font-size: 10px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); 
         }
+
         .t-item:hover { background: var(--accent); color: #000; }
-        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-        /* === PAGES === */
-        .page { display: none; padding: 160px 20px 100px; max-width: 1200px; margin: 0 auto; animation: pageIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .t-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        .page { display: none; padding: 120px 20px 60px; max-width: 1100px; margin: 0 auto; animation: pageIn 0.4s ease-out; }
         .page.active { display: block; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* === BENTO GRID === */
-        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 15px; }
+
         .bento-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); 
-            padding: 45px; position: relative; overflow: hidden; 
+            padding: 30px; position: relative; overflow: hidden; 
         }
         
-        .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
-        .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; position: relative; z-index: 5; }
+        .hero-card { grid-column: span 2; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .hero-card h1 { font-size: 5.5rem; letter-spacing: -6px; font-weight: 800; line-height: 0.85; margin: 15px 0; z-index: 5; }
         .hero-card h1 span { color: var(--accent); }
 
-        /* === COMPACT VHS PLAYER === */
-        .vhs-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; position: relative; z-index: 10; }
+        .frm-huge {
+            position: absolute; bottom: -10px; right: -5px;
+            font-size: 14rem; font-weight: 900; letter-spacing: -12px;
+            color: var(--accent); opacity: 0.03; z-index: 1; pointer-events: none;
+        }
+
+        .vhs-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; z-index: 10; }
+        
         .vhs-player { 
-            background: var(--vhs-bg); border: 1px solid var(--border); border-radius: 14px; 
-            padding: 10px 20px; display: flex; align-items: center; gap: 15px; 
-            width: fit-content; min-width: 320px; position: relative; overflow: hidden;
+            background: var(--vhs-bg); border: 1px solid var(--border); border-radius: 12px; 
+            padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
+            width: fit-content; min-width: 280px;
         }
-        .vhs-player::after {
-            content: ""; position: absolute; inset: 0; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
-            background-size: 100% 2px; pointer-events: none;
-        }
+
         .vhs-btn { 
-            width: 30px; height: 30px; background: #1a1a1f; border: 1px solid var(--border); 
-            color: var(--accent); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 9px;
+            width: 28px; height: 28px; background: #1a1a1f; border: 1px solid var(--border); 
+            color: var(--accent); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 8px;
         }
+
         .vhs-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent); }
-        .vhs-info { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; }
-        .vhs-title { font-weight: 800; font-size: 11px; color: #fff; letter-spacing: 0.5px; }
-        .vhs-status { color: var(--accent); animation: vhs-blink 1.5s infinite; }
-        @keyframes vhs-blink { 50% { opacity: 0; } }
 
-        /* === COMPACT DB BUTTON === */
-        .db-connector-cell { display: flex; align-items: center; justify-content: center; }
+        .vhs-info { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; }
+        .vhs-title { font-weight: 800; font-size: 10px; color: #fff; }
+        .vhs-status { color: var(--accent); }
+
         .db-btn-compact { 
-            padding: 18px 40px; background: var(--text-main); color: var(--bg); 
-            border: none; border-radius: 20px; font-weight: 900; font-size: 15px; 
-            width: auto; 
+            padding: 15px 35px; background: var(--text-main); color: var(--bg); 
+            border: none; border-radius: 16px; font-weight: 900; font-size: 13px; 
         }
-        .db-btn-compact:hover { background: var(--accent); color: #000; }
 
-        /* === TERMINAL === */
+        .db-btn-compact:hover { background: var(--accent); color: #000; transform: scale(1.02); }
+
         #term-body { 
-            background: #000; border-radius: 28px; padding: 40px; font-family: var(--font-mono); 
-            height: 500px; overflow-y: auto; color: var(--accent); border: 1px solid var(--border); 
-            font-size: 14px; line-height: 1.7; 
+            background: #000; border-radius: 20px; padding: 25px; font-family: var(--font-mono); 
+            height: 400px; overflow-y: auto; color: var(--accent); border: 1px solid var(--border); 
+            font-size: 13px; line-height: 1.6; 
         }
-        .t-row { margin-bottom: 8px; }
-        .t-input-wrap {
-            display: flex; gap: 15px; margin-top: 25px; background: rgba(255,255,255,0.03);
-            padding: 25px; border-radius: 24px; border: 1px solid var(--border);
-        }
-        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        /* === MODAL & OTHER ELEMENTS (FROM ORIGINAL) === */
-        #modal { position: fixed; inset: 0; background: rgba(3, 3, 3, 0.98); display: none; z-index: 5000; overflow-y: auto; backdrop-filter: blur(15px); padding: 80px 20px; }
-        .modal-container { max-width: 900px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 40px; overflow: hidden; }
-        .modal-body { padding: 60px; }
-        .close-m { position: fixed; top: 40px; right: 40px; padding: 18px 30px; background: var(--accent); border: none; border-radius: 18px; color: #000; font-family: var(--font-mono); font-weight: 800; z-index: 5001; }
-        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); --vhs-bg: #e0e0e4; }
+        .t-input-wrap {
+            display: flex; gap: 12px; margin-top: 15px; background: rgba(255,255,255,0.02);
+            padding: 20px; border-radius: 18px; border: 1px solid var(--border);
+        }
+
+        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 14px; }
+
+        #forum-feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+
+        .archive-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px;
+            cursor: pointer; position: relative; transition: 0.3s;
+        }
+
+        .archive-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+        .archive-img { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
+
+        #modal { position: fixed; inset: 0; background: rgba(3, 3, 3, 0.95); display: none; z-index: 5000; overflow-y: auto; backdrop-filter: blur(10px); padding: 60px 20px; }
+        .modal-container { max-width: 800px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 30px; overflow: hidden; }
+        .modal-body { padding: 40px; }
+        .modal-text { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+        .close-m { position: fixed; top: 30px; right: 30px; padding: 15px 25px; background: var(--accent); border: none; border-radius: 14px; color: #000; font-family: var(--font-mono); font-weight: 800; }
+
+        #drag-win { position: fixed; top: 20%; left: 30%; width: 360px; background: var(--win-bg); border: 1px solid var(--accent); border-radius: 24px; display: none; z-index: 4000; }
+        .win-h { padding: 15px; border-bottom: 1px solid var(--border); cursor: move; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--accent); }
+        .win-b { padding: 25px; }
+        .win-in { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); border-radius: 12px; color: #fff; margin-bottom: 12px; font-family: var(--font-mono); font-size: 12px; }
+        .win-push { width: 100%; padding: 15px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-weight: 800; }
+
+        ::selection { background: var(--accent); color: #000; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
     </style>
 </head>
-<body onclick="unlockAudio()">
+<body onclick="initAudio()">
 
 <div id="c-cursor"></div>
 <div class="ascii-bg">
@@ -161,24 +181,18 @@
     | || || || || || || || || || |
     | || || || || || || || || || |
     |_||_||_||_||_||_||_||_||_||_|
-    FERUM_OS_KERNEL_REVISION_5.5.01
+    FERUM_OS_KERNEL_REVISION_6.0.0
+    ACCESS_GRANTED_BY_FERUM_ID
 </div>
 
 <nav>
-    <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
-    <button class="nav-btn" onclick="switchTab('forum', this)">Archive</button>
-    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
-    <button class="nav-btn" onclick="switchTab('secret', this)">[ X_LINK ]</button>
+    <button class="nav-btn active" onclick="tab('home', this)">Home</button>
+    <button class="nav-btn" onclick="tab('forum', this)">Archive</button>
+    <button class="nav-btn" onclick="tab('terminal', this)">Terminal</button>
+    <button class="nav-btn" onclick="tab('secret', this)">[ X ]</button>
     <div style="position: relative;">
-        <button class="nav-btn" onclick="toggleT()">Design</button>
-        <div class="theme-menu" id="tMenu">
-            <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
-            <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
-            <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
-            <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
-            <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
-            <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
-        </div>
+        <button class="nav-btn" onclick="togT()">Design</button>
+        <div class="theme-menu" id="tM"></div>
     </div>
 </nav>
 
@@ -187,166 +201,243 @@
         <div class="bento-card hero-card">
             <div class="frm-huge">FRM</div>
             <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.5_ULTRA_WIDE</p>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;">// ULTRA_COMPACT_CORE</p>
                 <h1>FERUM<span>.OS</span></h1>
-                
                 <div class="vhs-stack">
                     <div class="vhs-player">
-                        <div class="vhs-controls">
-                            <button class="vhs-btn" id="vbtn-0" onclick="toggleAudio(0)">PLAY</button>
-                        </div>
+                        <button class="vhs-btn" id="v0" onclick="togA(0)">PLAY</button>
                         <div class="vhs-info">
-                            <div class="vhs-title">TAPE_01: RADIO_INFUSION</div>
-                            <div class="vhs-status" id="vstat-0">STOPPED</div>
+                            <div class="vhs-title">RADIO_INFUSION</div>
+                            <div class="vhs-status" id="s0">STOPPED</div>
                         </div>
                     </div>
                     <div class="vhs-player">
-                        <div class="vhs-controls">
-                            <button class="vhs-btn" id="vbtn-1" onclick="toggleAudio(1)">PLAY</button>
-                        </div>
+                        <button class="vhs-btn" id="v1" onclick="togA(1)">PLAY</button>
                         <div class="vhs-info">
-                            <div class="vhs-title">TAPE_02: TOKYO_DRIFT_ROCK</div>
-                            <div class="vhs-status" id="vstat-1">STOPPED</div>
+                            <div class="vhs-title">TOKYO_DRIFT_ROCK</div>
+                            <div class="vhs-status" id="s1">STOPPED</div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
-                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.5.01 // SEC: ENCRYPTED</p>
-            </div>
-            
-            <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ KERNEL_ACTIVE ]</div>
-                <div>SESSION_TIME: <span id="uptime">00:00:00</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; z-index: 5;">
+                <p style="font-family: var(--font-mono); font-size: 9px; opacity: 0.3;">REV_6.0.0 // ENCRYPTED</p>
+                <div style="text-align: right; font-family: var(--font-mono); font-size: 10px;">
+                    <span style="color: var(--accent)">[ SYSTEM_LIVE ]</span><br>
+                    <span id="upt">00:00:00</span>
+                </div>
             </div>
         </div>
-
         <div class="bento-card">
-            <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
-            <div style="margin-top: 35px; font-size: 13px; color: var(--text-dim); line-height: 2.2; font-family: var(--font-mono);">
-                [!] LOADING_SKILLS_MANIFEST...<br>
-                ------------------------------<br>
-                > UI/UX: GLASSMORPHISM, BENTO, VHS_FX<br>
-                > DEV: HTML5, CSS3, JS (ES6+), PYTHON<br>
-                > MATH: OPTIMIZATION, LINEAR_PROG, VAR_7<br>
-                > OTHER: VIDEO_ESSAYS, ARG_RESEARCH, STALKER_RP<br>
-                ------------------------------<br>
-                [!] SYSTEM_READY
+            <h3 style="color: var(--accent); font-family: var(--font-mono); font-size: 14px;">Skills.manifest</h3>
+            <div style="margin-top: 20px; font-size: 11px; color: var(--text-dim); line-height: 2; font-family: var(--font-mono);">
+                > UI: GLASSMORPHISM, VHS_FX<br>
+                > DEV: JS, PY, SQL, SUPABASE<br>
+                > MATH: VAR_7, OPTIMIZATION<br>
+                > ART: ARG, VIDEO_ESSAYS<br>
+                > STATUS: ROOT_ACCESS_OK
             </div>
         </div>
-
         <div class="bento-card db-connector-cell">
-             <button class="db-btn-compact" onclick="toggleWin(true)">CONNECT_DB</button>
+             <button class="db-btn-compact" onclick="togW(true)">CONNECT_DB</button>
         </div>
     </div>
 </div>
 
 <div id="forum" class="page">
-    <div id="forum-feed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;"></div>
+    <div id="forum-feed"></div>
 </div>
 
 <div id="terminal" class="page">
     <div id="term-body">
-        <div class="t-row">FERUM.OS [Version 5.5.ULTRA_WIDE]</div>
-        <div class="t-row">Type 'help' to see available commands.</div>
+        <div>FERUM.OS [Version 6.0.0]</div>
+        <div>All dark protocols engaged. Ready for input.</div>
     </div>
     <div class="t-input-wrap">
         <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
-        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" autocomplete="off">
+        <input type="text" id="t-in" class="t-user-in" onkeydown="run(event)" autocomplete="off">
     </div>
 </div>
 
 <div id="secret" class="page">
-    <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
-        <h2 style="color: var(--accent); margin-bottom: 20px; font-family: var(--font-mono);">SECURE_LINK: NO_GIVE_UP</h2>
-        <div class="vhs-player" style="margin-bottom: 30px;">
-            <button class="vhs-btn active" style="width: auto; padding: 0 20px;">X_SECRET_TAPE.EXE</button>
-            <div class="vhs-info"><div class="vhs-status">READY_TO_ROLL</div></div>
+    <div class="bento-card" style="min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
+        <h2 style="color: var(--accent); margin-bottom: 20px; font-family: var(--font-mono);">SECURE_STREAM</h2>
+        <iframe width="100%" height="350" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay" style="border-radius: 15px; border: 1px solid var(--accent);"></iframe>
+    </div>
+</div>
+
+<div id="modal">
+    <button class="close-m" onclick="clsM()">CLOSE</button>
+    <div class="modal-container">
+        <div id="mImg"></div>
+        <div class="modal-body">
+            <h2 id="mT" style="margin-bottom: 20px;"></h2>
+            <div class="modal-text" id="mC"></div>
         </div>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
     </div>
 </div>
 
-<div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000;">
-    <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
-        <span>DB_UPLINK_CORE</span>
-        <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
+<div id="drag-win">
+    <div class="win-h" id="w-h">
+        <span>CORE_DB_PUSH</span>
+        <span onclick="togW(false)" style="color:#fff;">[ X ]</span>
     </div>
-    <div style="padding:30px;">
-        <input type="text" id="db-n" placeholder="ENTRY_NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
-        <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
-        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800;">PUSH_TO_CLOUD</button>
+    <div class="win-b">
+        <input type="text" id="d-n" placeholder="TITLE" class="win-in">
+        <textarea id="d-m" placeholder="CONTENT" class="win-in" style="height:100px; resize:none;"></textarea>
+        <button onclick="push()" class="win-push">EXECUTE_PUSH</button>
     </div>
 </div>
 
-<audio id="r0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
-<audio id="r1" loop src="https://listen.moe/stream"></audio>
+<audio id="a0" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
+<audio id="a1" loop src="https://listen.moe/stream"></audio>
 
 <script>
-    // CURSOR ENGINE
-    const cursor = document.getElementById('c-cursor');
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX - 6 + 'px';
-        cursor.style.top = e.clientY - 6 + 'px';
-    });
-    document.querySelectorAll('button, .t-item, .nav-btn, .db-btn-compact').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('c-hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('c-hover'));
-    });
-
-    // ТВОЙ ОРИГИНАЛЬНЫЙ JS БЕЗ ИЗМЕНЕНИЙ (Supabase, Theme, Tabs)
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
-    const themes = {
-        crimson: { accent: '#ff0055', bg: '#030303', card: '#0e0e11', text: '#f0f0f0' },
-        arsenic: { accent: '#00ffa3', bg: '#030303', card: '#0e0e11', text: '#f0f0f0' },
-        void: { accent: '#ff7b00', bg: '#000', card: '#050505', text: '#fff' },
-        ghost: { accent: '#000', bg: '#f0f0f2', card: '#ffffff', text: '#000', mode: 'ghost' },
-        stalker: { accent: '#7c8a4f', bg: '#0a0b08', card: '#14160f', text: '#c8d4a5' },
-        win98: { accent: '#000080', bg: '#008080', card: '#c0c0c0', text: '#000' }
+    const sounds = {
+        click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+        hover: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
+        boot: new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3')
     };
+    let aOk = false;
+    function initAudio() { if(!aOk) { Object.values(sounds).forEach(s => { s.play(); s.pause(); }); aOk = true; sounds.boot.play(); } }
+    function play(s) { if(aOk) { let n = sounds[s].cloneNode(); n.volume = 0.15; n.play(); } }
 
-    function applyTheme(t) {
-        const th = themes[t]; const r = document.documentElement.style;
-        r.setProperty('--accent', th.accent); r.setProperty('--bg', th.bg); 
-        r.setProperty('--card', th.card); r.setProperty('--text-main', th.text);
-        document.body.className = th.mode === 'ghost' ? 'ghost-mode' : '';
-        document.getElementById('tMenu').classList.remove('show');
+    const ths = [
+        { n: 'CRIMSON_CORE', a: '#ff0055', b: '#030303', c: '#0e0e11', t: '#f0f0f0' },
+        { n: 'ARSENIC_TOXIC', a: '#00ffa3', b: '#030504', c: '#0b100e', t: '#e0f0e8' },
+        { n: 'VOID_OLED', a: '#ff7b00', b: '#000', c: '#050505', t: '#fff' },
+        { n: 'STALKER_PDA', a: '#7c8a4f', b: '#0a0b08', c: '#14160f', t: '#c8d4a5' },
+        { n: 'MATRIX_GLITCH', a: '#00ff41', b: '#000', c: '#050a05', t: '#00ff41' },
+        { n: 'DEEP_CYAN', a: '#00d4ff', b: '#00080d', c: '#00141a', t: '#b0eaff' },
+        { n: 'RETRO_WIN_DARK', a: '#000080', b: '#1a1a1a', c: '#262626', t: '#fff' },
+        { n: 'BLOOD_MOON', a: '#880000', b: '#050000', c: '#150505', t: '#ffaaaa' },
+        { n: 'VIOLET_NIGHT', a: '#a020f0', b: '#050008', c: '#10051a', t: '#e0c0ff' },
+        { n: 'COLD_ICE', a: '#a5f2f3', b: '#000508', c: '#05101a', t: '#d0f0ff' },
+        { n: 'NUCLEAR_WASTE', a: '#ccff00', b: '#050800', c: '#0d1a00', t: '#e6ffb0' },
+        { n: 'OBSIDIAN', a: '#333', b: '#020202', c: '#080808', t: '#aaa' },
+        { n: 'CYBER_SUNSET', a: '#ff4d00', b: '#0d0500', c: '#1a0d05', t: '#ffccaa' },
+        { n: 'MIDNIGHT_BLUE', a: '#1e90ff', b: '#000208', c: '#000a1a', t: '#c0dfff' },
+        { n: 'GOTH_BLACK', a: '#ffffff', b: '#000', c: '#111', t: '#777' },
+        { n: 'PHANTOM', a: '#4b0082', b: '#020005', c: '#080510', t: '#b0a0ff' },
+        { n: 'DRACULA', a: '#bd93f9', b: '#282a36', c: '#44475a', t: '#f8f8f2' },
+        { n: 'NORD_NIGHT', a: '#88c0d0', b: '#2e3440', c: '#3b4252', t: '#eceff4' },
+        { n: 'GRUVBOX_DARK', a: '#fb4934', b: '#1d2021', c: '#282828', t: '#ebdbb2' },
+        { n: 'SYNTH_WAVE', a: '#f92aad', b: '#0d0221', c: '#240b36', t: '#00d9ff' }
+    ];
+
+    const tM = document.getElementById('tM');
+    ths.forEach(t => {
+        let div = document.createElement('div');
+        div.className = 't-item';
+        div.innerHTML = `<span class="t-dot" style="background:${t.a}"></span> ${t.n}`;
+        div.onclick = () => {
+            const r = document.documentElement.style;
+            r.setProperty('--accent', t.a); r.setProperty('--bg', t.b); 
+            r.setProperty('--card', t.c); r.setProperty('--text-main', t.t);
+            tM.classList.remove('show'); play('click');
+        };
+        tM.appendChild(div);
+    });
+
+    const cur = document.getElementById('c-cursor');
+    document.addEventListener('mousemove', (e) => {
+        cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseover', (e) => {
+        if(e.target.closest('button, .t-item, .nav-btn, .archive-card')) {
+            cur.classList.add('c-hover'); play('hover');
+        } else { cur.classList.remove('c-hover'); }
+    });
+
+    function tab(id, b) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); b.classList.add('active');
+        play('click'); if(id === 'forum') loadF();
     }
 
-    // (Тут остальные функции: switchTab, toggleAudio, loadForum, uptime и т.д. из твоего кода)
-    // Я их оставил как есть, чтобы всё работало.
-    
-    let start = Date.now();
+    function togT() { document.getElementById('tM').classList.toggle('show'); play('click'); }
+    function togW(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; play('click'); }
+
+    let curA = null;
+    function togA(i) {
+        const as = [document.getElementById('a0'), document.getElementById('a1')];
+        const bs = [document.getElementById('v0'), document.getElementById('v1')];
+        const ss = [document.getElementById('s0'), document.getElementById('s1')];
+        if(curA === i) {
+            as[i].pause(); bs[i].innerText = 'PLAY'; ss[i].innerText = 'STOPPED'; curA = null;
+        } else {
+            as.forEach((a, j) => { a.pause(); bs[j].innerText = 'PLAY'; ss[j].innerText = 'STOPPED'; });
+            as[i].play(); bs[i].innerText = 'STOP'; ss[i].innerText = 'PLAYING'; curA = i;
+        }
+        play('click');
+    }
+
+    async function loadF() {
+        const feed = document.getElementById('forum-feed');
+        feed.innerHTML = '<div style="font-family:var(--font-mono); opacity:0.5;">[ ACCESSING_SUPABASE... ]</div>';
+        const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
+        if(error) { feed.innerHTML = '[ ERROR_FETCHING_ARCHIVE ]'; return; }
+        feed.innerHTML = data.map(p => `
+            <div class="archive-card" onclick='opnM(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                ${p.image_url ? `<img src="${p.image_url}" class="archive-img">` : ''}
+                <div style="font-family:var(--font-mono); font-weight:700; font-size:14px;">${p.name}</div>
+                <div style="font-size:10px; color:var(--text-dim); margin-top:5px;">${(p.desc || '').substring(0, 60)}...</div>
+            </div>
+        `).join('');
+    }
+
+    function opnM(p) {
+        document.getElementById('mImg').innerHTML = p.image_url ? `<img src="${p.image_url}" style="width:100%; height:400px; object-fit:contain; background:#000;">` : '';
+        document.getElementById('mT').innerText = p.name;
+        document.getElementById('mC').innerHTML = p.content || p.desc;
+        document.getElementById('modal').style.display = 'block';
+        document.body.style.overflow = 'hidden'; play('click');
+    }
+
+    function clsM() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = 'auto'; play('click'); }
+
+    function run(e) {
+        if(e.key === 'Enter') {
+            const out = document.getElementById('term-body');
+            const c = e.target.value.toLowerCase().trim();
+            out.innerHTML += `<div><span style="opacity:0.3">$</span> ${c}</div>`;
+            const add = (m, cl = 'var(--accent)') => out.innerHTML += `<div style="color:${cl}">> ${m}</div>`;
+            switch(c) {
+                case 'help': add("ls, clear, whoami, sys_info, reboot, themes_list"); break;
+                case 'ls': add("drwxr-xr-x projects<br>-rw-r--r-- ferum_id.key"); break;
+                case 'clear': out.innerHTML = '<div>Buffer cleared.</div>'; break;
+                case 'whoami': add("User: ferum | Role: ROOT"); break;
+                case 'sys_info': add("OS: FERUM.OS v6.0.0<br>Uptime: " + document.getElementById('upt').innerText); break;
+                case 'themes_list': add(ths.map(t => t.n).join(", ")); break;
+                case 'reboot': add("Rebooting...", "#f00"); setTimeout(()=>location.reload(), 800); break;
+                default: add("Command not found.", "#f00");
+            }
+            out.scrollTop = out.scrollHeight; e.target.value = ''; play('click');
+        }
+    }
+
+    let st = Date.now();
     setInterval(() => {
-        let diff = Math.floor((Date.now() - start)/1000);
-        let h = Math.floor(diff/3600).toString().padStart(2,'0'), 
-            m = Math.floor((diff%3600)/60).toString().padStart(2,'0'), 
-            s = (diff%60).toString().padStart(2,'0');
-        document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
+        let d = Math.floor((Date.now() - st)/1000);
+        let h = Math.floor(d/3600).toString().padStart(2,'0'), 
+            m = Math.floor((d%3600)/60).toString().padStart(2,'0'), 
+            s = (d%60).toString().padStart(2,'0');
+        document.getElementById('upt').innerText = `${h}:${m}:${s}`;
     }, 1000);
 
-    function switchTab(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); btn.classList.add('active');
-    }
-    
-    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); }
-    function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; }
-    
-    // VHS ENGINE
-    let currentTape = null;
-    function toggleAudio(idx) {
-        const audios = [document.getElementById('r0'), document.getElementById('r1')];
-        const buttons = [document.getElementById('vbtn-0'), document.getElementById('vbtn-1')];
-        const statusLines = [document.getElementById('vstat-0'), document.getElementById('vstat-1')];
-        if(currentTape === idx) {
-            audios[idx].pause(); buttons[idx].innerText = 'PLAY'; statusLines[idx].innerText = 'STOPPED'; currentTape = null;
-        } else {
-            audios.forEach((a, i) => { a.pause(); buttons[i].innerText = 'PLAY'; statusLines[i].innerText = 'STOPPED'; });
-            audios[idx].play(); buttons[idx].innerText = 'STOP'; statusLines[idx].innerText = 'PLAYING'; currentTape = idx;
-        }
+    const dW = document.getElementById('drag-win'), dH = document.getElementById('w-h');
+    let dr = false, of = [0,0];
+    dH.onmousedown = (e) => { dr = true; of = [dW.offsetLeft - e.clientX, dW.offsetTop - e.clientY]; };
+    document.onmousemove = (e) => { if(dr) { dW.style.left = (e.clientX + of[0]) + 'px'; dW.style.top = (e.clientY + of[1]) + 'px'; } };
+    document.onmouseup = () => dr = false;
+
+    async function push() {
+        const n = document.getElementById('d-n').value, m = document.getElementById('d-m').value;
+        if(!n || !m) return;
+        await sb.from('projects').insert([{ name: n, desc: m }]);
+        togW(false); loadF(); play('boot');
     }
 </script>
 </body>
