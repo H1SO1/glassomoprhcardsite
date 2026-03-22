@@ -68,7 +68,23 @@ body {
     background-color: var(--accent);
     border-color: transparent;
 }
+.skill-node {
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    transition: var(--transition-fast);
+}
 
+.skill-node:hover {
+    background-color: var(--accent);
+    color: #000;
+    transform: translateY(-4px);
+}
 .ascii-bg {
     position: fixed;
     inset: 0;
@@ -834,43 +850,48 @@ closeProjectModal() {
         }
     }
 
-    async fetchDataArchive() {
+   async fetchDataArchive() {
         const grid = document.getElementById('archive-grid');
+        // Очищаем grid перед началом запроса
         grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ QUERYING_REMOTE_INDEX... ]</div>';
         
         const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
         
         if(error) {
             this.sendNotification("FETCH_ERROR", "Could not synchronize archive.");
+            console.error(error); // Полезно для отладки
+            grid.innerHTML = '<div class="span-12" style="text-align:center; color:var(--accent);">[ ERROR_SYNCHRONIZING ]</div>';
             return;
         }
         
-        if(data) {
-            grid.innerHTML = data.map(item => `
-<div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
-
-    <div onclick="event.stopPropagation()">
-        <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">
-            OBJECT_REF: ${item.id}
-        </p>
-
-        <h3 style="margin-bottom:12px; font-weight:900; font-size:18px;">
-            ${item.name}
-        </h3>
-
-        <p style="font-size:13px; color:var(--text-dim);">
-            (item.content || item.desc || "").slice(0, 120) + "..."
-        </p>
-
-        ${item.image ? `
-            <img src="${item.image}" 
-            style="width:100%; margin-top:15px; border-radius:12px; pointer-events:none;">
-        ` : ''}
-
-    </div>
-
-</div>
-`).join('');
+        if(data && data.length > 0) {
+            grid.innerHTML = data.map(item => {
+                // Создаем обрезанное описание
+                const descText = item.content || item.desc || "";
+                const shortDesc = descText.length > 120 ? descText.slice(0, 120) + "..." : descText;
+                
+                return `
+                    <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
+                        <div onclick="event.stopPropagation()">
+                            <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">
+                                OBJECT_REF: ${item.id}
+                            </p>
+                            <h3 style="margin-bottom:12px; font-weight:900; font-size:18px;">
+                                ${item.name}
+                            </h3>
+                            <p style="font-size:13px; color:var(--text-dim);">
+                                ${shortDesc}
+                            </p>
+                            ${item.image ? `
+                                <img src="${item.image}" 
+                                style="width:100%; margin-top:15px; border-radius:12px; pointer-events:none; border: 1px solid var(--border);">
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join(''); 
+        } else {
+             grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ NO_OBJECTS_FOUND ]</div>';
         }
     }
 
