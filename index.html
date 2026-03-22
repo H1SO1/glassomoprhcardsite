@@ -669,17 +669,13 @@ class FerumKernel {
     modal.style.display = 'grid';
 }
 
-openProjectModalByIndex(index) {
-        const item = this.archiveData[index];
-        if(!item) {
-            console.error("Data not found for index:", index);
-            return;
-        }
-
+openProjectModal(encodedData) {
+        // Расшифровываем данные обратно в объект
+        const item = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+        
         const modal = document.getElementById('project-modal');
         const content = document.getElementById('modal-content');
         
-        // Наполняем контентом
         content.innerHTML = `
             <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--accent); line-height: 1.1;">
                 ${item.name}
@@ -688,18 +684,15 @@ openProjectModalByIndex(index) {
             <div style="color: var(--text-main); line-height: 1.8; font-size: 16px; white-space: pre-wrap; font-family: var(--font-main);">
                 ${item.content || item.desc || "No additional data available."}
             </div>
-            <p style="margin-top: 30px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); opacity: 0.4; border-top: 1px solid var(--border); pt-20">
-                <br>TIMESTAMP: ${new Date().toLocaleString()} // OBJ_REF: ${item.id}
+            <p style="margin-top: 30px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); opacity: 0.4; border-top: 1px solid var(--border); padding-top: 20px;">
+                TIMESTAMP: ${new Date().toLocaleString()} // OBJ_REF: ${item.id}
             </p>
         `;
         
-        // Показываем модалку
-        modal.style.display = 'grid'; 
-        document.body.style.overflow = 'hidden'; 
+        modal.style.display = 'grid';
+        document.body.style.overflow = 'hidden';
         
-        if(this.soundBank && this.soundBank.click) {
-            this.soundBank.click.play();
-        }
+        if(this.soundBank && this.soundBank.click) this.soundBank.click.play();
     }
 
 closeProjectModal() {
@@ -978,21 +971,22 @@ closeProjectModal() {
         const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
         
         if(error) {
-            console.error("Supabase Error:", error);
+            console.error(error);
             grid.innerHTML = '<div style="text-align:center; color:var(--accent); padding: 40px;">[ SYNC_ERROR ]</div>';
             return;
         }
         
         if(data && data.length > 0) {
-            this.archiveData = data; 
-
-            grid.innerHTML = data.map((item, index) => {
+            grid.innerHTML = data.map(item => {
                 const descText = item.content || item.desc || "";
                 const shortDesc = descText.length > 200 ? descText.slice(0, 200) + "..." : descText;
                 
+                // Кодируем объект в base64, чтобы кавычки ничего не ломали
+                const safeData = btoa(unescape(encodeURIComponent(JSON.stringify(item))));
+                
                 return `
-                    <div class="archive-post-card" style="cursor: pointer;" onclick="core.openProjectModalByIndex(${index})">
-                        <div class="post-layout" style="pointer-events: none;">
+                    <div class="archive-post-card" style="cursor:pointer" onclick="core.openProjectModalSafe('${safeData}')">
+                        <div class="post-layout" style="pointer-events:none">
                             ${item.image_url ? `
                                 <div class="post-image-wrapper">
                                     <img src="${item.image_url}" alt="img">
@@ -1010,7 +1004,6 @@ closeProjectModal() {
             }).join('');
         }
     }
-
     processTerminal(event) {
         if(event.key === 'Enter') {
             const container = document.getElementById('term-container');
