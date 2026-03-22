@@ -971,38 +971,58 @@ closeProjectModal() {
         const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
         
         if(error) {
-            console.error(error);
-            grid.innerHTML = '<div style="text-align:center; color:var(--accent); padding: 40px;">[ SYNC_ERROR ]</div>';
+            console.error("Supabase error:", error);
             return;
         }
         
         if(data && data.length > 0) {
-            grid.innerHTML = data.map(item => {
+            // Сохраняем в память, чтобы не мучиться с кавычками
+            window.storedArchiveData = data; 
+
+            grid.innerHTML = data.map((item, index) => {
                 const descText = item.content || item.desc || "";
-                const shortDesc = descText.length > 200 ? descText.slice(0, 200) + "..." : descText;
-                
-                // Кодируем объект в base64, чтобы кавычки ничего не ломали
-                const safeData = btoa(unescape(encodeURIComponent(JSON.stringify(item))));
+                const shortDesc = descText.length > 180 ? descText.slice(0, 180) + "..." : descText;
                 
                 return `
-                    <div class="archive-post-card" style="cursor:pointer" onclick="core.openProjectModalSafe('${safeData}')">
-                        <div class="post-layout" style="pointer-events:none">
+                    <div class="archive-post-card" style="cursor:pointer;" onclick="core.openModal(${index})">
+                        <div class="post-layout" style="pointer-events:none;">
                             ${item.image_url ? `
                                 <div class="post-image-wrapper">
-                                    <img src="${item.image_url}" alt="img">
+                                    <img src="${item.image_url}">
                                 </div>
                             ` : ''}
                             <div class="post-content">
                                 <p class="post-meta">REF_ID: ${item.id}</p>
                                 <h3 class="post-title">${item.name}</h3>
                                 <p class="post-desc">${shortDesc}</p>
-                                <div class="post-meta" style="margin-top:auto;">STATUS: DECRYPTED // DATA_TYPE: OBJECT</div>
+                                <div class="post-meta" style="margin-top:auto;">STATUS: DECRYPTED</div>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
         }
+    }
+
+    openModal(index) {
+        console.log("Opening modal for index:", index); // Проверка в консоли
+        const item = window.storedArchiveData[index];
+        if(!item) return;
+
+        const modal = document.getElementById('project-modal');
+        const content = document.getElementById('modal-content');
+        
+        content.innerHTML = `
+            <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--accent);">${item.name}</h2>
+            ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:16px; margin-bottom:20px; border:1px solid var(--border);">` : ''}
+            <div style="color: var(--text-main); line-height: 1.8; font-size: 16px; white-space: pre-wrap;">
+                ${item.content || item.desc || "No data."}
+            </div>
+        `;
+        
+        modal.style.display = 'grid'; 
+        document.body.style.overflow = 'hidden'; 
+        if(this.soundBank.click) this.soundBank.click.play();
     }
     processTerminal(event) {
         if(event.key === 'Enter') {
@@ -1065,8 +1085,14 @@ const core = new FerumKernel();
     }
 });
 </script>
-    <div class="overlay" id="project-modal">
-    <div class="win-frame" id="project-modal-content"></div>
+    
+    <<div class="overlay" id="project-modal">
+    <div class="win-frame">
+        <div id="modal-content">
+            </div>
+        <button onclick="core.closeProjectModal()" class="btn-action" style="margin-top:20px;">CLOSE_ENCRYPTED_ENTRY</button>
+    </div>
 </div>
+        
 </body>
 </html>
