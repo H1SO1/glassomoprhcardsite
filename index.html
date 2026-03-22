@@ -166,6 +166,26 @@
 <div id="modal"><div class="close-btn" onclick="closeM()">[ CLOSE ]</div><div id="mContent" style="max-width: 800px; margin: 0 auto;"></div></div>
 <audio id="player" loop src="https://stream.zeno.fm/0r0xa792kwzuv"></audio>
 
+    <div style="position: absolute; right: 40px; top: 40px; width: 280px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="font-size: 11px; color: var(--text-dim);">CPU_LOAD</div>
+        <div id="cpu-stat" style="font-size: 24px; color: var(--accent);">0.0%</div>
+    </div>
+    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="font-size: 11px; color: var(--text-dim);">RAM_USAGE</div>
+        <div style="font-size: 24px;">768 MB</div>
+    </div>
+</div>
+
+    <script>
+    function updateCpu() {
+        const cpuVal = (Math.random() * 5 + 0.1).toFixed(1);
+        document.getElementById('cpu-stat').innerText = `${cpuVal}%`;
+        setTimeout(updateCpu, 1500 + Math.random() * 1000);
+    }
+    updateCpu(); 
+</script>
+
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
     const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
