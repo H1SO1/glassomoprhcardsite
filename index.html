@@ -21,7 +21,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
@@ -29,64 +29,53 @@
             padding: 8px; border-radius: 20px; border: 1px solid var(--border);
             display: flex; gap: 5px; z-index: 1000;
         }
+
         .nav-btn {
-            padding: 12px 24px; border-radius: 14px; border: none;
+            padding: 12px 28px; border-radius: 14px; border: none;
             background: transparent; color: var(--text-dim);
-            font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s;
+            font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s;
         }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        .page {
-            display: none; padding: 140px 20px 80px;
-            max-width: 1000px; margin: 0 auto;
-            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s ease; }
         .page.active { display: block; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Bento Grid */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
         .bento-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--radius-card); padding: 40px;
             display: flex; flex-direction: column; justify-content: center;
-            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
-        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; font-weight: 800; line-height: 1; margin-bottom: 15px; }
+        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; margin-bottom: 15px; font-weight: 800; line-height: 1; }
         .hero-card h1 span { color: var(--accent); }
-        
-        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .game-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 30px; text-align: center; }
-        
-        canvas { background: #000; border-radius: 12px; margin-top: 15px; max-width: 100%; border: 1px solid var(--border); }
-        
-        .btn-ui {
-            background: var(--accent); color: #000; border: none; padding: 12px 20px;
-            border-radius: 12px; font-family: var(--font-mono); font-weight: 800;
-            cursor: pointer; margin-top: 15px; width: 100%; transition: 0.2s;
-        }
-        .btn-ui:active { transform: scale(0.98); }
 
+        /* Games Layout */
+        .games-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .game-card { 
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); 
+            padding: 30px; text-align: center; display: flex; flex-direction: column; align-items: center;
+        }
+        canvas { background: #000; border: 1px solid var(--border); border-radius: 12px; margin: 20px 0; max-width: 100%; }
+        .game-btn { 
+            background: var(--accent); color: #000; border: none; padding: 12px 30px; 
+            border-radius: 12px; font-family: var(--font-mono); font-weight: 800; cursor: pointer; width: 100%;
+        }
+
+        /* Forum */
         #forum-feed { display: grid; gap: 20px; }
-        .post-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius-card); overflow: hidden; cursor: pointer;
-            transition: 0.3s;
-        }
-        .post-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; cursor: pointer; }
         .post-card-text { padding: 40px; }
-        .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; font-family: var(--font-mono); }
+        .post-meta { font-size: 11px; color: var(--accent); font-family: var(--font-mono); margin-bottom: 10px; }
 
-        #modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); display: none; z-index: 2000;
-            overflow-y: auto; padding: 100px 40px;
-        }
-        .modal-body { max-width: 1000px; margin: 0 auto; color: #ccc; }
-        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; color: #888; cursor: pointer; border: 1px solid var(--border); }
+        /* Modal */
+        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 20px; overflow-y: auto; }
+        .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); color: #888; cursor: pointer; z-index: 2001; }
 
-        @media (max-width: 768px) { .bento-grid, .games-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
+        @media (max-width: 768px) { .bento-grid, .games-container { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.8rem; } }
     </style>
 </head>
 <body>
@@ -105,16 +94,16 @@
             <h1>FERUM<span>.OS</span></h1>
             <p style="color: var(--text-dim); max-width: 600px; font-size: 18px; margin-top: 10px;">
                 Привет. Я <b>H1SO1</b>. <br>
-                Цифровой архитектор. Люблю длинные тексты, код и странный юмор. В процессе изучения REACT и давления на Андрея.
+                Цифровой архитектор, любитель лонгридов. В процессе REACT и вечного самокопания.
             </p>
             <div style="display: flex; gap: 12px; margin-top: 30px;">
-                <a href="https://github.com/H1SO1" style="color:#fff; text-decoration:none; font-weight:600; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px;">GitHub</a>
-                <a href="https://t.me/rh1so" style="color:#fff; text-decoration:none; font-weight:600; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px;">Telegram</a>
+                <a href="https://github.com/H1SO1" target="_blank" style="text-decoration:none; color:#fff; border:1px solid var(--border); padding:10px 20px; border-radius:12px;">GitHub</a>
+                <a href="https://t.me/rh1so" target="_blank" style="text-decoration:none; color:#fff; border:1px solid var(--border); padding:10px 20px; border-radius:12px;">Telegram</a>
             </div>
         </div>
         <div class="bento-card">
             <h3 style="color:#fff;">Skills</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Supabase, HTML, JS, C#, CSS, Adobe Suite, Games.</p>
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">Supabase, C#, JS, CSS, React(loading...).</p>
         </div>
         <div class="bento-card">
             <h3 style="color:#fff;">Motto</h3>
@@ -130,118 +119,100 @@
 
 <div id="games" class="page">
     <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Game_Center</h2>
-    <div class="games-grid">
+    <div class="games-container">
         <div class="game-card">
-            <h3 style="font-family: var(--font-mono);">Snake_OS v1.0</h3>
-            <canvas id="snakeCanvas" width="300" height="300"></canvas>
-            <button class="btn-ui" onclick="startSnake()">START_GAME</button>
+            <h3 style="font-family: var(--font-mono);">SNAKE_OS</h3>
+            <canvas id="sCanvas" width="280" height="280"></canvas>
+            <button class="game-btn" onclick="initSnake()">START</button>
         </div>
         <div class="game-card">
-            <h3 style="font-family: var(--font-mono);">Bit_Miner</h3>
-            <div style="margin: 20px 0;">
-                <span id="bits" style="font-size: 32px; color: var(--accent); font-weight: 800;">0</span><br>
-                <span style="font-size: 10px; color: var(--text-dim);">SYSTEM_BITS</span>
+            <h3 style="font-family: var(--font-mono);">BIT_MINER</h3>
+            <div style="padding: 40px 0;">
+                <h4 id="bitCount" style="font-size: 40px; color: var(--accent);">0</h4>
+                <p style="font-size: 10px; color: var(--text-dim);">BITS_COLLECTED</p>
             </div>
-            <button class="btn-ui" onclick="mineBit()">MINE_BIT()</button>
+            <button class="game-btn" onclick="mine()">GENERATE_BIT()</button>
         </div>
     </div>
 </div>
 
 <div id="secret" class="page">
-    <div class="secret-container">
-        <h2>Классифицировано</h2>
-        <div class="video-wrapper">
-            <iframe id="rick-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+    <div class="video-wrapper" style="border-radius: 32px; overflow: hidden; border: 1px solid var(--accent);">
+        <iframe id="rick" width="100%" height="450" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 </div>
 
-<div id="modal" onclick="closePost()">
-    <div class="close-btn">[ CLOSE_FILE ]</div>
-    <div id="modal-content" class="modal-body" onclick="event.stopPropagation()"></div>
+<div id="modal">
+    <div class="close-btn" onclick="closeM()">[ ЗАКРЫТЬ ]</div>
+    <div id="mContent" class="modal-body"></div>
 </div>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
     const SB_KEY = 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'; 
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-    let cachedPosts = [];
+    const sb = supabase.createClient(SB_URL, SB_KEY);
+    let posts = [];
 
-    function switchTab(tabId, btn) {
+    function switchTab(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-        const rick = document.getElementById('rick-iframe');
-        rick.src = (tabId === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
-        if(tabId === 'forum') getPosts();
+        
+        document.getElementById('rick').src = (id === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
+        if(id === 'forum') loadPosts();
     }
 
-    async function getPosts() {
+    async function loadPosts() {
         const feed = document.getElementById('forum-feed');
-        const { data, error } = await supabaseClient.from('projects').select('*').order('id', { ascending: false });
-        if (error) return;
-        cachedPosts = data;
-        feed.innerHTML = '';
-        data.forEach((post, i) => {
-            feed.innerHTML += `
-                <div class="post-card" onclick="openFullPost(${i})">
-                    <div class="post-card-text">
-                        <div class="post-meta">ID: #${post.id} // SECURED</div>
-                        <h3>${post.name}</h3>
-                        <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 140) : ''}...</p>
-                    </div>
-                </div>`;
-        });
+        const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
+        posts = data;
+        feed.innerHTML = data.map((p, i) => `
+            <div class="post-card" onclick="openP(${i})">
+                <div class="post-card-text">
+                    <div class="post-meta">ID: #${p.id} // DATA_NODE</div>
+                    <h3>${p.name}</h3>
+                    <p style="color:var(--text-dim)">${p.desc?.slice(0,100)}...</p>
+                </div>
+            </div>
+        `).join('');
     }
 
-    function openFullPost(i) {
-        const post = cachedPosts[i];
-        document.getElementById('modal-content').innerHTML = `
-            <h1 style="font-size: 3rem; color: #fff; margin-bottom: 20px;">${post.name}</h1>
-            <div style="white-space: pre-wrap; font-family: var(--font-mono); font-size: 16px;">${post.content || post.desc}</div>
-        `;
+    function openP(i) {
+        document.getElementById('mContent').innerHTML = `<h1>${posts[i].name}</h1><p style="margin-top:30px; white-space:pre-wrap;">${posts[i].content || posts[i].desc}</p>`;
         document.getElementById('modal').style.display = 'block';
     }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    function closePost() { document.getElementById('modal').style.display = 'none'; }
+    // Clicker
+    let b = 0;
+    function mine() { b++; document.getElementById('bitCount').innerText = b; }
 
-    let bits = 0;
-    function mineBit() { bits++; document.getElementById('bits').innerText = bits; }
+    // Snake
+    let s, f, d, g;
+    const cvs = document.getElementById('sCanvas');
+    const ct = cvs.getContext('2d');
 
-    let snake, food, dx, dy, gameLoop;
-    const canvas = document.getElementById('snakeCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function startSnake() {
-        clearInterval(gameLoop);
-        snake = [{x: 150, y: 150}]; dx = 10; dy = 0;
-        spawnFood();
-        gameLoop = setInterval(drawSnake, 100);
+    function initSnake() {
+        clearInterval(g); s=[{x:140,y:140}]; d={x:20,y:0}; spawnF();
+        g = setInterval(drawS, 150);
     }
-
-    function spawnFood() {
-        food = { x: Math.floor(Math.random()*29)*10, y: Math.floor(Math.random()*29)*10 };
+    function spawnF() { f = {x:Math.floor(Math.random()*14)*20, y:Math.floor(Math.random()*14)*20}; }
+    function drawS() {
+        let head = {x: s[0].x + d.x, y: s[0].y + d.y};
+        if(head.x<0||head.x>=280||head.y<0||head.y>=280) return clearInterval(g);
+        s.unshift(head);
+        if(head.x===f.x && head.y===f.y) spawnF(); else s.pop();
+        ct.fillStyle='#000'; ct.fillRect(0,0,280,280);
+        ct.fillStyle='#00ffa3'; ct.fillRect(f.x,f.y,18,18);
+        ct.fillStyle='#fff'; s.forEach(p=>ct.fillRect(p.x,p.y,18,18));
     }
-
-    function drawSnake() {
-        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-        if(head.x<0 || head.x>=300 || head.y<0 || head.y>=300) return clearInterval(gameLoop);
-        snake.unshift(head);
-        if(head.x === food.x && head.y === food.y) spawnFood(); else snake.pop();
-        
-        ctx.fillStyle = '#000'; ctx.fillRect(0,0,300,300);
-        ctx.fillStyle = '#00ffa3'; ctx.fillRect(food.x, food.y, 9, 9);
-        ctx.fillStyle = '#fff';
-        snake.forEach(p => ctx.fillRect(p.x, p.y, 9, 9));
-    }
-
-    window.addEventListener('keydown', e => {
-        if(e.key==='w' && dy===0) {dx=0; dy=-10}
-        if(e.key==='s' && dy===0) {dx=0; dy=10}
-        if(e.key==='a' && dx===0) {dx=-10; dy=0}
-        if(e.key==='d' && dx===0) {dx=10; dy=0}
-    });
+    window.onkeydown=e=>{
+        if(e.key==='w'&&d.y===0){d={x:0,y:-20}}
+        if(e.key==='s'&&d.y===0){d={x:0,y:20}}
+        if(e.key==='a'&&d.x===0){d={x:-20,y:0}}
+        if(e.key==='d'&&d.x===0){d={x:20,y:0}}
+    };
 </script>
 </body>
 </html>
