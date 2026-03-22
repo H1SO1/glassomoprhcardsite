@@ -355,6 +355,84 @@ nav {
 @media (max-width: 1000px) {
     .span-8, .span-4, .span-6 { grid-column: span 12; }
 }
+         #archive-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.archive-post-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-mid);
+    z-index: 1;
+    width: 100%;
+}
+
+.archive-post-card:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+}
+
+.post-layout {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.post-image-wrapper {
+    width: 240px;
+    height: 150px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.post-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-title {
+    margin-bottom: 10px;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--text-main);
+}
+
+.post-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.post-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.8;
+}
+
+/* Адаптив для мобилок */
+@media (max-width: 768px) {
+    .post-layout { flex-direction: column; }
+    .post-image-wrapper { width: 100%; height: 200px; }
+}
     </style>
 </head>
 <body onclick="core.initializeAudio()">
@@ -852,46 +930,41 @@ closeProjectModal() {
 
    async fetchDataArchive() {
         const grid = document.getElementById('archive-grid');
-        // Очищаем grid перед началом запроса
-        grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ QUERYING_REMOTE_INDEX... ]</div>';
+        grid.innerHTML = '<div style="text-align:center; opacity:0.5; font-family:var(--font-mono); padding: 40px;">[ SYNC_IN_PROGRESS... ]</div>';
         
         const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
         
         if(error) {
-            this.sendNotification("FETCH_ERROR", "Could not synchronize archive.");
-            console.error(error); // Полезно для отладки
-            grid.innerHTML = '<div class="span-12" style="text-align:center; color:var(--accent);">[ ERROR_SYNCHRONIZING ]</div>';
+            console.error(error);
+            grid.innerHTML = '<div style="text-align:center; color:var(--accent); padding: 40px;">[ SYNC_ERROR ]</div>';
             return;
         }
         
         if(data && data.length > 0) {
             grid.innerHTML = data.map(item => {
-                // Создаем обрезанное описание
                 const descText = item.content || item.desc || "";
-                const shortDesc = descText.length > 120 ? descText.slice(0, 120) + "..." : descText;
+                const shortDesc = descText.length > 200 ? descText.slice(0, 200) + "..." : descText;
                 
                 return `
-                    <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
-                        <div onclick="event.stopPropagation()">
-                            <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">
-                                OBJECT_REF: ${item.id}
-                            </p>
-                            <h3 style="margin-bottom:12px; font-weight:900; font-size:18px;">
-                                ${item.name}
-                            </h3>
-                            <p style="font-size:13px; color:var(--text-dim);">
-                                ${shortDesc}
-                            </p>
+                    <div class="archive-post-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
+                        <div class="post-layout">
                             ${item.image ? `
-                                <img src="${item.image}" 
-                                style="width:100%; margin-top:15px; border-radius:12px; pointer-events:none; border: 1px solid var(--border);">
+                                <div class="post-image-wrapper">
+                                    <img src="${item.image}" alt="project_img">
+                                </div>
                             ` : ''}
+                            <div class="post-content">
+                                <p class="post-meta">REF_ID: ${item.id}</p>
+                                <h3 class="post-title">${item.name}</h3>
+                                <p class="post-desc">${shortDesc}</p>
+                                <div class="post-meta" style="margin-top:auto;">STATUS: DECRYPTED // DATA_TYPE: OBJECT</div>
+                            </div>
                         </div>
                     </div>
                 `;
-            }).join(''); 
+            }).join('');
         } else {
-             grid.innerHTML = '<div class="span-12" style="text-align:center; opacity:0.5; font-family:var(--font-mono);">[ NO_OBJECTS_FOUND ]</div>';
+             grid.innerHTML = '<div style="text-align:center; opacity:0.5; font-family:var(--font-mono); padding: 40px;">[ ARCHIVE_EMPTY ]</div>';
         }
     }
 
