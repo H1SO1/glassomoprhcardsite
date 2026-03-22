@@ -85,47 +85,53 @@
 
         
         .post-card {
-            background: var(--card); 
-            border: 1px solid var(--border);
-            border-radius: var(--radius-card); 
-            margin-bottom: 25px; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            display: grid; 
-            grid-template-columns: 1fr 200px; /* Текст слева, 200px картинка справа */
-            gap: 20px;
-            overflow: hidden; /* Чтобы картинка не вылезала */
-        }
-        
-        .post-card:hover { border-color: var(--accent); transform: scale(1.01); }
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        margin-bottom: 25px;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        display: flex; /* Перешли на flex для гибкости */
+        justify-content: space-between;
+        overflow: hidden;
+    }
 
-        /* Блок с текстом */
-        .post-card-text {
-            padding: 40px; 
-            display: flex; flex-direction: column; justify-content: center;
-        }
-        
-        .post-card h3 { font-size: 1.8rem; margin: 10px 0; color: #fff; font-weight: 800; line-height: 1.1; }
-        .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .post-card:hover { 
+        border-color: var(--accent); 
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
 
-        /* Блок с картинкой-превью */
-        .post-preview-img-container {
-            width: 200px; height: 100%;
-            background: rgba(0,0,0,0.3); /* Заглушка, если картинка не грузится */
-            display: flex; align-items: center; justify-content: center;
-            border-left: 1px solid var(--border);
+    .post-card-text {
+        padding: 40px;
+        flex: 1; /* Занимает всё свободное место */
+    }
+
+    /* Блок превью */
+    .post-preview-side {
+        width: 280px; /* Сделал чуть пошире для красоты */
+        min-width: 280px;
+        position: relative;
+        border-left: 1px solid var(--border);
+    }
+
+    .post-preview-side img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .post-card { flex-direction: column-reverse; }
+        .post-preview-side { 
+            width: 100%; 
+            height: 200px; 
+            min-width: 100%;
+            border-left: none;
+            border-bottom: 1px solid var(--border);
         }
-        
-        .post-preview-img {
-            width: 100%; height: 100%;
-            object-fit: cover; /* Заполняет блок, не растягиваясь */
-            /* filter: grayscale(100%); Можно добавить грейскейл, если хочешь прям нуар */
-            transition: filter 0.3s;
-        }
-        
-        .post-card:hover .post-preview-img {
-            filter: grayscale(0%);
-        }
+    }
 
         /* --- МОДАЛЬНОЕ ОКНО (ПОЛНЫЙ ПОСТ) --- */
         #modal {
@@ -255,30 +261,38 @@
 
         
         async function loadForum() {
-            const feed = document.getElementById('forum-feed');
-            const { data, error } = await supabaseClient
-                .from('projects')
-                .select('*')
-                .order('id', { ascending: false });
+        const feed = document.getElementById('forum-feed');
+        const { data, error } = await supabaseClient
+            .from('projects')
+            .select('*')
+            .order('id', { ascending: false });
 
-            if(error) {
-                feed.innerHTML = `<p style="color: var(--accent)">ERROR_AUTH: ${error.message}</p>`;
-                return;
-            }
+        if(error) return;
+        cachedPosts = data;
+        feed.innerHTML = '';
 
-            cachedPosts = data;
-            feed.innerHTML = '';
+        data.forEach((post, i) => {
+            // Если картинка есть — создаем блок, если нет — пустая строка
+            const imageBlock = post.image_url ? `
+                <div class="post-preview-side">
+                    <img src="${post.image_url}" loading="lazy">
+                </div>
+            ` : '';
 
-            data.forEach((post, i) => {
-                feed.innerHTML += `
-                    <div class="post-card" onclick="openFullPost(${i})">
-                        <div class="post-meta">ID_REF: #${post.id}</div>
+            feed.innerHTML += `
+                <div class="post-card" onclick="openFullPost(${i})">
+                    <div class="post-card-text">
+                        <div class="post-meta">ID: #${post.id} // SECURED</div>
                         <h3>${post.name}</h3>
-                        <p style="color: var(--text-dim); font-size: 14px;">${post.desc ? post.desc.substring(0, 120) : 'Нет описания...'}...</p>
+                        <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">
+                            ${post.desc ? post.desc.substring(0, 160) : 'Нет описания...'}...
+                        </p>
                     </div>
-                `;
-            });
-        }
+                    ${imageBlock}
+                </div>
+            `;
+        });
+    }
 
         
         function openFullPost(index) {
