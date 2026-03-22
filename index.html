@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rh1so // FERUM.OS v5.3.ULTRA</title>
     <title>rh1so // FERUM.OS v5.4.REBORN</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-
+    
     <style>
         /* === CORE VARIABLES === */
         :root {
             --bg: #030303; 
             --card: #0e0e11; 
             --accent: #ff0055; 
-            --border: rgba(255, 255, 255, 0.06);
             --border: rgba(255, 255, 255, 0.08);
             --text-main: #f0f0f0; 
             --text-dim: #71717a; 
@@ -24,8 +22,6 @@
             --win-bg: rgba(10, 10, 12, 0.98);
         }
 
-        /* ГЛОБАЛЬНЫЕ СТИЛИ */
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s, color 0.3s; }
         /* === RESET & BASE === */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background 0.3s, border-color 0.3s; }
         
@@ -38,7 +34,6 @@
             cursor: crosshair;
         }
 
-        /* НАВИГАЦИЯ */
         /* === SCROLLBAR === */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -50,24 +45,17 @@
             top: 25px; 
             left: 50%; 
             transform: translateX(-50%); 
-            background: rgba(17, 17, 19, 0.8); 
-            backdrop-filter: blur(25px); 
-            padding: 8px; 
-            border-radius: 20px; 
             background: rgba(17, 17, 19, 0.85); 
             backdrop-filter: blur(30px); 
             padding: 10px; 
             border-radius: 22px; 
             border: 1px solid var(--border); 
             display: flex; 
-            gap: 5px; 
             gap: 8px; 
             z-index: 1000; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         .nav-btn { 
-            padding: 12px 25px; 
-            border-radius: 14px; 
             padding: 14px 28px; 
             border-radius: 16px; 
             border: none; 
@@ -82,37 +70,26 @@
         .nav-btn.active { background: var(--accent); color: #000; }
         .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* МЕНЮ ДИЗАЙНА */
         /* === THEME MENU === */
         .theme-menu { 
             position: absolute; 
-            top: 75px; 
             top: 80px; 
             right: 0; 
-            background: var(--card); 
             background: var(--win-bg); 
             border: 1px solid var(--border); 
-            border-radius: 20px; 
-            padding: 15px; 
             border-radius: 24px; 
             padding: 18px; 
             display: none; 
             flex-direction: column; 
-            gap: 8px; 
-            min-width: 240px; 
-            max-height: 450px; 
             gap: 10px; 
             min-width: 260px; 
             max-height: 480px; 
             overflow-y: auto; 
             z-index: 1001; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
         .theme-menu.show { display: flex; }
         .t-item { 
-            padding: 12px; 
-            border-radius: 12px; 
             padding: 14px; 
             border-radius: 14px; 
             cursor: pointer; 
@@ -120,150 +97,72 @@
             font-size: 11px; 
             display: flex; 
             align-items: center; 
-            gap: 12px; 
-            background: rgba(255,255,255,0.02); 
             gap: 14px; 
             background: rgba(255,255,255,0.03); 
         }
         .t-item:hover { background: var(--accent); color: #000; }
-        .t-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .t-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-        /* СТРАНИЦЫ */
-        .page { display: none; padding: 140px 20px 80px; max-width: 1100px; margin: 0 auto; animation: fadeInUp 0.5s ease; }
         /* === PAGES === */
         .page { display: none; padding: 160px 20px 100px; max-width: 1200px; margin: 0 auto; animation: pageIn 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         .page.active { display: block; }
         @keyframes pageIn { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* БЕНТО СЕТКА */
-        .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; }
         /* === BENTO GRID === */
         .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
         .bento-card { 
             background: var(--card); 
             border: 1px solid var(--border); 
             border-radius: var(--radius); 
-            padding: 40px; 
             padding: 45px; 
             position: relative; 
             overflow: hidden; 
         }
-
-        /* КАРТОЧКА ГЕРОЯ */
-        .hero-card { grid-column: span 2; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; }
-        .hero-card h1 { font-size: 6.5rem; letter-spacing: -6px; font-weight: 800; line-height: 0.9; margin: 20px 0; }
+        
         .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
         .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; }
         .hero-card h1 span { color: var(--accent); }
 
-        .social-row { display: flex; gap: 12px; margin: 20px 0; }
-        .social-btn { 
-            padding: 16px 32px; 
-            border-radius: 18px; 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border); 
-            color: #fff; 
-            text-decoration: none; 
-            font-weight: 700; 
-            font-size: 14px; 
-            transition: 0.3s;
-        }
-        .social-btn:hover { background: #fff; color: #000; transform: translateY(-3px); }
-
-        /* РАДИО ПЛЕЕР */
-        .radio-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; position: relative; z-index: 10; }
         /* === PLAYER === */
         .radio-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; position: relative; z-index: 10; }
         .player-bar { 
-            background: rgba(255,255,255,0.02); 
             background: rgba(255,255,255,0.03); 
             border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 12px 20px; 
             border-radius: 26px; 
             padding: 14px 24px; 
             display: flex; 
             align-items: center; 
-            gap: 15px; 
             gap: 18px; 
             width: fit-content; 
-            min-width: 320px; 
             min-width: 340px; 
         }
         .p-play { 
-            width: 44px; 
-            height: 44px; 
             width: 48px; 
             height: 48px; 
             border-radius: 50%; 
             border: none; 
             background: var(--accent); 
-            color: var(--bg); /* Чтобы ▶ было видно */
             color: #000; 
             cursor: pointer; 
-            font-size: 18px; 
             font-size: 20px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             flex-shrink: 0; 
-            transition: 0.2s;
             box-shadow: 0 8px 20px rgba(255, 0, 85, 0.2);
         }
-        .p-play:hover { transform: scale(1.1); }
 
-        /* ASCII ART */
-        .hero-art { position: absolute; right: 40px; bottom: 40px; text-align: right; pointer-events: none; }
-        .frm-txt { font-size: 11rem; font-weight: 900; letter-spacing: -15px; line-height: 1; opacity: 0.08; }
-
-        /* ЦЕНТРИРОВАНИЕ КНОПКИ ЧАТА */
-        .db-center { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-        .btn-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
-
-        /* ОКНО КОММУНИКАЦИИ */
-        #drag-win { 
         /* === MODAL REFIX === */
         #modal { 
             position: fixed; 
-            top: 20%; 
-            left: 35%; 
-            width: 440px; 
-            background: rgba(14, 14, 17, 0.95); 
-            backdrop-filter: blur(30px); 
-            border: 1px solid var(--accent); 
-            border-radius: 28px; 
-            z-index: 3000; 
             inset: 0; 
             background: rgba(3, 3, 3, 0.98); 
             display: none; 
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-        }
-        .win-header { 
-            padding: 20px 25px; 
-            cursor: move; 
-            display: flex; 
-            justify-content: space-between; 
-            border-bottom: 1px solid var(--border); 
-            font-family: var(--font-mono); 
-            font-size: 11px; 
-            color: var(--accent);
             z-index: 5000; 
             overflow-y: auto; 
             backdrop-filter: blur(15px);
             padding: 80px 20px;
         }
-        .win-body { padding: 30px; }
-        .win-input { 
-            width: 100%; 
-            padding: 18px; 
-            background: rgba(0,0,0,0.5); 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            color: #fff; 
-            margin-bottom: 15px; 
-            font-family: var(--font-mono); 
-            font-size: 13px;
         .modal-container {
             max-width: 900px;
             margin: 0 auto;
@@ -273,11 +172,6 @@
             overflow: hidden;
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
-        .win-btn { 
-            width: 100%; 
-            padding: 22px; 
-            border-radius: 18px; 
-            border: none; 
         .modal-img-wrap { width: 100%; max-height: 500px; overflow: hidden; background: #000; }
         .modal-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
         .modal-body { padding: 60px; }
@@ -289,10 +183,6 @@
             right: 40px; 
             padding: 18px 30px; 
             background: var(--accent); 
-            color: var(--bg); 
-            font-weight: 800; 
-            cursor: pointer; 
-            transition: 0.3s;
             border: none; 
             border-radius: 18px; 
             color: #000; 
@@ -301,44 +191,20 @@
             cursor: pointer;
             z-index: 5001;
         }
-        .win-btn:hover { letter-spacing: 2px; }
 
-        /* ТЕРМИНАЛ */
         /* === TERMINAL === */
         #term-body { 
             background: #000; 
-            border-radius: 24px; 
-            padding: 30px; 
             border-radius: 28px; 
             padding: 40px; 
             font-family: var(--font-mono); 
-            height: 480px; 
             height: 500px; 
             overflow-y: auto; 
             color: var(--accent); 
             border: 1px solid var(--border); 
             font-size: 14px; 
-            line-height: 1.6; 
-            scrollbar-width: thin;
             line-height: 1.7; 
         }
-        .t-prompt { color: var(--accent); margin-right: 10px; }
-        .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
-
-        /* МОДАЛКА */
-        #modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 4000; padding: 100px 20px; overflow-y: auto; }
-        .close-m { 
-            position: fixed; 
-            top: 40px; 
-            right: 40px; 
-            padding: 15px 25px; 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            color: #fff; 
-            cursor: pointer; 
-            font-family: var(--font-mono); 
-            z-index: 4001; 
         .t-row { margin-bottom: 8px; }
         .t-input-wrap {
             display: flex;
@@ -351,100 +217,71 @@
         }
         .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
-        /* КОРРЕКЦИЯ ДЛЯ GHOST ТЕМЫ */
-        .ghost-mode .social-btn { border-color: #000; color: #000; }
         /* === GHOST MODE FIXES === */
         .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); }
         .ghost-mode .p-play { background: #000 !important; color: #fff !important; }
         .ghost-mode .nav-btn.active { color: #fff; }
 
-        @keyframes fadeInUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
     </style>
 </head>
-<body onclick="initAudio()" onwheel="playSnd('scroll')">
 <body onclick="unlockAudio()">
 
 <nav>
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
-@@ -269,14 +236,11 @@
+    <button class="nav-btn" onclick="switchTab('forum', this)">Archive</button>
+    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
+    <button class="nav-btn" onclick="switchTab('secret', this)">[ X_LINK ]</button>
+    <div style="position: relative;">
+        <button class="nav-btn" onclick="toggleT()">Design</button>
         <div class="theme-menu" id="tMenu">
             <div class="t-item" onclick="applyTheme('crimson')"><span class="t-dot" style="background:#ff0055"></span> CRIMSON_CORE</div>
             <div class="t-item" onclick="applyTheme('arsenic')"><span class="t-dot" style="background:#00ffa3"></span> ARSENIC_TOXIC</div>
-            <div class="t-item" onclick="applyTheme('vapor')"><span class="t-dot" style="background:#ff00ff"></span> VAPOR_WAVE</div>
             <div class="t-item" onclick="applyTheme('void')"><span class="t-dot" style="background:#ff7b00"></span> VOID_OLED</div>
             <div class="t-item" onclick="applyTheme('ghost')"><span class="t-dot" style="background:#000"></span> GHOST_WHITE</div>
-            <div class="t-item" onclick="applyTheme('cobalt')"><span class="t-dot" style="background:#0066ff"></span> COBALT_DRIVE</div>
             <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
             <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
             <div class="t-item" onclick="applyTheme('matrix')"><span class="t-dot" style="background:#00ff41"></span> MATRIX_RAIN</div>
-            <div class="t-item" onclick="applyTheme('night')"><span class="t-dot" style="background:#7a00ff"></span> NIGHT_CITY</div>
         </div>
     </div>
 </nav>
-@@ -285,266 +249,204 @@
+
+<div id="home" class="page active">
     <div class="bento-grid">
         <div class="bento-card hero-card">
             <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.3_PRO_RESTORED</p>
                 <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.4_FINAL_HELL</p>
                 <h1>FERUM<span>.OS</span></h1>
-                <div class="social-row">
-                    <a href="#" class="social-btn">GitHub</a>
-                    <a href="#" class="social-btn">Telegram</a>
-                </div>
                 
                 <div class="radio-stack">
                     <div class="player-bar">
                         <button class="p-play" onclick="toggleAudio(0, this)">▶</button>
                         <div>
-                            <div style="font-weight: 800; font-size: 12px;">RADIO_INFUSION (Lofi)</div>
-                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
                             <div style="font-weight: 800; font-size: 13px;">RADIO_INFUSION (Lofi)</div>
                             <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
                         </div>
                     </div>
-                    <div class="player-bar" style="margin-top: 5px;">
                     <div class="player-bar">
                         <button class="p-play" onclick="toggleAudio(1, this)">▶</button>
                         <div>
-                            <div style="font-weight: 800; font-size: 12px;">TOKYO_DRIFT (J-Rock)</div>
-                            <div class="r-stat" style="font-size: 9px; color: var(--text-dim);">STATUS: IDLE</div>
                             <div style="font-weight: 800; font-size: 13px;">TOKYO_DRIFT (J-Rock)</div>
                             <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="hero-art">
-                <div class="frm-txt">FRM</div>
-                <p style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; opacity: 0.3; margin-top: -10px;">SECURITY_LEVEL: ALPHA_7</p>
 
             <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
                 <div style="font-size: 8rem; font-weight: 900; opacity: 0.05; letter-spacing: -10px;">FRM</div>
                 <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.4.12 // SEC: ALPHA</p>
             </div>
-
-            <div style="position: absolute; top: 40px; right: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ SYSTEM_HEALTH ]</div>
+            
             <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
                 <div style="color: var(--accent)">[ SYSTEM_LIVE ]</div>
                 <div>UPTIME: <span id="uptime">00:00:00</span></div>
-                <div>MEM_LOAD: 24%</div>
             </div>
         </div>
 
         <div class="bento-card">
-            <h3 style="color: var(--accent); font-family: var(--font-mono);">Core_Skills</h3>
-            <div style="margin-top: 30px; font-size: 13px; color: var(--text-dim); line-height: 2.3; font-family: var(--font-mono);">
-                > UI/UX Architecture<br>
-                > Game Theory (STALKER)<br>
-                > Glitch Visual Design<br>
-                > Database Management<br>
-                > Linear Optimization
             <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
             <div style="margin-top: 35px; font-size: 14px; color: var(--text-dim); line-height: 2.5; font-family: var(--font-mono);">
                 > UI_ARCHITECTURE: [ HIGH ]<br>
@@ -455,11 +292,6 @@
             </div>
         </div>
 
-        <div class="bento-card db-center">
-            <h3 style="color: var(--accent); font-family: var(--font-mono);">Support_DB</h3>
-            <div class="btn-wrap">
-                <button onclick="toggleWin(true)" style="width:100%; padding:24px; border-radius:20px; border:none; background:var(--text-main); color: var(--bg); font-weight:800; cursor:pointer; transition: 0.3s;">OPEN_COMM_LINK</button>
-            </div>
         <div class="bento-card" style="display: flex; align-items: center; justify-content: center;">
              <button onclick="toggleWin(true)" style="width:100%; height:100%; background:var(--text-main); color:var(--bg); border:none; border-radius:var(--radius); font-weight:900; font-size:20px; cursor:pointer;">CONNECT_DB</button>
         </div>
@@ -467,21 +299,15 @@
 </div>
 
 <div id="forum" class="page">
-    <div id="forum-feed"></div>
     <div id="forum-feed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;"></div>
 </div>
 
 <div id="terminal" class="page">
     <div id="term-body">
-        FERUM.OS [Terminal v5.3] - User: ferum - Access: Granted<br>
-        Type 'help' to see available commands.
         <div class="t-row">FERUM.OS [Version 5.4.REBORN]</div>
         <div class="t-row">Unauthorized access is prohibited.</div>
         <div class="t-row">Type 'help' to begin.</div>
     </div>
-    <div style="display:flex; gap:12px; margin-top:20px; background:rgba(255,255,255,0.03); padding:24px; border-radius:22px; border:1px solid var(--border); align-items: center;">
-        <span class="t-prompt">$</span>
-        <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" oninput="playSnd('key')" spellcheck="false" autocomplete="off">
     <div class="t-input-wrap">
         <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
         <input type="text" id="t-in" class="t-user-in" onkeydown="runTerm(event)" autocomplete="off" spellcheck="false">
@@ -489,11 +315,6 @@
 </div>
 
 <div id="secret" class="page">
-    <div class="bento-card" style="min-height: 600px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px dashed var(--accent);">
-        <div>
-            <h1 style="font-size: 5rem; color: var(--accent);">ENCRYPTED</h1>
-            <p style="font-family: var(--font-mono); margin-top: 20px; opacity: 0.5;">Waiting for correct terminal sequence...</p>
-        </div>
     <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
         <h2 style="color: var(--accent); margin-bottom: 30px; font-family: var(--font-mono);">DECRYPT_SUCCESS: NO_GIVE_UP</h2>
         <iframe width="100%" height="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
@@ -501,8 +322,6 @@
 </div>
 
 <div id="modal">
-    <button class="close-m" onclick="closeM()">[ ESC_CLOSE ]</button>
-    <div class="modal-content" id="mContent"></div>
     <button class="close-m" onclick="closeM()">[ CLOSE_X ]</button>
     <div class="modal-container">
         <div class="modal-img-wrap" id="mImgWrap"></div>
@@ -513,19 +332,11 @@
     </div>
 </div>
 
-<div id="drag-win">
-    <div class="win-header" id="win-handle">
-        <span>UPLINK_COMM_v1.2</span>
-        <span onclick="toggleWin(false)" style="cursor:pointer; color: #fff;">[ X ]</span>
 <div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000; box-shadow:0 40px 80px #000;">
     <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
         <span>UPLINK_SESSION</span>
         <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
     </div>
-    <div class="win-body">
-        <input type="text" id="db-n" class="win-input" placeholder="IDENTIFIER (NAME)">
-        <textarea id="db-m" class="win-input" style="height:140px; resize:none;" placeholder="DATA_PACKET (MESSAGE)"></textarea>
-        <button class="win-btn" onclick="send()">PUSH_TO_CORE</button>
     <div style="padding:30px;">
         <input type="text" id="db-n" placeholder="NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
         <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
@@ -537,14 +348,8 @@
 <audio id="r1" loop src="https://listen.moe/stream"></audio>
 
 <script>
-
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
-
- 
-    const snds = {
-        key: new Audio('https://www.soundjay.com/communication/typing-mechanical-laptop-1.mp3'),
-        click: new Audio('https://www.soundjay.com/buttons/button-16.mp3'),
-        scroll: new Audio('https://www.soundjay.com/buttons/button-50.mp3')
+    
     // SOUND ENGINE
     const sfx = {
         key: new Audio('https://opengameart.org/sites/default/files/click_0.wav'),
@@ -552,11 +357,6 @@
         boot: new Audio('https://opengameart.org/sites/default/files/power_up.wav')
     };
 
-    let audioUnlocked = false;
-    function initAudio() {
-        if(!audioUnlocked) {
-            Object.values(snds).forEach(s => { s.muted = true; s.play().then(() => { s.pause(); s.muted = false; }); });
-            audioUnlocked = true;
     let audioOk = false;
     function unlockAudio() {
         if(!audioOk) {
@@ -567,28 +367,16 @@
         }
     }
 
-    function playSnd(t) { 
-        if(!audioUnlocked) return;
-        let s = snds[t].cloneNode(); 
-        s.volume = (t==='scroll') ? 0.05 : 0.15; 
-        s.play().catch(e => console.log("Sound block")); 
-    }
     function playSnd(t) { if(audioOk) { let s = sfx[t].cloneNode(); s.volume = 0.2; s.play(); } }
 
-    
     // THEMES
     const themes = {
         crimson: { bg: '#030303', card: '#0e0e11', accent: '#ff0055', text: '#f0f0f0' },
         arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0' },
-        vapor: { bg: '#080008', card: '#1a001a', accent: '#ff00ff', text: '#ffe0ff' },
         void: { bg: '#000', card: '#050505', accent: '#ff7b00', text: '#fff' },
-        ghost: { bg: '#f5f5f7', card: '#fff', accent: '#000', text: '#000', mode: 'ghost' },
-        cobalt: { bg: '#00050a', card: '#001020', accent: '#0066ff', text: '#e0f0ff' },
         ghost: { bg: '#f0f0f2', card: '#ffffff', accent: '#000', text: '#000', mode: 'ghost' },
         stalker: { bg: '#0a0b08', card: '#14160f', accent: '#7c8a4f', text: '#c8d4a5' },
         win98: { bg: '#008080', card: '#c0c0c0', accent: '#000080', text: '#000' },
-        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' },
-        night: { bg: '#05050a', card: '#0d0d1a', accent: '#7a00ff', text: '#f0f0ff' }
         matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' }
     };
 
@@ -597,56 +385,17 @@
         r.setProperty('--bg', th.bg); r.setProperty('--card', th.card); r.setProperty('--accent', th.accent);
         r.setProperty('--text-main', th.text);
         document.body.className = th.mode === 'ghost' ? 'ghost-mode' : '';
-        toggleT(); playSnd('click');
         document.getElementById('tMenu').classList.remove('show');
         playSnd('click');
     }
 
-   
     // TERMINAL ENGINE
     function runTerm(e) {
         if(e.key === 'Enter') {
             const out = document.getElementById('term-body');
-            const val = e.target.value.toLowerCase().trim();
-            out.innerHTML += `<div><span style="color:var(--text-dim)">$</span> ${val}</div>`;
             const cmd = e.target.value.toLowerCase().trim();
             out.innerHTML += `<div class="t-row"><span style="color:var(--text-dim)">$</span> ${cmd}</div>`;
-
-            switch(val) {
-                case 'help': 
-                    out.innerHTML += `<div style="color:#fff">Commands: help, ls, cat, whoami, fetch, socials, matrix, clear, date, reboot</div>`;
-                    break;
-                case 'ls':
-                    out.innerHTML += `<div>total 3<br>-rwxr-xr-x  ferum_data.sys<br>-rw-r--r--  secret_note.txt<br>drwxr-xr-x  core_logs</div>`;
-                    break;
-                case 'cat secret_note.txt':
-                    out.innerHTML += `<div style="color:var(--accent)">"Everything you see is just a reflection of the code."</div>`;
-                    break;
-                case 'whoami':
-                    out.innerHTML += `<div>User: ferum | Rank: Administrator | Status: Online</div>`;
-                    break;
-                case 'matrix':
-                    out.innerHTML += `<div style="color:#00ff41">Wake up, ferum... The Matrix has you...</div>`;
-                    applyTheme('matrix');
-                    break;
-                case 'fetch':
-                    out.innerHTML += `<div>OS: FERUM.OS v5.3<br>Kernel: 6.8.0-Pro<br>Shell: FerumShell v1.0<br>Uptime: ${document.getElementById('uptime').innerText}</div>`;
-                    break;
-                case 'date':
-                    out.innerHTML += `<div>${new Date().toLocaleString()}</div>`;
-                    break;
-                case 'clear':
-                    out.innerHTML = 'Terminal cleared.';
-                    break;
-                case 'reboot':
-                    out.innerHTML += `<div>Rebooting system...</div>`;
-                    setTimeout(() => location.reload(), 1500);
-                    break;
-                case 'ferum':
-                    out.innerHTML += `<div style="font-size:10px">01000110 01000101 01010010 01010101 01001101</div>`;
-                    break;
-                default:
-                    out.innerHTML += `<div style="color:red">Error: Command '${val}' not found.</div>`;
+            
             const log = (msg, col = 'var(--accent)') => {
                 out.innerHTML += `<div class="t-row" style="color:${col}">${msg}</div>`;
             };
@@ -661,31 +410,12 @@
                 case 'fetch': log("OS: FERUM.OS v5.4<br>Uptime: "+document.getElementById('uptime').innerText+"<br>Shell: ferum_sh v1.2"); break;
                 default: log("Unknown command: " + cmd, "red");
             }
-            out.scrollTop = out.scrollHeight; e.target.value = '';
             out.scrollTop = out.scrollHeight;
             e.target.value = '';
             playSnd('key');
         }
     }
 
-    let activeRad = null;
-    function toggleAudio(idx, btn) {
-        const audios = [document.getElementById('r0'), document.getElementById('r1')];
-        const allStats = document.querySelectorAll('.r-stat');
-        const allBtns = document.querySelectorAll('.p-play');
-
-        if (activeRad === idx) {
-            audios[idx].pause();
-            btn.innerText = '▶';
-            allStats[idx].innerText = 'STATUS: IDLE';
-            activeRad = null;
-        } else {
-            audios.forEach((a, i) => { a.pause(); allBtns[i].innerText = '▶'; allStats[i].innerText = 'STATUS: IDLE'; });
-            audios[idx].play();
-            btn.innerText = '■';
-            allStats[idx].innerText = 'STATUS: STREAMING';
-            activeRad = idx;
-        }
     // MODAL FIX LOGIC
     function openP(p) {
         playSnd('click');
@@ -696,17 +426,6 @@
         document.getElementById('modal').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
-
- 
-    const win = document.getElementById('drag-win'), handle = document.getElementById('win-handle');
-    let isD = false, off = [0,0];
-    handle.onmousedown = (e) => { isD = true; off = [win.offsetLeft - e.clientX, win.offsetTop - e.clientY]; };
-    document.onmousemove = (e) => { if(isD) { win.style.left = (e.clientX + off[0]) + 'px'; win.style.top = (e.clientY + off[1]) + 'px'; } };
-    document.onmouseup = () => isD = false;
-
-    function toggleWin(s) { playSnd('click'); win.style.display = s ? 'block' : 'none'; }
-    function toggleT() { document.getElementById('tMenu').classList.toggle('show'); }
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
     function closeM() { 
         document.getElementById('modal').style.display = 'none'; 
@@ -719,9 +438,6 @@
         const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
         if(error) return;
         feed.innerHTML = data.map(p => `
-            <div class="bento-card" style="margin-bottom:25px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
-                ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:300px; object-fit:cover; border-radius:24px; margin-bottom:20px;">` : ''}
-                <h3>${p.name}</h3><p style="color:var(--text-dim); margin-top:10px;">${p.desc}</p>
             <div class="bento-card" style="padding:30px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
                 ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px;">` : ''}
                 <h3 style="font-size:20px;">${p.name}</h3>
@@ -730,34 +446,16 @@
         `).join('');
     }
 
-    function openP(p) {
-        playSnd('click');
-        document.getElementById('mContent').innerHTML = `
-            ${p.image_url ? `<img src="${p.image_url}" style="width:100%; border-radius:32px; margin-bottom:40px;">` : ''}
-            <h1 style="font-size:4rem; letter-spacing:-3px;">${p.name}</h1>
-            <div style="margin-top:30px; font-size:18px; line-height:1.8; color:var(--text-dim);">${p.content || p.desc}</div>
-        `;
-        document.getElementById('modal').style.display = 'block';
-    }
-
-    async function send() {
-        const n = document.getElementById('db-n').value, m = document.getElementById('db-m').value;
-        if(!n || !m) return;
-        await sb.from('projects').insert([{ name: n, desc: m }]);
-        document.getElementById('db-n').value = ''; document.getElementById('db-m').value = '';
-        toggleWin(false); loadForum();
-    }
-
-
     // UTILS
     function switchTab(id, btn) {
         playSnd('click');
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-@@ -554,7 +456,26 @@
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); 
+        btn.classList.add('active');
         if(id === 'forum') loadForum();
     }
 
-   
     function toggleT() { document.getElementById('tMenu').classList.toggle('show'); playSnd('click'); }
     function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; playSnd('click'); }
 
@@ -781,11 +479,12 @@
     let start = Date.now();
     setInterval(() => {
         let diff = Math.floor((Date.now() - start)/1000);
-@@ -564,7 +485,21 @@
+        let h = Math.floor(diff/3600).toString().padStart(2,'0'), 
+            m = Math.floor((diff%3600)/60).toString().padStart(2,'0'), 
+            s = (diff%60).toString().padStart(2,'0');
         document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
     }, 1000);
 
-    console.log("FERUM.OS INITIALIZED");
     // DRAG
     const dWin = document.getElementById('drag-win'), dH = document.getElementById('win-handle');
     let isD = false, off = [0,0];
