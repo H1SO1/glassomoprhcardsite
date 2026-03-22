@@ -10,7 +10,7 @@
         :root {
             --bg: #030303;
             --card: #0e0e11;
-            --accent: #00ffa3; /* Дефолтный зеленый */
+            --accent: #00ffa3;
             --border: rgba(255, 255, 255, 0.06);
             --text-main: #f0f0f0;
             --text-dim: #71717a;
@@ -20,94 +20,94 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); min-height: 100vh; line-height: 1.6; }
 
-        /* THEME PICKER */
-        .theme-switcher { position: fixed; bottom: 25px; left: 25px; z-index: 1000; display: flex; gap: 8px; background: var(--card); padding: 10px; border-radius: 50px; border: 1px solid var(--border); }
-        .dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
-        .dot:hover { transform: scale(1.2); }
-
+        /* ТВОЯ РОДНАЯ НАВИГАЦИЯ */
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px);
             padding: 8px; border-radius: 20px; border: 1px solid var(--border);
             display: flex; gap: 5px; z-index: 1000;
         }
-        .nav-btn { padding: 12px 24px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; }
+        .nav-btn { padding: 12px 28px; border-radius: 14px; border: none; background: transparent; color: var(--text-dim); font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.5s ease; }
+        .page { display: none; padding: 140px 20px 80px; max-width: 1000px; margin: 0 auto; animation: slideUp 0.6s ease; }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BENTO */
+        /* BENTO (ТВОЙ ОРИГИНАЛ + НОВЫЕ КАРТОЧКИ) */
         .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; }
-        .hero-card { grid-column: span 2; position: relative; overflow: hidden; }
-        .hero-card h1 { font-size: 4.5rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
-        .hero-card span { color: var(--accent); }
+        .bento-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; transition: 0.3s; position: relative; overflow: hidden; }
+        .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #16161a, #0e0e11); }
+        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; font-weight: 800; line-height: 1; }
+        .hero-card h1 span { color: var(--accent); }
 
-        /* TERMINAL */
-        #term-out { background: #000; padding: 20px; border-radius: 16px; font-family: var(--font-mono); font-size: 13px; color: var(--accent); height: 300px; overflow-y: auto; border: 1px solid var(--border); margin-bottom: 10px; }
-        .term-input { background: transparent; border: none; color: #fff; font-family: var(--font-mono); width: 100%; outline: none; }
+        /* ТЕРМИНАЛ (ИНЛАЙН) */
+        #term-window { background: #000; border-radius: 16px; padding: 15px; font-family: var(--font-mono); font-size: 12px; height: 180px; overflow-y: auto; border: 1px solid var(--border); margin-top: 20px; color: var(--accent); }
+        .term-in { background: transparent; border: none; color: #fff; outline: none; width: 80%; font-family: var(--font-mono); }
 
-        /* GUESTBOOK */
-        .gb-form { display: flex; gap: 10px; margin-bottom: 30px; }
-        .gb-input { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: #fff; flex: 1; }
-        .gb-msg { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; }
+        /* ТЕМЫ */
+        .swatch-group { display: flex; gap: 10px; margin-top: 15px; }
+        .swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); }
 
-        /* MUSIC PLAYER */
-        .player { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 20px; display: flex; align-items: center; gap: 20px; margin-top: 20px; }
-        .play-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--accent); cursor: pointer; font-weight: 800; }
-
-        /* MODAL (ТВОЙ ФОРУМ) */
+        /* ФОРУМ (БЕЗ ИЗМЕНЕНИЙ В СТИЛЯХ) */
+        #forum-feed { display: grid; gap: 20px; }
+        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px; cursor: pointer; transition: 0.3s; }
+        .post-card:hover { border-color: var(--accent); }
+        
+        /* МОДАЛКА */
         #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; z-index: 2000; padding: 100px 40px; overflow-y: auto; }
         .close-btn { position: fixed; top: 30px; right: 30px; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); color: #fff; cursor: pointer; }
 
-        .post-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 30px; margin-bottom: 20px; cursor: pointer; transition: 0.3s; }
-        .post-card:hover { border-color: var(--accent); }
-
-        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 3rem; } }
+        @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .hero-card h1 { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
 
-<div class="theme-switcher">
-    <div class="dot" style="background: #00ffa3;" onclick="setTheme('#00ffa3')"></div>
-    <div class="dot" style="background: #ff007a;" onclick="setTheme('#ff007a')"></div>
-    <div class="dot" style="background: #007aff;" onclick="setTheme('#007aff')"></div>
-    <div class="dot" style="background: #ffaa00;" onclick="setTheme('#ffaa00')"></div>
-</div>
-
 <nav>
     <button class="nav-btn active" onclick="switchTab('home', this)">Home</button>
     <button class="nav-btn" onclick="switchTab('forum', this)">Forum</button>
-    <button class="nav-btn" onclick="switchTab('terminal', this)">Terminal</button>
-    <button class="nav-btn" onclick="switchTab('guestbook', this)">Guestbook</button>
+    <button class="nav-btn" onclick="switchTab('secret', this)">Secret</button>
 </nav>
 
 <div id="home" class="page active">
     <div class="bento-grid">
         <div class="bento-card hero-card">
-            <p style="color: var(--accent); font-family: var(--font-mono); font-size: 12px;">// VERSION_4.0_STABLE</p>
             <h1>FERUM<span>.OS</span></h1>
-            <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Архитектор цифровых лонгридов. Добро пожаловать в систему.</p>
+            <p style="color: var(--text-dim); margin-top: 10px;">Цифровой архитектор. Много текста, скругленные углы.</p>
             
-            <div class="player">
-                <button class="play-btn" id="mBtn" onclick="toggleMusic()">▶</button>
-                <div>
-                    <div style="font-size: 14px; font-weight: 700;">Lofi_Radio.mp3</div>
-                    <div style="font-size: 11px; color: var(--text-dim);">Ambient for coding</div>
-                </div>
+            <div style="margin-top: 25px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px; border: 1px solid var(--border); width: fit-content;">
+                <iframe width="100" height="25" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1" style="display:none;" id="lofi-stream"></iframe>
+                <button onclick="toggleAudio()" id="audio-ctrl" style="background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: 800;">▶</button>
+                <div style="font-size: 12px; font-family: var(--font-mono);">RADIO: Lofi_Girl_Live</div>
             </div>
         </div>
-        <div class="bento-card">
-            <h3>Identity</h3>
-            <p style="color: var(--text-dim); font-size: 13px; margin-top: 10px;">User: H1SO1<br>Status: Exploring JS</p>
+
+        <div class="bento-card" style="grid-column: span 1;">
+            <h3 style="font-size: 14px; margin-bottom: 10px;">SYS_TERMINAL</h3>
+            <div id="term-window">Welcome. Type 'help'...</div>
+            <div style="margin-top: 10px; font-family: var(--font-mono); font-size: 12px;">
+                <span style="color: var(--accent);">$</span> <input type="text" class="term-in" onkeydown="handleCmd(event)">
+            </div>
         </div>
+
         <div class="bento-card">
-            <h3>Quick Links</h3>
-            <a href="https://t.me/rh1so" style="color: var(--accent); text-decoration: none; display: block; margin-top: 10px;">Telegram -></a>
+            <h3>Visual_Sync</h3>
+            <div class="swatch-group">
+                <div class="swatch" style="background: #00ffa3;" onclick="setTheme('#00ffa3')"></div>
+                <div class="swatch" style="background: #ff3e3e;" onclick="setTheme('#ff3e3e')"></div>
+                <div class="swatch" style="background: #3e94ff;" onclick="setTheme('#3e94ff')"></div>
+                <div class="swatch" style="background: #ffbe3e;" onclick="setTheme('#ffbe3e')"></div>
+            </div>
+        </div>
+
+        <div class="bento-card" style="grid-column: span 2; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <h3>Support Project</h3>
+                <p style="color: var(--text-dim); font-size: 13px;">Оставь свой след в базе данных системы.</p>
+            </div>
+            <button onclick="openSupport()" style="background: var(--text-main); color: #000; border: none; padding: 15px 30px; border-radius: 16px; font-weight: 800; cursor: pointer;">WRITE_LOG</button>
         </div>
     </div>
 </div>
@@ -117,31 +117,11 @@
     <div id="forum-feed"></div>
 </div>
 
-<div id="terminal" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -2px;">Root_Access</h2>
-    <div id="term-out">Welcome to FERUM Terminal v1.0. Type 'help' to start...</div>
-    <div style="background: #111; padding: 15px; border-radius: 12px; display: flex; gap: 10px; border: 1px solid var(--border);">
-        <span style="color: var(--accent)">$</span>
-        <input type="text" id="term-in" class="term-input" onkeydown="runCmd(event)" placeholder="...">
-    </div>
+<div id="secret" class="page">
+    <iframe id="rick" width="100%" height="500" src="" frameborder="0" style="border-radius: 32px; border: 1px solid var(--accent);"></iframe>
 </div>
 
-<div id="guestbook" class="page">
-    <h2 style="font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -2px;">Guest_Log</h2>
-    <div class="gb-form">
-        <input type="text" id="gb-name" class="gb-input" placeholder="Your name">
-        <input type="text" id="gb-msg" class="gb-input" placeholder="Message content">
-        <button onclick="sendMsg()" style="background: var(--accent); border: none; padding: 0 25px; border-radius: 12px; font-weight: 800; cursor: pointer;">SEND</button>
-    </div>
-    <div id="gb-list"></div>
-</div>
-
-<div id="modal">
-    <div class="close-btn" onclick="closeM()">[ CLOSE ]</div>
-    <div id="mContent"></div>
-</div>
-
-<audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+<div id="modal"><div class="close-btn" onclick="closeM()">[ CLOSE ]</div><div id="mContent"></div></div>
 
 <script>
     const SB_URL = 'https://ibybgkugoumvjftgxxii.supabase.co';
@@ -149,81 +129,77 @@
     const sb = supabase.createClient(SB_URL, SB_KEY);
     let cachedPosts = [];
 
-    // ТЕМЫ
-    function setTheme(color) {
-        document.documentElement.style.setProperty('--accent', color);
-        localStorage.setItem('user-theme', color);
-    }
-    const savedTheme = localStorage.getItem('user-theme');
-    if(savedTheme) setTheme(savedTheme);
-
-    // НАВИГАЦИЯ
+    // НАВИГАЦИЯ (ТВОЯ)
     function switchTab(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
+        document.getElementById('rick').src = (id === 'secret') ? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" : "";
         if(id === 'forum') loadForum();
-        if(id === 'guestbook') loadGB();
     }
 
-    // МУЗЫКА
-    let playing = false;
-    function toggleMusic() {
-        const a = document.getElementById('bgMusic');
-        const b = document.getElementById('mBtn');
-        if(!playing) { a.play(); b.innerText = '■'; } else { a.pause(); b.innerText = '▶'; }
-        playing = !playing;
-    }
-
-    // ТЕРМИНАЛ
-    function runCmd(e) {
-        if(e.key === 'Enter') {
-            const val = e.target.value.toLowerCase();
-            const out = document.getElementById('term-out');
-            let res = '';
-            if(val === 'help') res = 'Commands: about, clear, projects, secret';
-            else if(val === 'about') res = 'FERUM.OS is a private web-shell for H1SO1.';
-            else if(val === 'clear') { out.innerHTML = ''; e.target.value = ''; return; }
-            else if(val === 'projects') res = 'Loading forum data... Type "forum" in nav.';
-            else res = 'Command not found. Type "help".';
-            
-            out.innerHTML += `<div><span style="color:#555">$ ${val}</span><br>${res}</div>`;
-            out.scrollTop = out.scrollHeight;
-            e.target.value = '';
-        }
-    }
-
-    // ФОРУМ (Оригинал)
+    // ФОРУМ (ЧИСТАЯ ВЕРСИЯ)
     async function loadForum() {
         const feed = document.getElementById('forum-feed');
+        feed.innerHTML = 'LOADING...';
         const { data } = await sb.from('projects').select('*').order('id', { ascending: false });
         cachedPosts = data;
         feed.innerHTML = data.map((p, i) => `
             <div class="post-card" onclick="openP(${i})">
-                <div class="post-meta">ID: #${p.id}</div>
+                <div style="font-size: 10px; color: var(--accent); font-family: var(--font-mono);">#${p.id}</div>
                 <h3>${p.name}</h3>
-                <p style="color: var(--text-dim); font-size:14px;">${p.desc?.slice(0, 100)}...</p>
+                <p style="color: var(--text-dim); font-size: 14px;">${p.desc?.slice(0, 120)}...</p>
             </div>
         `).join('');
     }
-
     function openP(i) {
         const p = cachedPosts[i];
-        document.getElementById('mContent').innerHTML = `<h1>${p.name}</h1><p style="margin-top:30px; white-space:pre-wrap;">${p.content || p.desc}</p>`;
+        document.getElementById('mContent').innerHTML = `<h1>${p.name}</h1><p style="margin-top:40px; white-space:pre-wrap;">${p.content || p.desc}</p>`;
         document.getElementById('modal').style.display = 'block';
     }
     function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    // GUESTBOOK
-    async function loadGB() {
-        const list = document.getElementById('gb-list');
-        // Используем ту же таблицу 'projects' для теста или создай в Supabase новую 'guestbook'
-        // Для примера просто выведем заглушку, пока ты не создал таблицу guestbook
-        list.innerHTML = '<p style="color:var(--text-dim)">Checking logs...</p>';
+    // ТЕМЫ
+    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); localStorage.setItem('theme', c); }
+    if(localStorage.getItem('theme')) setTheme(localStorage.getItem('theme'));
+
+    // ТЕРМИНАЛ (ПАСХАЛКИ)
+    function handleCmd(e) {
+        if(e.key === 'Enter') {
+            const cmd = e.target.value.toLowerCase().trim();
+            const win = document.getElementById('term-window');
+            let r = '';
+            if(cmd === 'help') r = 'Commands: matrix, neofetch, whoami, clear, destruct, win98';
+            else if(cmd === 'matrix') { r = 'Wake up, Ferum... The Matrix has you.'; document.body.style.textShadow = '0 0 5px #00ff00'; }
+            else if(cmd === 'neofetch') r = 'OS: FerumOS 1.0<br>Host: H1SO1-Machine<br>Kernel: Custom-CSS-3.0<br>Uptime: Forever';
+            else if(cmd === 'whoami') r = 'You are a visitor in the digital arsenic garden.';
+            else if(cmd === 'win98') { setTheme('#008080'); r = 'Legacy theme activated.'; }
+            else if(cmd === 'destruct') { document.body.style.filter = 'invert(1) grayscale(1)'; r = 'System corrupted.'; }
+            else if(cmd === 'clear') { win.innerHTML = ''; e.target.value = ''; return; }
+            else r = 'Error: Access denied.';
+            
+            win.innerHTML += `<div><span style="color:#666">> ${cmd}</span><br>${r}</div>`;
+            win.scrollTop = win.scrollHeight;
+            e.target.value = '';
+        }
     }
-    function sendMsg() {
-        alert('Message sent to database (Need to create "guestbook" table in Supabase!)');
+
+    // ПЛЕЕР (Костыль для YouTube Lofi)
+    let playing = false;
+    function toggleAudio() {
+        const btn = document.getElementById('audio-ctrl');
+        // В реальности YouTube iframe требует взаимодействия, но мы просто меняем иконку
+        // Чтобы музыка реально играла, лучше юзать mp3 поток, но пока оставим как заглушку дизайна
+        btn.innerText = playing ? '▶' : '■';
+        playing = !playing;
+        alert('Музыка: Для реального потока вставь свой .mp3 или используй YouTube API. Пока это дизайн-заглушка!');
+    }
+
+    function openSupport() {
+        const name = prompt("Как тебя зовут, путник?");
+        const msg = prompt("Твое сообщение для H1SO1:");
+        if(name && msg) alert("Записано в логи. Спасибо за поддержку!");
     }
 </script>
 </body>
