@@ -247,6 +247,13 @@
             transition: var(--transition-mid);
         }
 
+         .bento-card p{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
         .bento-card:hover {
             border-color: rgba(var(--accent-rgb), 0.4);
             transform: translateY(-8px);
