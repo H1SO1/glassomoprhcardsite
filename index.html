@@ -253,6 +253,23 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+         .bento-card::after{
+    content:'OPEN';
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    letter-spacing:3px;
+    background:rgba(0,0,0,0.6);
+    opacity:0;
+    transition:0.3s;
+}
+
+.bento-card:hover::after{
+    opacity:1;
+}
 
         .bento-card:hover {
             border-color: rgba(var(--accent-rgb), 0.4);
@@ -397,6 +414,14 @@
             transform: scale(1);
             transition: var(--transition-mid);
         }
+
+         #project-modal .win-frame {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+         #project-modal {
+    overflow-y: auto;
+}
 
         .win-field {
             width: 100%;
