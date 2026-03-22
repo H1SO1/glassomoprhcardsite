@@ -611,6 +611,12 @@
         #project-modal {
     overflow-y: auto;
 }
+        .bento-card p{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
     </style>
 </head>
 <body onclick="core.initializeAudio()">
@@ -818,7 +824,7 @@ openProjectModal(item) {
 
     content.innerHTML = `
         <h2 style="color:var(--accent); margin-bottom:25px;">${item.name}</h2>
-        ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
+         ${item.image ? `<img src="${this.supabase.storage.from('image_url').getPublicUrl(item.image).data.publicUrl}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
         <p style="opacity:0.7; line-height:1.8;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
         <button class="btn-action" style="margin-top:30px;" onclick="core.closeProjectModal()">CLOSE</button>
     `;
@@ -1116,14 +1122,30 @@ closeProjectModal() {
         
         if(data) {
             grid.innerHTML = data.map(item => `
-    <div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
-                    <div>
-                        <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">OBJECT_REF: ${item.id}</p>
-                        <h3 style="margin-bottom:18px; font-weight:900; font-size:19px; letter-spacing: -0.5px;">${item.name}</h3>
-                        <p style="font-size:13px; color:var(--text-dim); font-weight: 500;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
-                    </div>
-                </div>
-            `).join('');
+<div class="bento-card" onclick='core.openProjectModal(${JSON.stringify(item)})'>
+
+    <div onclick="event.stopPropagation()">
+        <p style="color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-bottom:12px; font-weight: 800;">
+            OBJECT_REF: ${item.id}
+        </p>
+
+        <h3 style="margin-bottom:12px; font-weight:900; font-size:18px;">
+            ${item.name}
+        </h3>
+
+        <p style="font-size:13px; color:var(--text-dim);">
+            (item.content || item.desc || "").slice(0, 120) + "..."
+        </p>
+
+        ${item.image ? `
+            <img src="${item.image}" 
+            style="width:100%; margin-top:15px; border-radius:12px; pointer-events:none;">
+        ` : ''}
+
+    </div>
+
+</div>
+`).join('');
         }
     }
 
