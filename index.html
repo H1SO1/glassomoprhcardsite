@@ -7,18 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #050505;
-            --card: #111113;
+       :root {
+            --bg: #030303;
+            --card: #0e0e11;
             --accent: #00ffa3;
             --text-main: #ffffff;
             --text-dim: #71717a;
             --radius: 32px;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.06);
+            --font: 'Plus Jakarta Sans', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
         
         body {
             background: var(--bg);
@@ -28,17 +29,16 @@
             line-height: 1.6;
         }
 
-        /* --- Навигация (Tabs) --- */
+        /* --- Navigation Navigation --- */
         nav {
             position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
             background: rgba(17, 17, 19, 0.7); backdrop-filter: blur(25px);
-            padding: 8px; border-radius: 24px; border: 1px solid var(--border);
+            padding: 8px; border-radius: 20px; border: 1px solid var(--border);
             display: flex; gap: 5px; z-index: 1000;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .nav-btn {
-            padding: 12px 28px; border-radius: 18px; border: none;
+            padding: 12px 28px; border-radius: 16px; border: none;
             background: transparent; color: var(--text-dim);
             font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -58,82 +58,68 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        
-        .bento-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
-        .bento-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 45px;
-            display: flex; flex-direction: column; justify-content: center;
-            transition: 0.4s;
-        }
-        .hero-card { grid-column: span 2; background: radial-gradient(circle at top right, #1a1a22, #111113); }
-        .hero-card h1 { font-size: 4rem; letter-spacing: -4px; margin-bottom: 15px; font-weight: 800; line-height: 1; }
-        .hero-card h1 span { color: var(--accent); }
-        
-        .social-links { display: flex; gap: 12px; margin-top: 30px; }
-        .social-btn {
-            background: var(--glass); padding: 14px 24px; border-radius: 20px;
-            text-decoration: none; color: #fff; font-size: 14px; border: 1px solid var(--border);
-            transition: 0.3s; font-weight: 600;
-        }
-        .social-btn:hover { background: #fff; color: #000; border-color: #fff; }
-
         /* --- ФОРУМ: СЕТКА КАРТОЧЕК --- */
         .feed-header { margin-bottom: 50px; }
         .feed-header h2 { font-size: 3rem; letter-spacing: -3px; font-weight: 800; }
-        .feed-header p { color: var(--text-dim); margin-top: 5px; }
 
-        
+        /* --- КАРТОЧКА: БАЗОВЫЙ СТИЛЬ --- */
         .post-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-card);
-        margin-bottom: 25px;
-        cursor: pointer;
-        transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        display: flex; /* Перешли на flex для гибкости */
-        justify-content: space-between;
-        overflow: hidden;
-    }
-
-    .post-card:hover { 
-        border-color: var(--accent); 
-        transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-
-    .post-card-text {
-        padding: 40px;
-        flex: 1; /* Занимает всё свободное место */
-    }
-
-    /* Блок превью */
-    .post-preview-side {
-        width: 280px; /* Сделал чуть пошире для красоты */
-        min-width: 280px;
-        position: relative;
-        border-left: 1px solid var(--border);
-    }
-
-    .post-preview-side img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    @media (max-width: 768px) {
-        .post-card { flex-direction: column-reverse; }
-        .post-preview-side { 
-            width: 100%; 
-            height: 200px; 
-            min-width: 100%;
-            border-left: none;
-            border-bottom: 1px solid var(--border);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius); /* Гарантированное скругление */
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow: hidden; /* Чтобы картинка не вылезала */
+            position: relative;
         }
-    }
+        
+        /* Эффект scale на всю карточку при наведении */
+        .post-card:hover { 
+            border-color: var(--accent); 
+            transform: scale(1.01); /* Мягко увеличиваем всю карточку */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
 
-        /* --- МОДАЛЬНОЕ ОКНО (ПОЛНЫЙ ПОСТ) --- */
+        /* --- Grid layout (для постов с картинкой) --- */
+        .post-grid {
+            display: grid;
+            grid-template-columns: 1fr 240px; /* Фиксированная колонка под картинку */
+            gap: 20px;
+        }
+
+        /* Блок с текстом */
+        .post-card-text {
+            padding: 40px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        
+        .post-card h3 { font-size: 1.8rem; margin: 10px 0; color: #fff; font-weight: 800; line-height: 1.1; }
+        .post-meta { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Блок с картинкой-превью */
+        .post-preview-img-container {
+            width: 240px; height: 100%; /* Полностью заполняет grid-ячейку */
+            background: rgba(0,0,0,0.3);
+            border-left: 1px solid var(--border);
+            position: relative;
+            overflow: hidden; /* Для scale-эффекта картинки */
+        }
+        
+        .post-preview-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: absolute; /* Для scale-эффекта */
+            top: 0; left: 0;
+        }
+        
+        /* Эффект scale на картинку внутри блока */
+        .post-card:hover .post-preview-img {
+            transform: scale(1.05); /* Картинка увеличивается внутри рамки */
+        }
+
+        /* --- МОДАЛЬНОЕ ОКНО --- */
         #modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(30px);
@@ -144,24 +130,15 @@
             background: var(--card); width: 100%; max-width: 800px;
             border-radius: var(--radius); padding: 60px; position: relative;
             height: fit-content; border: 1px solid var(--border);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
         }
-        .modal-img {
-            width: 100%; max-height: 500px; object-fit: cover;
-            border-radius: 24px; margin-bottom: 30px; border: 1px solid var(--border);
-        }
+        .modal-img { width: 100%; max-height: 500px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; }
         .rich-content { white-space: pre-wrap; color: #ccc; font-size: 16px; line-height: 1.9; }
 
-        /* --- РИКРОЛЛ --- */
-        .video-wrapper {
-            width: 100%; aspect-ratio: 16/9; border-radius: var(--radius);
-            overflow: hidden; border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(0, 255, 163, 0.2);
-        }
-
         @media (max-width: 768px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .hero-card h1 { font-size: 2.8rem; }
-            .modal-inner { padding: 30px; }
+            .feed-header h2 { font-size: 2.2rem; }
+            .post-grid { grid-template-columns: 1fr; } /* На мобилках картинку под текст */
+            .post-preview-img-container { width: 100%; height: 200px; border-left: none; border-top: 1px solid var(--border); }
+            .post-card-text { padding: 30px; }
         }
     </style>
 </head>
@@ -261,38 +238,39 @@
 
         
         async function loadForum() {
-        const feed = document.getElementById('forum-feed');
-        const { data, error } = await supabaseClient
-            .from('projects')
-            .select('*')
-            .order('id', { ascending: false });
+            const feed = document.getElementById('forum-feed');
+            const { data, error } = await supabaseClient
+                .from('projects')
+                .select('*')
+                .order('id', { ascending: false });
 
-        if(error) return;
-        cachedPosts = data;
-        feed.innerHTML = '';
+            if(error) return;
+            cachedPosts = data;
+            feed.innerHTML = '';
 
-        data.forEach((post, i) => {
-            // Если картинка есть — создаем блок, если нет — пустая строка
-            const imageBlock = post.image_url ? `
-                <div class="post-preview-side">
-                    <img src="${post.image_url}" loading="lazy">
-                </div>
-            ` : '';
+            data.forEach((post, i) => {
+                // Главная фишка: меняем классы динамически
+                const cardClasses = post.image_url ? 'post-card post-grid' : 'post-card';
 
-            feed.innerHTML += `
-                <div class="post-card" onclick="openFullPost(${i})">
-                    <div class="post-card-text">
-                        <div class="post-meta">ID: #${post.id} // SECURED</div>
-                        <h3>${post.name}</h3>
-                        <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">
-                            ${post.desc ? post.desc.substring(0, 160) : 'Нет описания...'}...
-                        </p>
+                feed.innerHTML += `
+                    <div class="${cardClasses}" onclick="openFullPost(${i})">
+                        <div class="post-card-text">
+                            <div class="post-meta">ID_REF: #${post.id} // ACTIVE</div>
+                            <h3>${post.name}</h3>
+                            <p style="color: var(--text-dim); font-size: 14px;">
+                                ${post.desc ? post.desc.substring(0, 160) : 'Описание отсутствует...'}...
+                            </p>
+                        </div>
+                        
+                        ${post.image_url ? `
+                            <div class="post-preview-img-container">
+                                <img src="${post.image_url}" class="post-preview-img" loading="lazy">
+                            </div>
+                        ` : ''}
                     </div>
-                    ${imageBlock}
-                </div>
-            `;
-        });
-    }
+                `;
+            });
+        }
 
         
         function openFullPost(index) {
