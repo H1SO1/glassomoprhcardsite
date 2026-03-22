@@ -56,7 +56,7 @@
             border: 2px solid var(--accent);
             border-radius: 50%;
             position: fixed;
-            pointer-s: none;
+            pointer-events: none;
             z-index: 10000;
             transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
             mix-blend-mode: difference;
@@ -232,26 +232,6 @@
             grid-template-columns: repeat(12, 1fr);
             gap: 25px;
             grid-auto-rows: minmax(160px, auto);
-        }
-
-        .bento-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 45px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition-mid);
-            z-index: 1;
-        }
-
-        .bento-card:hover {
-            border-color: rgba(var(--accent-rgb), 0.4);
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-glow);
         }
 
         .span-12 { grid-column: span 12; }
@@ -574,27 +554,55 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-         .bento-card::after {
+
+.bento-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 45px;
+    position: relative; 
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-mid);
+    z-index: 1;
+}
+
+/* Эффект при наведении */
+.bento-card:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Декоративный градиент (под контентом) */
+.bento-card::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(var(--accent-rgb),0.15), transparent 70%);
+    background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.15), transparent 70%);
     opacity: 0;
     transition: var(--transition-mid);
-    pointer-events: none;
-             z-index: 0;
+    pointer-events: none; /* Пропускает клики сквозь себя к кнопкам */
+    z-index: 0; /* Ложится под основной контент */
 }
 
 .bento-card:hover::after {
     opacity: 1;
-    pointer-events: none;
-    z-index: 0;
 }
 
+/* Анимация нажатия */
 .bento-card:active {
     transform: scale(0.97);
-    pointer-events: auto;
-    z-index: 0;
+}
+
+/* ГАРАНТИЯ КЛИКАБЕЛЬНОСТИ: 
+   Весь прямой контент карточки поднимаем над градиентом */
+.bento-card > * {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto; /* Явно разрешаем взаимодействие с контентом */
 }
     </style>
 </head>
