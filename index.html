@@ -233,24 +233,29 @@
     function toggleAudio(idx, btn) {
         const audios = [document.getElementById('r0'), document.getElementById('r1')];
         const current = audios[idx];
-        const status = btn.nextElementSibling.querySelector('.r-stat');
+        const allStats = document.querySelectorAll('.r-stat');
+        const allBtns = document.querySelectorAll('.p-play');
 
-        if (activeRad !== null && activeRad !== idx) {
-            audios[activeRad].pause();
-            document.querySelectorAll('.p-play')[activeRad].innerText = '▶';
-            document.querySelectorAll('.r-stat')[activeRad].innerText = 'STATUS: IDLE';
-        }
-
-        if (current.paused) {
-            current.play();
-            btn.innerText = '■';
-            status.innerText = 'STATUS: STREAMING';
-            activeRad = idx;
-        } else {
+        
+        if (activeRad === idx) {
             current.pause();
             btn.innerText = '▶';
-            status.innerText = 'STATUS: IDLE';
+            allStats[idx].innerText = 'STATUS: IDLE';
             activeRad = null;
+        } 
+        else {
+            
+            audios.forEach((a, i) => {
+                a.pause();
+                allBtns[i].innerText = '▶';
+                allStats[i].innerText = 'STATUS: IDLE';
+            });
+
+           
+            current.play();
+            btn.innerText = '■';
+            allStats[idx].innerText = 'STATUS: STREAMING';
+            activeRad = idx;
         }
         playSnd('click');
     }
