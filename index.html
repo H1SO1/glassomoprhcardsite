@@ -604,6 +604,13 @@
 .bento-card:active {
     transform: scale(0.97);
 }
+        #project-modal .win-frame {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+        #project-modal {
+    overflow-y: auto;
+}
     </style>
 </head>
 <body onclick="core.initializeAudio()">
@@ -797,7 +804,7 @@ class FerumKernel {
 
     content.innerHTML = `
         <h2 style="color:var(--accent); margin-bottom:25px;">${item.name}</h2>
-        ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
+        ${item.image ? `<img src="${this.supabase.storage.from('image_url').getPublicUrl(item.image).data.publicUrl}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
         <p style="opacity:0.7; line-height:1.8;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
         <button class="btn-action" style="margin-top:30px;" onclick="core.closeProjectModal()">CLOSE</button>
     `;
@@ -818,18 +825,18 @@ openProjectModal(item) {
 
     modal.style.display = 'grid';
 
-    requestAnimationFrame(() => {
-        modal.classList.add('active');
-    });
+    setTimeout(()=>{
+        modal.style.opacity = '1';
+    },10);
 }
 
 closeProjectModal() {
     const modal = document.getElementById('project-modal');
-    modal.classList.remove('active');
+    modal.style.opacity = '0';
 
-    setTimeout(() => {
+    setTimeout(()=>{
         modal.style.display = 'none';
-    }, 500);
+    },300);
 }
     constructor() {
         this.supabase = supabase.createClient(
@@ -1170,6 +1177,16 @@ closeProjectModal() {
 }
 
 const core = new FerumKernel();
+    document.getElementById('project-modal').addEventListener('click', (e)=>{
+    if(e.target.id === 'project-modal'){
+        core.closeProjectModal();
+    }
+});
+    document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+        core.closeProjectModal();
+    }
+});
 </script>
     <div class="overlay" id="project-modal">
     <div class="win-frame" id="project-modal-content"></div>
