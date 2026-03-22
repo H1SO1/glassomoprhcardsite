@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rh1so // FERUM.OS v5.4.REBORN</title>
+    <title>ferum // FERUM.OS v5.5.ULTRA_WIDE</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -20,6 +20,7 @@
             --font-main: 'Plus Jakarta Sans', sans-serif; 
             --font-mono: 'JetBrains Mono', monospace;
             --win-bg: rgba(10, 10, 12, 0.98);
+            --vhs-bg: #0a0a0c;
         }
 
         /* === RESET & BASE === */
@@ -41,64 +42,30 @@
 
         /* === NAVIGATION === */
         nav { 
-            position: fixed; 
-            top: 25px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(17, 17, 19, 0.85); 
-            backdrop-filter: blur(30px); 
-            padding: 10px; 
-            border-radius: 22px; 
-            border: 1px solid var(--border); 
-            display: flex; 
-            gap: 8px; 
-            z-index: 1000; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
+            background: rgba(17, 17, 19, 0.85); backdrop-filter: blur(30px); 
+            padding: 10px; border-radius: 22px; border: 1px solid var(--border); 
+            display: flex; gap: 8px; z-index: 1000; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         .nav-btn { 
-            padding: 14px 28px; 
-            border-radius: 16px; 
-            border: none; 
-            background: transparent; 
-            color: var(--text-dim); 
-            font-weight: 700; 
-            font-size: 13px; 
-            cursor: pointer; 
-            font-family: var(--font-main);
-            transition: 0.2s;
+            padding: 14px 28px; border-radius: 16px; border: none; background: transparent; 
+            color: var(--text-dim); font-weight: 700; font-size: 13px; cursor: pointer; 
+            font-family: var(--font-main); transition: 0.2s;
         }
         .nav-btn.active { background: var(--accent); color: #000; }
         .nav-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
         /* === THEME MENU === */
         .theme-menu { 
-            position: absolute; 
-            top: 80px; 
-            right: 0; 
-            background: var(--win-bg); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 18px; 
-            display: none; 
-            flex-direction: column; 
-            gap: 10px; 
-            min-width: 260px; 
-            max-height: 480px; 
-            overflow-y: auto; 
-            z-index: 1001; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            position: absolute; top: 80px; right: 0; background: var(--win-bg); 
+            border: 1px solid var(--border); border-radius: 24px; padding: 18px; 
+            display: none; flex-direction: column; gap: 10px; min-width: 260px; 
+            max-height: 480px; overflow-y: auto; z-index: 1001; box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
         .theme-menu.show { display: flex; }
         .t-item { 
-            padding: 14px; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            font-family: var(--font-mono); 
-            font-size: 11px; 
-            display: flex; 
-            align-items: center; 
-            gap: 14px; 
-            background: rgba(255,255,255,0.03); 
+            padding: 14px; border-radius: 14px; cursor: pointer; font-family: var(--font-mono); 
+            font-size: 11px; display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); 
         }
         .t-item:hover { background: var(--accent); color: #000; }
         .t-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -111,66 +78,54 @@
         /* === BENTO GRID === */
         .bento-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
         .bento-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: var(--radius); 
-            padding: 45px; 
-            position: relative; 
-            overflow: hidden; 
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 45px; position: relative; overflow: hidden; 
         }
         
         .hero-card { grid-column: span 2; min-height: 550px; display: flex; flex-direction: column; justify-content: space-between; }
         .hero-card h1 { font-size: 7rem; letter-spacing: -8px; font-weight: 800; line-height: 0.85; margin: 25px 0; }
         .hero-card h1 span { color: var(--accent); }
 
-        /* === PLAYER === */
-        .radio-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; position: relative; z-index: 10; }
-        .player-bar { 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border); 
-            border-radius: 26px; 
-            padding: 14px 24px; 
-            display: flex; 
-            align-items: center; 
-            gap: 18px; 
-            width: fit-content; 
-            min-width: 340px; 
+        /* === VHS PLAYER REDESIGN === */
+        .vhs-stack { display: flex; flex-direction: column; gap: 20px; margin-top: 30px; position: relative; z-index: 10; }
+        .vhs-player { 
+            background: var(--vhs-bg); border: 2px solid var(--border); border-radius: 20px; 
+            padding: 20px; display: flex; align-items: center; gap: 20px; 
+            width: fit-content; min-width: 400px; position: relative; overflow: hidden;
         }
-        .p-play { 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 50%; 
-            border: none; 
-            background: var(--accent); 
-            color: #000; 
-            cursor: pointer; 
-            font-size: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            flex-shrink: 0; 
-            box-shadow: 0 8px 20px rgba(255, 0, 85, 0.2);
+        .vhs-player::after {
+            content: ""; position: absolute; inset: 0; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%; pointer-events: none;
         }
+        .vhs-controls { display: flex; gap: 10px; }
+        .vhs-btn { 
+            width: 40px; height: 40px; background: #1a1a1f; border: 1px solid var(--border); 
+            color: var(--accent); border-radius: 8px; cursor: pointer; font-family: var(--font-mono); font-weight: 700;
+        }
+        .vhs-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
+        .vhs-info { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; }
+        .vhs-title { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 1px; }
+        .vhs-status { color: var(--accent); animation: vhs-blink 1.5s infinite; }
+        @keyframes vhs-blink { 50% { opacity: 0; } }
+
+        /* === COMPACT DB BUTTON === */
+        .db-connector-cell { display: flex; align-items: center; justify-content: center; }
+        .db-btn-compact { 
+            padding: 18px 40px; background: var(--text-main); color: var(--bg); 
+            border: none; border-radius: 20px; font-weight: 900; font-size: 15px; 
+            cursor: pointer; transition: 0.3s; width: auto; 
+        }
+        .db-btn-compact:hover { transform: scale(1.05); background: var(--accent); color: #000; }
 
         /* === MODAL REFIX === */
         #modal { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(3, 3, 3, 0.98); 
-            display: none; 
-            z-index: 5000; 
-            overflow-y: auto; 
-            backdrop-filter: blur(15px);
-            padding: 80px 20px;
+            position: fixed; inset: 0; background: rgba(3, 3, 3, 0.98); 
+            display: none; z-index: 5000; overflow-y: auto; backdrop-filter: blur(15px); padding: 80px 20px;
         }
         .modal-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            max-width: 900px; margin: 0 auto; background: var(--card); border: 1px solid var(--border);
+            border-radius: 40px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
         .modal-img-wrap { width: 100%; max-height: 500px; overflow: hidden; background: #000; }
         .modal-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
@@ -178,48 +133,27 @@
         .modal-body h2 { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 25px; line-height: 1; }
         .modal-text { color: var(--text-dim); font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap; }
         .close-m { 
-            position: fixed; 
-            top: 40px; 
-            right: 40px; 
-            padding: 18px 30px; 
-            background: var(--accent); 
-            border: none; 
-            border-radius: 18px; 
-            color: #000; 
-            font-family: var(--font-mono); 
-            font-weight: 800;
-            cursor: pointer;
-            z-index: 5001;
+            position: fixed; top: 40px; right: 40px; padding: 18px 30px; background: var(--accent); 
+            border: none; border-radius: 18px; color: #000; font-family: var(--font-mono); font-weight: 800; cursor: pointer; z-index: 5001;
         }
 
         /* === TERMINAL === */
         #term-body { 
-            background: #000; 
-            border-radius: 28px; 
-            padding: 40px; 
-            font-family: var(--font-mono); 
-            height: 500px; 
-            overflow-y: auto; 
-            color: var(--accent); 
-            border: 1px solid var(--border); 
-            font-size: 14px; 
-            line-height: 1.7; 
+            background: #000; border-radius: 28px; padding: 40px; font-family: var(--font-mono); 
+            height: 500px; overflow-y: auto; color: var(--accent); border: 1px solid var(--border); 
+            font-size: 14px; line-height: 1.7; 
         }
         .t-row { margin-bottom: 8px; }
         .t-input-wrap {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            background: rgba(255,255,255,0.03);
-            padding: 25px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
+            display: flex; gap: 15px; margin-top: 25px; background: rgba(255,255,255,0.03);
+            padding: 25px; border-radius: 24px; border: 1px solid var(--border);
         }
         .t-user-in { background: transparent; border: none; color: #fff; flex: 1; font-family: var(--font-mono); font-size: 16px; }
 
         /* === GHOST MODE FIXES === */
-        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); }
-        .ghost-mode .p-play { background: #000 !important; color: #fff !important; }
+        .ghost-mode { --bg: #f0f0f2; --card: #ffffff; --text-main: #000000; --border: rgba(0,0,0,0.1); --vhs-bg: #e0e0e4; }
+        .ghost-mode .vhs-btn { background: #eee; }
+        .ghost-mode .vhs-title { color: #000; }
         .ghost-mode .nav-btn.active { color: #fff; }
 
     </style>
@@ -241,6 +175,8 @@
             <div class="t-item" onclick="applyTheme('stalker')"><span class="t-dot" style="background:#7c8a4f"></span> STALKER_PDA</div>
             <div class="t-item" onclick="applyTheme('win98')"><span class="t-dot" style="background:#008080"></span> RETRO_WIN</div>
             <div class="t-item" onclick="applyTheme('matrix')"><span class="t-dot" style="background:#00ff41"></span> MATRIX_RAIN</div>
+            <div class="t-item" onclick="applyTheme('sunset')"><span class="t-dot" style="background:#ff4d00"></span> CYBER_SUNSET</div>
+            <div class="t-item" onclick="applyTheme('ocean')"><span class="t-dot" style="background:#00d4ff"></span> DEEP_SEA</div>
         </div>
     </div>
 </nav>
@@ -249,22 +185,26 @@
     <div class="bento-grid">
         <div class="bento-card hero-card">
             <div>
-                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.4_FINAL_HELL</p>
+                <p style="color: var(--accent); font-family: var(--font-mono); font-size: 11px;">// FERUM_OS_v5.5_ULTRA_WIDE</p>
                 <h1>FERUM<span>.OS</span></h1>
                 
-                <div class="radio-stack">
-                    <div class="player-bar">
-                        <button class="p-play" onclick="toggleAudio(0, this)">▶</button>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">RADIO_INFUSION (Lofi)</div>
-                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
+                <div class="vhs-stack">
+                    <div class="vhs-player">
+                        <div class="vhs-controls">
+                            <button class="vhs-btn" id="vbtn-0" onclick="toggleAudio(0)">PLAY</button>
+                        </div>
+                        <div class="vhs-info">
+                            <div class="vhs-title">TAPE_01: RADIO_INFUSION</div>
+                            <div class="vhs-status" id="vstat-0">STOPPED</div>
                         </div>
                     </div>
-                    <div class="player-bar">
-                        <button class="p-play" onclick="toggleAudio(1, this)">▶</button>
-                        <div>
-                            <div style="font-weight: 800; font-size: 13px;">TOKYO_DRIFT (J-Rock)</div>
-                            <div class="r-stat" style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">STATUS: IDLE</div>
+                    <div class="vhs-player">
+                        <div class="vhs-controls">
+                            <button class="vhs-btn" id="vbtn-1" onclick="toggleAudio(1)">PLAY</button>
+                        </div>
+                        <div class="vhs-info">
+                            <div class="vhs-title">TAPE_02: TOKYO_DRIFT_ROCK</div>
+                            <div class="vhs-status" id="vstat-1">STOPPED</div>
                         </div>
                     </div>
                 </div>
@@ -272,28 +212,33 @@
 
             <div style="position: absolute; bottom: 45px; right: 45px; text-align: right;">
                 <div style="font-size: 8rem; font-weight: 900; opacity: 0.05; letter-spacing: -10px;">FRM</div>
-                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.4.12 // SEC: ALPHA</p>
+                <p style="font-family: var(--font-mono); font-size: 10px; opacity: 0.4;">KRNL_REV: 5.5.01 // SEC: ENCRYPTED</p>
             </div>
             
             <div style="position: absolute; top: 45px; right: 45px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-                <div style="color: var(--accent)">[ SYSTEM_LIVE ]</div>
-                <div>UPTIME: <span id="uptime">00:00:00</span></div>
+                <div style="color: var(--accent)">[ KERNEL_ACTIVE ]</div>
+                <div>SESSION_TIME: <span id="uptime">00:00:00</span></div>
             </div>
         </div>
 
         <div class="bento-card">
             <h3 style="color: var(--accent); font-family: var(--font-mono);">Skills.txt</h3>
-            <div style="margin-top: 35px; font-size: 14px; color: var(--text-dim); line-height: 2.5; font-family: var(--font-mono);">
-                > UI_ARCHITECTURE: [ HIGH ]<br>
-                > GLITCH_FX: [ MASTER ]<br>
-                > SUPABASE_DB: [ READY ]<br>
-                > LINEAR_MATH: [ VARIANT_7 ]<br>
-                > GAME_LOGIC: [ STALKER ]
+            <div style="margin-top: 35px; font-size: 13px; color: var(--text-dim); line-height: 2.2; font-family: var(--font-mono);">
+                [!] LOADING_SKILLS_MANIFEST...<br>
+                ------------------------------<br>
+                > UI/UX: GLASSMORPHISM, BENTO, VHS_FX<br>
+                > DEV: HTML5, CSS3, JS (ES6+), PYTHON<br>
+                > DATA: SUPABASE, SQL, DYNAMIC_RESOURCES<br>
+                > MATH: OPTIMIZATION, LINEAR_PROG, VAR_7<br>
+                > OTHER: VIDEO_ESSAYS, ARG_RESEARCH, STALKER_RP<br>
+                > STATUS: CONSTANT_EVOLUTION<br>
+                ------------------------------<br>
+                [!] SYSTEM_READY
             </div>
         </div>
 
-        <div class="bento-card" style="display: flex; align-items: center; justify-content: center;">
-             <button onclick="toggleWin(true)" style="width:100%; height:100%; background:var(--text-main); color:var(--bg); border:none; border-radius:var(--radius); font-weight:900; font-size:20px; cursor:pointer;">CONNECT_DB</button>
+        <div class="bento-card db-connector-cell">
+             <button class="db-btn-compact" onclick="toggleWin(true)">CONNECT_DB</button>
         </div>
     </div>
 </div>
@@ -304,9 +249,9 @@
 
 <div id="terminal" class="page">
     <div id="term-body">
-        <div class="t-row">FERUM.OS [Version 5.4.REBORN]</div>
-        <div class="t-row">Unauthorized access is prohibited.</div>
-        <div class="t-row">Type 'help' to begin.</div>
+        <div class="t-row">FERUM.OS [Version 5.5.ULTRA_WIDE]</div>
+        <div class="t-row">Welcome back, root user. All systems operational.</div>
+        <div class="t-row">Type 'help' to see available commands.</div>
     </div>
     <div class="t-input-wrap">
         <span style="color: var(--accent); font-family: var(--font-mono);">$</span>
@@ -316,7 +261,7 @@
 
 <div id="secret" class="page">
     <div class="bento-card" style="min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000;">
-        <h2 style="color: var(--accent); margin-bottom: 30px; font-family: var(--font-mono);">DECRYPT_SUCCESS: NO_GIVE_UP</h2>
+        <h2 style="color: var(--accent); margin-bottom: 30px; font-family: var(--font-mono);">SECURE_LINK: NO_GIVE_UP</h2>
         <iframe width="100%" height="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 1px solid var(--accent);"></iframe>
     </div>
 </div>
@@ -334,13 +279,13 @@
 
 <div id="drag-win" style="position:fixed; top:25%; left:35%; width:400px; background:var(--win-bg); border:1px solid var(--accent); border-radius:30px; display:none; z-index:4000; box-shadow:0 40px 80px #000;">
     <div id="win-handle" style="padding:20px; border-bottom:1px solid var(--border); cursor:move; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--accent);">
-        <span>UPLINK_SESSION</span>
+        <span>DB_UPLINK_CORE</span>
         <span onclick="toggleWin(false)" style="cursor:pointer; color:#fff;">[ X ]</span>
     </div>
     <div style="padding:30px;">
-        <input type="text" id="db-n" placeholder="NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
-        <textarea id="db-m" placeholder="CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
-        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800; cursor:pointer;">SEND_PACKET</button>
+        <input type="text" id="db-n" placeholder="ENTRY_NAME" style="width:100%; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono);">
+        <textarea id="db-m" placeholder="HTML_SUPPORTED_CONTENT" style="width:100%; height:120px; padding:15px; background:#000; border:1px solid var(--border); border-radius:15px; color:#fff; margin-bottom:15px; font-family:var(--font-mono); resize:none;"></textarea>
+        <button onclick="send()" style="width:100%; padding:20px; background:var(--accent); color:#000; border:none; border-radius:15px; font-weight:800; cursor:pointer;">PUSH_TO_CLOUD</button>
     </div>
 </div>
 
@@ -350,7 +295,6 @@
 <script>
     const sb = supabase.createClient('https://ibybgkugoumvjftgxxii.supabase.co', 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F');
     
-    // SOUND ENGINE
     const sfx = {
         key: new Audio('https://opengameart.org/sites/default/files/click_0.wav'),
         click: new Audio('https://opengameart.org/sites/default/files/menu_click_0.wav'),
@@ -361,15 +305,11 @@
     function unlockAudio() {
         if(!audioOk) {
             Object.values(sfx).forEach(s => { s.play().then(()=>s.pause()); });
-            audioOk = true;
-            sfx.boot.play();
-            console.log("Audio Unlocked");
+            audioOk = true; sfx.boot.play();
         }
     }
-
     function playSnd(t) { if(audioOk) { let s = sfx[t].cloneNode(); s.volume = 0.2; s.play(); } }
 
-    // THEMES
     const themes = {
         crimson: { bg: '#030303', card: '#0e0e11', accent: '#ff0055', text: '#f0f0f0' },
         arsenic: { bg: '#030303', card: '#0e0e11', accent: '#00ffa3', text: '#f0f0f0' },
@@ -377,7 +317,9 @@
         ghost: { bg: '#f0f0f2', card: '#ffffff', accent: '#000', text: '#000', mode: 'ghost' },
         stalker: { bg: '#0a0b08', card: '#14160f', accent: '#7c8a4f', text: '#c8d4a5' },
         win98: { bg: '#008080', card: '#c0c0c0', accent: '#000080', text: '#000' },
-        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' }
+        matrix: { bg: '#000', card: '#050505', accent: '#00ff41', text: '#00ff41' },
+        sunset: { bg: '#1a0a00', card: '#2d1400', accent: '#ff4d00', text: '#ffccaa' },
+        ocean: { bg: '#000a1a', card: '#001a33', accent: '#00d4ff', text: '#aaccff' }
     };
 
     function applyTheme(t) {
@@ -389,50 +331,38 @@
         playSnd('click');
     }
 
-    // TERMINAL ENGINE
     function runTerm(e) {
         if(e.key === 'Enter') {
             const out = document.getElementById('term-body');
             const cmd = e.target.value.toLowerCase().trim();
             out.innerHTML += `<div class="t-row"><span style="color:var(--text-dim)">$</span> ${cmd}</div>`;
-            
-            const log = (msg, col = 'var(--accent)') => {
-                out.innerHTML += `<div class="t-row" style="color:${col}">${msg}</div>`;
-            };
-
+            const log = (msg, col = 'var(--accent)') => out.innerHTML += `<div class="t-row" style="color:${col}">${msg}</div>`;
             switch(cmd) {
-                case 'help': log("Commands: ls, clear, whoami, fetch, sys_info, reboot, matrix"); break;
+                case 'help': log("Commands: ls, clear, whoami, fetch, sys_info, reboot, matrix, themes"); break;
                 case 'ls': log("drwxr-xr-x  projects<br>-rw-r--r--  ferum_id.key<br>-rwxr-xr-x  os_core.sh"); break;
-                case 'clear': out.innerHTML = '<div class="t-row">Terminal cleared.</div>'; break;
-                case 'whoami': log("User: ferum | UID: 007 | Permissions: ROOT"); break;
-                case 'reboot': log("System reboot initiated...", "red"); setTimeout(()=>location.reload(), 1000); break;
-                case 'matrix': applyTheme('matrix'); log("Reality shifted."); break;
-                case 'fetch': log("OS: FERUM.OS v5.4<br>Uptime: "+document.getElementById('uptime').innerText+"<br>Shell: ferum_sh v1.2"); break;
-                default: log("Unknown command: " + cmd, "red");
+                case 'clear': out.innerHTML = '<div class="t-row">Terminal buffer cleared.</div>'; break;
+                case 'whoami': log("User: ferum | Permissions: ROOT_ACCESS"); break;
+                case 'reboot': log("Initiating system reboot...", "red"); setTimeout(()=>location.reload(), 1000); break;
+                case 'themes': log("Available: Crimson, Arsenic, Void, Ghost, Stalker, Win98, Matrix, Sunset, Ocean"); break;
+                default: log("Error: Command '" + cmd + "' not found.", "red");
             }
-            out.scrollTop = out.scrollHeight;
-            e.target.value = '';
-            playSnd('key');
+            out.scrollTop = out.scrollHeight; e.target.value = ''; playSnd('key');
         }
     }
 
-    // MODAL FIX LOGIC
     function openP(p) {
         playSnd('click');
         const imgWrap = document.getElementById('mImgWrap');
         imgWrap.innerHTML = p.image_url ? `<img src="${p.image_url}">` : '';
         document.getElementById('mTitle').innerText = p.name;
-        document.getElementById('mText').innerText = p.content || p.desc;
+        // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: innerHTML вместо innerText для поддержки форматирования
+        document.getElementById('mText').innerHTML = p.content || p.desc;
         document.getElementById('modal').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
 
-    function closeM() { 
-        document.getElementById('modal').style.display = 'none'; 
-        document.body.style.overflow = 'auto'; 
-    }
+    function closeM() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-    // FORUM LOAD
     async function loadForum() {
         const feed = document.getElementById('forum-feed');
         const { data, error } = await sb.from('projects').select('*').order('id', { ascending: false });
@@ -441,41 +371,51 @@
             <div class="bento-card" style="padding:30px; cursor:pointer;" onclick='openP(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
                 ${p.image_url ? `<img src="${p.image_url}" style="width:100%; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px;">` : ''}
                 <h3 style="font-size:20px;">${p.name}</h3>
-                <p style="color:var(--text-dim); font-size:12px; margin-top:10px;">${p.desc.substring(0, 100)}...</p>
+                <div style="color:var(--text-dim); font-size:12px; margin-top:10px;">${(p.desc || '').substring(0, 100)}...</div>
             </div>
         `).join('');
     }
 
-    // UTILS
     function switchTab(id, btn) {
         playSnd('click');
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); 
-        btn.classList.add('active');
+        document.getElementById(id).classList.add('active'); btn.classList.add('active');
         if(id === 'forum') loadForum();
     }
 
     function toggleT() { document.getElementById('tMenu').classList.toggle('show'); playSnd('click'); }
     function toggleWin(s) { document.getElementById('drag-win').style.display = s ? 'block' : 'none'; playSnd('click'); }
 
-    // RADIO
-    let activeRad = null;
-    function toggleAudio(idx, btn) {
-        const auds = [document.getElementById('r0'), document.getElementById('r1')];
-        const stats = document.querySelectorAll('.r-stat');
-        const btns = document.querySelectorAll('.p-play');
+    // VHS PLAYER ENGINE
+    let currentTape = null;
+    function toggleAudio(idx) {
+        const audios = [document.getElementById('r0'), document.getElementById('r1')];
+        const buttons = [document.getElementById('vbtn-0'), document.getElementById('vbtn-1')];
+        const statusLines = [document.getElementById('vstat-0'), document.getElementById('vstat-1')];
 
-        if(activeRad === idx) {
-            auds[idx].pause(); btn.innerText = '▶'; stats[idx].innerText = 'STATUS: IDLE'; activeRad = null;
+        if(currentTape === idx) {
+            audios[idx].pause();
+            buttons[idx].innerText = 'PLAY';
+            buttons[idx].classList.remove('active');
+            statusLines[idx].innerText = 'STOPPED';
+            currentTape = null;
         } else {
-            auds.forEach((a, i) => { a.pause(); btns[i].innerText = '▶'; stats[i].innerText = 'STATUS: IDLE'; });
-            auds[idx].play(); btn.innerText = '■'; stats[idx].innerText = 'STATUS: STREAMING'; activeRad = idx;
+            audios.forEach((a, i) => { 
+                a.pause(); 
+                buttons[i].innerText = 'PLAY'; 
+                buttons[i].classList.remove('active');
+                statusLines[i].innerText = 'STOPPED';
+            });
+            audios[idx].play();
+            buttons[idx].innerText = 'STOP';
+            buttons[idx].classList.add('active');
+            statusLines[idx].innerText = 'PLAYING_NOW';
+            currentTape = idx;
         }
         playSnd('click');
     }
 
-    // UPTIME
     let start = Date.now();
     setInterval(() => {
         let diff = Math.floor((Date.now() - start)/1000);
@@ -485,7 +425,6 @@
         document.getElementById('uptime').innerText = `${h}:${m}:${s}`;
     }, 1000);
 
-    // DRAG
     const dWin = document.getElementById('drag-win'), dH = document.getElementById('win-handle');
     let isD = false, off = [0,0];
     dH.onmousedown = (e) => { isD = true; off = [dWin.offsetLeft - e.clientX, dWin.offsetTop - e.clientY]; };
@@ -498,8 +437,7 @@
         await sb.from('projects').insert([{ name: n, desc: m }]);
         toggleWin(false); loadForum();
     }
-
-    console.log("FERUM.OS v5.4.REBORN INITIALIZED");
+    console.log("FERUM.OS v5.5.ULTRA_WIDE DEPLOYED");
 </script>
 </body>
 </html>
