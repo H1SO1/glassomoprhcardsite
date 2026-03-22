@@ -6,7 +6,7 @@
     <title>ferum // FERUM.OS v6.0.7_MAX_STABLE</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
+     <style>
         :root {
             --bg: #030303;
             --card: #0e0e11;
@@ -565,79 +565,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-        #project-modal {
-    opacity: 0;
-    transform: scale(0.9);
-    backdrop-filter: blur(0px);
-    transition: var(--transition-mid);
-}
-
-#project-modal.active {
-    display: grid;
-    opacity: 1;
-    transform: scale(1);
-    backdrop-filter: blur(12px);
-}
-
-#project-modal .win-frame {
-    transform: scale(0.9);
-    transition: var(--transition-mid);
-}
-
-#project-modal.active .win-frame {
-    transform: scale(1);
-}
-        .bento-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(var(--accent-rgb),0.15), transparent 70%);
-    opacity: 0;
-    transition: var(--transition-mid);
-}
-
-.bento-card:hover::after {
-    opacity: 1;
-}
-
-.bento-card:active {
-    transform: scale(0.97);
-}
-        #project-modal .win-frame {
-    max-height: 80vh;
-    overflow-y: auto;
-}
-        #project-modal {
-    overflow-y: auto;
-}
-        .bento-card p{
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-        .scanlines,
-.vignette,
-.ascii-bg {
-    pointer-events: none;
-}
-        #project-modal {
-    pointer-events: none;
-    opacity: 0;
-}
-
-#project-modal.active {
-    pointer-events: all;
-    opacity: 1;
-}
-        .overlay {
-    pointer-events: none;
-}
-
-.overlay.active {
-    pointer-events: all;
-}
     </style>
 </head>
 <body onclick="core.initializeAudio()">
@@ -737,7 +664,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-action" style="margin-top: 35px; font-size: 12px;" onclick="core.toggleWin(true)">GENERATE_UPLINK</button>
+            <button class="btn-action" style="margin-top: 35px; font-size: 12px;" onclick="core.toggleWin(1)">GENERATE_UPLINK</button>
         </div>
 
         <div class="bento-card span-6">
