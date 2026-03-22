@@ -639,6 +639,14 @@
         { n: 'AMBER_ALERT', a: '#ffbf00', b: '#080500', c: '#1a0d00', t: '#ffe0b0' }
     ];
 
+    async function pushToDB() {
+        const name = document.getElementById('d-n').value;
+        const msg = document.getElementById('d-m').value;
+        if(!name || !msg) return alert("Fill all fields!");
+        const { error } = await sb.from('guestbook').insert([{ name, message: msg }]);
+        if(error) alert("DB Error! Check table 'guestbook'");
+        else { alert("Success!"); hideChat(); document.getElementById('d-n').value=''; document.getElementById('d-m').value=''; }
+    }
     const tM = document.getElementById('tM');
     ths.forEach(t => {
         let div = document.createElement('div');
