@@ -854,12 +854,17 @@ closeProjectModal() {
 
     runCursorEngine() {
         const cursor = document.getElementById('c-cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
+        if (!cursor) return;
+
+        window.addEventListener('mousemove', (e) => {
+            requestAnimationFrame(() => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
         });
+
         document.addEventListener('mouseover', (e) => {
-            if(e.target.closest('button, input, textarea, .theme-item, .skill-node')) {
+            if (e.target.closest('button, input, a, .nav-btn, .bento-card, .chat-msg')) {
                 cursor.classList.add('c-hover');
             } else {
                 cursor.classList.remove('c-hover');
@@ -1162,71 +1167,64 @@ closeProjectModal() {
     }
 }
 
-const core = new FerumKernel();
-    document.getElementById('project-modal').addEventListener('click', (e)=>{
-    if(e.target.id === 'project-modal'){
-        core.closeProjectModal();
-    }
-});
-    document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape'){
-        core.closeProjectModal();
-    }
-});
-
-    // В constructor добавь:
-this.myNick = "node_" + Math.random().toString(36).substring(7);
-
-// В метод initialize() добавь:
-this.listenToChat();
-
-// Добавь эти новые методы в класс:
 async sendChatMessage() {
-    const input = document.getElementById('chat-input');
-    const key = document.getElementById('chat-secret').value;
-    if(!input.value || !key) return;
+        const input = document.getElementById('chat-input');
+        const keyField = document.getElementById('chat-secret');
+        if (!input || !keyField || !input.value.trim()) return;
 
-    const encrypted = CryptoJS.AES.encrypt(input.value, key).toString();
-    
-    await this.supabase.from('messages').insert([
-        { user_name: this.myNick, payload: encrypted }
-    ]);
-    input.value = "";
-}
+        const key = keyField.value || "1337";
+        const encrypted = CryptoJS.AES.encrypt(input.value, key).toString();
+        
+        const { error } = await this.supabase
+            .from('messages')
+            .insert([{ user_name: this.myNick, payload: encrypted }]);
 
-listenToChat() {
-    // Начальная загрузка
-    this.supabase.from('messages').select('*').order('created_at', {ascending: true}).limit(50)
-        .then(({data}) => { if(data) data.forEach(m => this.renderMessage(m)); });
+        if (!error) {
+            input.value = "";
+            this.soundBank.click.play();
+        }
+    }
 
-    // Realtime подписка
-    this.supabase.channel('any').on('postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'messages' }, 
-        payload => this.renderMessage(payload.new)
-    ).subscribe();
-}
+    listenToChat() {
+        // Загрузка последних 50 сообщений
+        this.supabase.from('messages').select('*').order('created_at', {ascending: true}).limit(50)
+            .then(({data}) => { 
+                if(data) data.forEach(m => this.renderMessage(m)); 
+            });
 
-renderMessage(msg) {
-    const flow = document.getElementById('chat-flow');
-    const key = document.getElementById('chat-secret').value;
-    const isMe = msg.user_name === this.myNick;
+        // Подписка на новые сообщения в реальном времени
+        this.supabase.channel('public:messages')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, 
+                payload => this.renderMessage(payload.new)
+            ).subscribe();
+    }
 
-    let decrypted = ">> DECRYPTION_FAILED";
-    try {
-        const bytes = CryptoJS.AES.decrypt(msg.payload, key);
-        decrypted = bytes.toString(CryptoJS.enc.Utf8) || ">> ACCESS_DENIED: WRONG_KEY";
-    } catch(e) {}
+    renderMessage(msg) {
+        const flow = document.getElementById('chat-flow');
+        const keyField = document.getElementById('chat-secret');
+        if (!flow || !keyField) return;
 
-    const div = document.createElement('div');
-    div.className = `chat-msg ${isMe ? 'mine' : 'others'}`;
-    div.innerHTML = `
-        <div class="chat-meta">${msg.user_name} // ${new Date(msg.created_at).toLocaleTimeString()}</div>
-        <div class="chat-text">${decrypted}</div>
-        <div class="chat-raw">HEX: ${msg.payload.substring(0, 24)}...</div>
-    `;
-    flow.appendChild(div);
-    flow.scrollTop = flow.scrollHeight;
-}
+        const key = keyField.value || "1337";
+        const isMe = msg.user_name === this.myNick;
+
+        let decrypted = ">> [DATA_ENCRYPTED]";
+        try {
+            const bytes = CryptoJS.AES.decrypt(msg.payload, key);
+            decrypted = bytes.toString(CryptoJS.enc.Utf8) || ">> [INVALID_KEY]";
+        } catch(e) {
+            decrypted = ">> [DECRYPTION_ERROR]";
+        }
+
+        const div = document.createElement('div');
+        div.className = `chat-msg ${isMe ? 'mine' : 'others'}`;
+        div.innerHTML = `
+            <div class="chat-meta">${msg.user_name} // ${new Date(msg.created_at).toLocaleTimeString()}</div>
+            <div class="chat-text">${decrypted}</div>
+            <div class="chat-raw">RAW: ${msg.payload.substring(0, 16)}...</div>
+        `;
+        flow.appendChild(div);
+        flow.scrollTop = flow.scrollHeight;
+    }
 </script>
     
     <<div class="overlay" id="project-modal">
