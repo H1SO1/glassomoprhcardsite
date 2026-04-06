@@ -1118,7 +1118,7 @@ closeProjectModal() {
         document.body.style.overflow = 'hidden'; 
         if(this.soundBank.click) this.soundBank.click.play();
     }
-    processTerminal(event) {
+     processTerminal(event) {
         if(event.key === 'Enter') {
             const container = document.getElementById('term-container');
             const cmd = event.target.value.toLowerCase().trim();
@@ -1165,9 +1165,8 @@ closeProjectModal() {
             this.soundBank.click.play();
         }
     }
-}
 
-async sendChatMessage() {
+    async sendChatMessage() {
         const input = document.getElementById('chat-input');
         const keyField = document.getElementById('chat-secret');
         if (!input || !keyField || !input.value.trim()) return;
@@ -1177,7 +1176,7 @@ async sendChatMessage() {
         
         const { error } = await this.supabase
             .from('messages')
-            .insert([{ user_name: this.myNick, payload: encrypted }]);
+            .insert([{ user_name: this.myNick || 'anonymous', payload: encrypted }]);
 
         if (!error) {
             input.value = "";
@@ -1186,17 +1185,23 @@ async sendChatMessage() {
     }
 
     listenToChat() {
-        // Загрузка последних 50 сообщений
-        this.supabase.from('messages').select('*').order('created_at', {ascending: true}).limit(50)
-            .then(({data}) => { 
-                if(data) data.forEach(m => this.renderMessage(m)); 
+        this.supabase
+            .from('messages')
+            .select('*')
+            .order('created_at', { ascending: true })
+            .limit(50)
+            .then(({ data }) => { 
+                if (data) data.forEach(m => this.renderMessage(m)); 
             });
 
-        // Подписка на новые сообщения в реальном времени
-        this.supabase.channel('public:messages')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, 
+        this.supabase
+            .channel('public:messages')
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'messages' }, 
                 payload => this.renderMessage(payload.new)
-            ).subscribe();
+            )
+            .subscribe();
     }
 
     renderMessage(msg) {
@@ -1225,6 +1230,12 @@ async sendChatMessage() {
         flow.appendChild(div);
         flow.scrollTop = flow.scrollHeight;
     }
+}
+
+const core = new FerumKernel();
+core.myNick = "ROOT_USER";
+core.listenToChat();
+    
 </script>
     
     <div class="overlay" id="project-modal">
