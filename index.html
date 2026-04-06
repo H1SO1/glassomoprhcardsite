@@ -743,17 +743,60 @@ nav {
 
 <script>
 class FerumKernel {
+    openProjectModal(item) {
+    const modal = document.getElementById('project-modal');
+    const content = document.getElementById('project-modal-content');
+    const imgUrl = item.image || null;
+
+    content.innerHTML = `
+        <h2 style="color:var(--accent); margin-bottom:25px;">${item.name}</h2>
+        ${imgUrl ? `<img src="${imgUrl}" style="width:100%; border-radius:20px; margin-bottom:20px;">` : ''}
+        <p style="opacity:0.7; line-height:1.8;">${item.content || item.desc || "NO_DESCRIPTION_PROVIDED"}</p>
+        <button class="btn-action" style="margin-top:30px;" onclick="core.closeProjectModal()">CLOSE</button>
+    `;
+
+    modal.style.display = 'grid';
+}
+
+openProjectModal(encodedData) {
+        // Расшифровываем данные обратно в объект
+        const item = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+        
+        const modal = document.getElementById('project-modal');
+        const content = document.getElementById('modal-content');
+        
+        content.innerHTML = `
+            <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--accent); line-height: 1.1;">
+                ${item.name}
+            </h2>
+            ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:16px; margin-bottom:20px; border:1px solid var(--border); display: block;">` : ''}
+            <div style="color: var(--text-main); line-height: 1.8; font-size: 16px; white-space: pre-wrap; font-family: var(--font-main);">
+                ${item.content || item.desc || "No additional data available."}
+            </div>
+            <p style="margin-top: 30px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); opacity: 0.4; border-top: 1px solid var(--border); padding-top: 20px;">
+                TIMESTAMP: ${new Date().toLocaleString()} // OBJ_REF: ${item.id}
+            </p>
+        `;
+        
+        modal.style.display = 'grid';
+        document.body.style.overflow = 'hidden';
+        
+        if(this.soundBank && this.soundBank.click) this.soundBank.click.play();
+    }
+
+closeProjectModal() {
+        document.getElementById('project-modal').style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    }
     constructor() {
         this.supabase = supabase.createClient(
             'https://ibybgkugoumvjftgxxii.supabase.co', 
             'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'
         );
-
         this.bootTime = Date.now();
+        this.activeRadio = null;
         this.isAudioStarted = false;
-        this.myNick = "node_" + Math.random().toString(36).substring(7);
-
-        // ТВОЯ БИБЛИОТЕКА ТЕМ (ВЕРНУЛ)
+        
         this.themeLibrary = [
             { id: 'CRIMSON', primary: '#ff0055', bg: '#030303', card: '#0e0e11' },
             { id: 'TOXIC', primary: '#39ff14', bg: '#020502', card: '#0a120a' },
@@ -789,7 +832,6 @@ class FerumKernel {
             { id: 'LAVA', primary: '#e63946', bg: '#000000', card: '#1d3557' }
         ];
 
-        // ТВОИ ЗВУКИ (ВЕРНУЛ)
         this.soundBank = {
             startup: new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3'),
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
@@ -800,16 +842,14 @@ class FerumKernel {
         this.initialize();
     }
 
-   initialize() {
+    initialize() {
         this.runCursorEngine();
+        this.startUptimeEngine();
         this.generateAsciiTexture();
-        this.listenToChat();
-        
-        // Таймер аптайма
-        setInterval(() => {
-            const up = document.getElementById('uptime-clock');
-            if(up) up.innerText = ((Date.now() - this.bootTime) / 1000).toFixed(1) + "s";
-        }, 100);
+        this.buildThemeGrid();
+        this.runKernelLogging();
+        this.startNotificationDaemon();
+        console.info("%c FERUM.OS: CORE_RECOVERY_COMPLETE ", "background: #ff0055; color: #fff; font-weight: bold;");
     }
 
     runCursorEngine() {
@@ -818,13 +858,13 @@ class FerumKernel {
 
         window.addEventListener('mousemove', (e) => {
             requestAnimationFrame(() => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
             });
         });
 
         document.addEventListener('mouseover', (e) => {
-            if (e.target.closest('button, .nav-btn, .bento-card, input')) {
+            if (e.target.closest('button, input, a, .nav-btn, .bento-card, .chat-msg')) {
                 cursor.classList.add('c-hover');
             } else {
                 cursor.classList.remove('c-hover');
@@ -832,97 +872,359 @@ class FerumKernel {
         });
     }
 
-    switchTab(targetId, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        const targetPage = document.getElementById(targetId);
-        if (targetPage) {
-            targetPage.classList.add('active');
-            btn.classList.add('active');
-            if(this.isAudioStarted) this.soundBank.click.play();
+    initializeAudio() {
+        if(!this.isAudioStarted) {
+            this.soundBank.startup.volume = 0.25;
+            this.soundBank.startup.play();
+            this.isAudioStarted = true;
+            document.body.onclick = null;
         }
     }
 
-    setTheme(themeId) {
-    const theme = this.themeLibrary.find(t => t.id === themeId.toUpperCase());
-    if (theme) {
-        document.documentElement.style.setProperty('--accent', theme.primary);
-        document.documentElement.style.setProperty('--bg', theme.bg);
-        document.documentElement.style.setProperty('--card', theme.card);
-        
-        // Преобразуем hex в rgb для полупрозрачных элементов
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(theme.primary);
-        if(result) {
-            const rgb = `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
-            document.documentElement.style.setProperty('--accent-rgb', rgb);
-        }
-        
-        if(this.isAudioStarted) this.soundBank.click.play();
-        console.log(`System: Theme changed to ${themeId}`);
-    }
-}
-
-    // Добавляем недостающие методы, чтобы скрипт не падал при кликах
-    openProject(id) {
-        const modal = document.getElementById('project-modal');
-        if(modal) modal.style.display = 'grid';
-    }
-
-    closeProjectModal() {
-        const modal = document.getElementById('project-modal');
-        if(modal) modal.style.display = 'none';
-    }
-
-    async sendChatMessage() {
-        const input = document.getElementById('chat-input');
-        if (!input || !input.value.trim()) return;
-
-        const key = document.getElementById('chat-secret')?.value || "1337";
-        const encrypted = CryptoJS.AES.encrypt(input.value, key).toString();
-        
-        await this.supabase.from('messages').insert([{ user_name: this.myNick, payload: encrypted }]);
-        input.value = "";
-    }
-
-    listenToChat() {
-        if(!this.supabase) return;
-        this.supabase.from('messages').select('*').order('created_at', {ascending: true}).limit(50)
-            .then(({data}) => { if(data) data.forEach(m => this.renderMessage(m)); });
-
-        this.supabase.channel('any').on('postgres_changes', 
-            { event: 'INSERT', schema: 'public', table: 'messages' }, 
-            payload => this.renderMessage(payload.new)
-        ).subscribe();
-    }
-
-    renderMessage(msg) {
-        const flow = document.getElementById('chat-flow');
-        if (!flow) return;
-        const key = document.getElementById('chat-secret')?.value || "1337";
-        
-        let decrypted = ">> [ENCRYPTED]";
-        try {
-            const bytes = CryptoJS.AES.decrypt(msg.payload, key);
-            decrypted = bytes.toString(CryptoJS.enc.Utf8) || ">> [DECODE_ERROR]";
-        } catch(e) { decrypted = ">> [KEY_MISMATCH]"; }
-
-        const div = document.createElement('div');
-        div.className = `chat-msg ${msg.user_name === this.myNick ? 'mine' : 'others'}`;
-        div.innerHTML = `<div class="chat-meta">${msg.user_name}</div><div>${decrypted}</div>`;
-        flow.appendChild(div);
-        flow.scrollTop = flow.scrollHeight;
+    startUptimeEngine() {
+        const display = document.getElementById('uptime-clock');
+        setInterval(() => {
+            const delta = Math.floor((Date.now() - this.bootTime) / 1000);
+            const hours = Math.floor(delta / 3600).toString().padStart(2, '0');
+            const minutes = Math.floor((delta % 3600) / 60).toString().padStart(2, '0');
+            const seconds = (delta % 60).toString().padStart(2, '0');
+            display.innerText = `${hours}:${minutes}:${seconds}`;
+        }, 1000);
     }
 
     generateAsciiTexture() {
         const layer = document.getElementById('ascii-layer');
-        if(layer) layer.innerText = "01 ".repeat(200);
+        const characters = "01$#!@%&*ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let grid = "";
+        for(let row=0; row<120; row++) {
+            let line = "";
+            for(let col=0; col<120; col++) {
+                line += characters[Math.floor(Math.random() * characters.length)];
+            }
+            grid += line + "\n";
+        }
+        layer.innerText = grid;
     }
 
-    initializeAudio() { this.isAudioStarted = true; }
+    switchTab(targetId, buttonElement) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(targetId).classList.add('active');
+        buttonElement.classList.add('active');
+        this.soundBank.click.play();
+        if(targetId === 'archive') this.fetchDataArchive();
+    }
+
+    toggleStream(index) {
+        const players = [document.getElementById('audio-ch-0'), document.getElementById('audio-ch-1')];
+        const uiWrappers = [document.getElementById('player-0'), document.getElementById('player-1')];
+        
+        if(this.activeRadio === index) {
+            players[index].pause();
+            uiWrappers[index].classList.remove('playing');
+            this.activeRadio = null;
+        } else {
+            players.forEach((p, i) => {
+                p.pause();
+                uiWrappers[i].classList.remove('playing');
+            });
+            players[index].play();
+            uiWrappers[index].classList.add('playing');
+            this.activeRadio = index;
+        }
+        this.soundBank.click.play();
+    }
+
+    toggleWin(state) {
+        const windowEl = document.getElementById('uplink-window');
+        windowEl.style.display = state ? 'grid' : 'none';
+        this.soundBank.click.play();
+    }
+
+    buildThemeGrid() {
+        const container = document.getElementById('theme-engine-output');
+        this.themeLibrary.forEach(theme => {
+            const card = document.createElement('div');
+            card.className = 'theme-item';
+            card.innerText = theme.id;
+            card.onclick = () => {
+                const root = document.documentElement.style;
+                root.setProperty('--accent', theme.primary);
+                root.setProperty('--bg', theme.bg);
+                root.setProperty('--card', theme.card);
+                const rgb = this.hexToRgbValues(theme.primary);
+                root.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+                this.soundBank.click.play();
+                this.sendNotification("THEME_UPDATED", `Kernel visual parameters set to ${theme.id}`);
+            };
+            container.appendChild(card);
+        });
+    }
+
+    hexToRgbValues(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
+    sendNotification(head, body) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<div class="toast-h">${head}</div><div class="toast-b">${body}</div>`;
+        container.appendChild(toast);
+        this.soundBank.alert.play();
+        setTimeout(() => toast.classList.add('show'), 50);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 700);
+        }, 6000);
+    }
+
+    runKernelLogging() {
+        const feed = document.getElementById('log-feed');
+        const messages = [
+            "SYS_UPLINK: ESTABLISHED", "DB_PING: 24MS", "MEM_STABLE_BLOCKS_8812",
+            "SCANNING_VULNERABILITIES...", "CLEANING_CACHE...", "SECURITY_TOKEN_V2_ACTIVE",
+            "ANOMALY_LOG_0: NULL", "KERNEL_POWER: 100%", "TEMP_SENSOR_01: STABLE",
+            "AUTH_SESSION: ROOT_GRANTED", "SYNCING_REMOTE_OBJECTS..."
+        ];
+        setInterval(() => {
+            const line = document.createElement('div');
+            line.innerText = `[${new Date().toLocaleTimeString()}] >> ${messages[Math.floor(Math.random() * messages.length)]}`;
+            feed.prepend(line);
+            if(feed.children.length > 8) feed.lastChild.remove();
+        }, 4000);
+    }
+
+    startNotificationDaemon() {
+        const poll = async () => {
+            const { data } = await this.supabase.from('notifications').select('*');
+            if (data && data.length > 0) {
+                const randomMsg = data[Math.floor(Math.random() * data.length)];
+                this.sendNotification(randomMsg.title || "SYSTEM_EVENT", randomMsg.content || randomMsg.message);
+            }
+            setTimeout(poll, Math.floor(Math.random() * 600000) + 60000);
+        };
+        setTimeout(poll, 15000);
+    }
+
+    attemptUnlock() {
+        const pass = document.getElementById('vault-input').value;
+        if(pass === '1337') {
+            document.getElementById('vault-lock-ui').style.display = 'none';
+            document.getElementById('vault-data-ui').style.display = 'block';
+            this.sendNotification("AUTH_SUCCESS", "Vault encryption layers bypassed.");
+        } else {
+            this.soundBank.denied.play();
+            this.sendNotification("ACCESS_DENIED", "Invalid bypass credentials provided.");
+        }
+    }
+
+    lockVault() {
+        document.getElementById('vault-lock-ui').style.display = 'flex';
+        document.getElementById('vault-data-ui').style.display = 'none';
+        document.getElementById('vault-input').value = "";
+        this.soundBank.click.play();
+    }
+
+    async uploadToSupabase() {
+        const btn = document.getElementById('up-trigger');
+        const name = document.getElementById('up-name').value;
+        const body = document.getElementById('up-body').value;
+        
+        if(!name || !body) return;
+        
+        btn.disabled = true;
+        btn.innerText = "UPLOADING_PACKET...";
+        
+        const { error } = await this.supabase.from('guestbook').insert([{ name: name, message: body }]);
+        
+        if(error) {
+            this.sendNotification("UPLINK_ERROR", error.message);
+            btn.disabled = false;
+            btn.innerText = "EXECUTE_PUSH";
+        } else {
+            this.sendNotification("UPLINK_SUCCESS", "Object verified and pushed to remote node.");
+            this.toggleWin(false);
+            btn.disabled = false;
+            btn.innerText = "EXECUTE_PUSH";
+            document.getElementById('up-name').value = "";
+            document.getElementById('up-body').value = "";
+            this.fetchDataArchive();
+        }
+    }
+
+   async fetchDataArchive() {
+        const grid = document.getElementById('archive-grid');
+        grid.innerHTML = '<div style="text-align:center; opacity:0.5; font-family:var(--font-mono); padding: 40px;">[ SYNC_IN_PROGRESS... ]</div>';
+        
+        const { data, error } = await this.supabase.from('projects').select('*').order('id', { ascending: false });
+        
+        if(error) {
+            console.error("Supabase error:", error);
+            return;
+        }
+        
+        if(data && data.length > 0) {
+            // Сохраняем в память, чтобы не мучиться с кавычками
+            window.storedArchiveData = data; 
+
+            grid.innerHTML = data.map((item, index) => {
+                const descText = item.content || item.desc || "";
+                const shortDesc = descText.length > 180 ? descText.slice(0, 180) + "..." : descText;
+                
+                return `
+                    <div class="archive-post-card" style="cursor:pointer;" onclick="core.openModal(${index})">
+                        <div class="post-layout" style="pointer-events:none;">
+                            ${item.image_url ? `
+                                <div class="post-image-wrapper">
+                                    <img src="${item.image_url}">
+                                </div>
+                            ` : ''}
+                            <div class="post-content">
+                                <p class="post-meta">REF_ID: ${item.id}</p>
+                                <h3 class="post-title">${item.name}</h3>
+                                <p class="post-desc">${shortDesc}</p>
+                                <div class="post-meta" style="margin-top:auto;">STATUS: DECRYPTED</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
+    openModal(index) {
+        console.log("Opening modal for index:", index); // Проверка в консоли
+        const item = window.storedArchiveData[index];
+        if(!item) return;
+
+        const modal = document.getElementById('project-modal');
+        const content = document.getElementById('modal-content');
+        
+        content.innerHTML = `
+            <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--accent);">${item.name}</h2>
+            ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:16px; margin-bottom:20px; border:1px solid var(--border);">` : ''}
+            <div style="color: var(--text-main); line-height: 1.8; font-size: 16px; white-space: pre-wrap;">
+                ${item.content || item.desc || "No data."}
+            </div>
+        `;
+        
+        modal.style.display = 'grid'; 
+        document.body.style.overflow = 'hidden'; 
+        if(this.soundBank.click) this.soundBank.click.play();
+    }
+    processTerminal(event) {
+        if(event.key === 'Enter') {
+            const container = document.getElementById('term-container');
+            const cmd = event.target.value.toLowerCase().trim();
+            
+            container.innerHTML += `<div class="t-row"><span class="t-prompt">ROOT@FERUM:~$</span> ${cmd}</div>`;
+            
+            const printOut = (msg) => {
+                container.innerHTML += `<div class="t-row" style="color:var(--accent)">> ${msg}</div>`;
+            };
+
+            switch(cmd) {
+                case 'help':
+                    printOut("Available: clear, status, uname, uptime, fetch, hint, system_reboot");
+                    break;
+                case 'clear':
+                    container.innerHTML = '';
+                    break;
+                case 'uname':
+                    printOut("FERUM_CORE_X86_64_LINUX_CUSTOM_V6.0.7");
+                    break;
+                case 'status':
+                    printOut("MEM_USAGE: 12% // CPU_LOAD: 4% // IO_THREAD: STABLE");
+                    break;
+                case 'uptime':
+                    printOut(`CURRENT_SESSION_TIME: ${document.getElementById('uptime-clock').innerText}`);
+                    break;
+                case 'fetch':
+                    this.fetchDataArchive();
+                    printOut("Synchronizing archive grid with Supabase...");
+                    break;
+                case 'hint':
+                    printOut("VAULT_ACCESS_CODE: '1337'");
+                    break;
+                case 'system_reboot':
+                    printOut("REBOOTING_SYSTEM...");
+                    setTimeout(() => location.reload(), 1000);
+                    break;
+                default:
+                    printOut(`ERROR: COMMAND '${cmd}' NOT RECOGNIZED BY KERNEL`);
+            }
+            
+            event.target.value = '';
+            container.scrollTop = container.scrollHeight;
+            this.soundBank.click.play();
+        }
+    }
 }
 
-const core = new FerumKernel();
+async sendChatMessage() {
+        const input = document.getElementById('chat-input');
+        const keyField = document.getElementById('chat-secret');
+        if (!input || !keyField || !input.value.trim()) return;
+
+        const key = keyField.value || "1337";
+        const encrypted = CryptoJS.AES.encrypt(input.value, key).toString();
+        
+        const { error } = await this.supabase
+            .from('messages')
+            .insert([{ user_name: this.myNick, payload: encrypted }]);
+
+        if (!error) {
+            input.value = "";
+            this.soundBank.click.play();
+        }
+    }
+
+    listenToChat() {
+        // Загрузка последних 50 сообщений
+        this.supabase.from('messages').select('*').order('created_at', {ascending: true}).limit(50)
+            .then(({data}) => { 
+                if(data) data.forEach(m => this.renderMessage(m)); 
+            });
+
+        // Подписка на новые сообщения в реальном времени
+        this.supabase.channel('public:messages')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, 
+                payload => this.renderMessage(payload.new)
+            ).subscribe();
+    }
+
+    renderMessage(msg) {
+        const flow = document.getElementById('chat-flow');
+        const keyField = document.getElementById('chat-secret');
+        if (!flow || !keyField) return;
+
+        const key = keyField.value || "1337";
+        const isMe = msg.user_name === this.myNick;
+
+        let decrypted = ">> [DATA_ENCRYPTED]";
+        try {
+            const bytes = CryptoJS.AES.decrypt(msg.payload, key);
+            decrypted = bytes.toString(CryptoJS.enc.Utf8) || ">> [INVALID_KEY]";
+        } catch(e) {
+            decrypted = ">> [DECRYPTION_ERROR]";
+        }
+
+        const div = document.createElement('div');
+        div.className = `chat-msg ${isMe ? 'mine' : 'others'}`;
+        div.innerHTML = `
+            <div class="chat-meta">${msg.user_name} // ${new Date(msg.created_at).toLocaleTimeString()}</div>
+            <div class="chat-text">${decrypted}</div>
+            <div class="chat-raw">RAW: ${msg.payload.substring(0, 16)}...</div>
+        `;
+        flow.appendChild(div);
+        flow.scrollTop = flow.scrollHeight;
+    }
 </script>
     
     <div class="overlay" id="project-modal">
