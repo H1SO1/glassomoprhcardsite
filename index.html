@@ -1526,10 +1526,17 @@ class FerumKernel {
         return data.user;
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    window.core = new FerumKernel();
-    console.log('Core создан!', window.core);
-});
+function waitForSupabase() {
+    if (typeof supabase !== 'undefined') {
+        window.core = new FerumKernel();
+        console.log('Core создан!', window.core);
+    } else {
+        console.log('Ожидание Supabase...');
+        setTimeout(waitForSupabase, 100);
+    }
+}
+
+waitForSupabase();
 </script>
 </body>
 </html>
