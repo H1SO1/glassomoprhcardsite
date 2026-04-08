@@ -944,19 +944,39 @@ class FerumKernel {
     }
 
     runCursorEngine() {
-        const cursor = document.getElementById('c-cursor');
-        if (!cursor) return;
+    const cursor = document.getElementById('c-cursor');
+    if (!cursor) return;
 
-        let mouseX = 0, mouseY = 0;
+    // Показываем курсор
+    cursor.style.display = 'block';
+    cursor.style.opacity = '1';
+    
+    window.addEventListener('mousemove', (e) => {
+        // Учитываем скролл страницы
+        const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
         
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            requestAnimationFrame(() => {
-                cursor.style.left = `${mouseX}px`;
-                cursor.style.top = `${mouseY}px`;
-            });
+        const mouseX = e.clientX + scrollX;
+        const mouseY = e.clientY + scrollY;
+        
+        requestAnimationFrame(() => {
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
         });
+    });
+    
+    // Добавляем эффект при наведении на кликабельные элементы
+    const hoverElements = document.querySelectorAll('button, .nav-btn, .bento-card, .btn-action, .theme-item, .skill-node, .archive-post-card, a, [onclick]');
+    
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('c-hover');
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('c-hover');
+        });
+    });
+}
 
         document.addEventListener('mouseover', (e) => {
             const target = e.target.closest('button, input, a, .nav-btn, .bento-card, .chat-msg, .theme-item, .skill-node, .archive-post-card, .btn-action');
@@ -1045,7 +1065,7 @@ class FerumKernel {
             const card = document.createElement('div');
             card.className = 'theme-item';
             card.innerText = theme.id;
-            card.onclick = () => {
+            card. = () => {
                 const root = document.documentElement.style;
                 root.setProperty('--accent', theme.primary);
                 root.setProperty('--bg', theme.bg);
