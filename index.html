@@ -1534,5 +1534,50 @@ class FerumKernel {
 // Инициализация
 const core = new FerumKernel();
 </script>
+    <script>
+// Форсированное создание курсора
+(function() {
+    // Удаляем старый если есть
+    const oldCursor = document.getElementById('c-cursor');
+    if(oldCursor) oldCursor.remove();
+    
+    // Создаём новый
+    const cursor = document.createElement('div');
+    cursor.id = 'c-cursor';
+    cursor.style.cssText = `
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ff0055;
+        border-radius: 50%;
+        position: fixed;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        z-index: 999999;
+        background: rgba(255,0,85,0.1);
+        transition: transform 0.1s;
+    `;
+    document.body.appendChild(cursor);
+    
+    // Двигаем за мышкой
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+    
+    // Эффект при наведении
+    document.addEventListener('mouseover', (e) => {
+        if(e.target.closest('button, .nav-btn, .bento-card, a, .btn-action')) {
+            cursor.style.transform = 'scale(3)';
+            cursor.style.background = '#ff0055';
+        } else {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.background = 'rgba(255,0,85,0.1)';
+        }
+    });
+    
+    console.log('Курсор создан принудительно');
+})();
+</script>
 </body>
 </html>
