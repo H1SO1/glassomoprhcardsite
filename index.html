@@ -40,6 +40,24 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        #c-cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ff0055;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transition: transform 0.15s, background 0.15s;
+    mix-blend-mode: difference;
+}
+
+.c-hover {
+    transform: scale(4);
+    background-color: #ff0055;
+    border-color: transparent;
+}
+
         body {
             background-color: var(--bg);
             color: var(--text-main);
@@ -948,6 +966,16 @@ class FerumKernel {
             cursor.classList.remove('c-hover');
         });
     });
+
+        // Принудительно показываем и двигаем курсор
+const cursor = document.getElementById('c-cursor');
+if(cursor) {
+    cursor.style.display = 'block';
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+}
 }
 
         document.addEventListener('mouseover', (e) => {
