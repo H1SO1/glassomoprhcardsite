@@ -910,7 +910,6 @@ class FerumKernel {
             denied: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3')
         };
         
-        // Предзагрузка звуков
         Object.values(this.soundBank).forEach(audio => {
             audio.volume = 0.25;
             audio.load();
@@ -927,65 +926,40 @@ class FerumKernel {
         this.runKernelLogging();
         this.startNotificationDaemon();
         
-        // Инициализируем аудио при первом взаимодействии
         document.body.addEventListener('click', () => this.initializeAudio(), { once: true });
         
         console.info("%c FERUM.OS: CORE_RECOVERY_COMPLETE ", "background: #ff0055; color: #fff; font-weight: bold;");
     }
 
     runCursorEngine() {
-    const cursor = document.getElementById('c-cursor');
-    if (!cursor) return;
+        const cursor = document.getElementById('c-cursor');
+        if (!cursor) {
+            console.error('Курсор не найден!');
+            return;
+        }
 
-    // Показываем курсор
-    cursor.style.display = 'block';
-    cursor.style.opacity = '1';
-    
-    window.addEventListener('mousemove', (e) => {
-        // Учитываем скролл страницы
-        const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        cursor.style.display = 'block';
+        cursor.style.position = 'fixed';
+        cursor.style.left = '0px';
+        cursor.style.top = '0px';
         
-        const mouseX = e.clientX + scrollX;
-        const mouseY = e.clientY + scrollY;
+        // Движение курсора
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
         
-        requestAnimationFrame(() => {
-            cursor.style.left = `${mouseX}px`;
-            cursor.style.top = `${mouseY}px`;
-        });
-    });
-    
-    // Добавляем эффект при наведении на кликабельные элементы
-    const hoverElements = document.querySelectorAll('button, .nav-btn, .bento-card, .btn-action, .theme-item, .skill-node, .archive-post-card, a, [onclick]');
-    
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('c-hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('c-hover');
-        });
-    });
-
-        // Принудительно показываем и двигаем курсор
-const cursor = document.getElementById('c-cursor');
-if(cursor) {
-    cursor.style.display = 'block';
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
-}
-}
-
+        // Эффект при наведении
         document.addEventListener('mouseover', (e) => {
-            const target = e.target.closest('button, input, a, .nav-btn, .bento-card, .chat-msg, .theme-item, .skill-node, .archive-post-card, .btn-action');
+            const target = e.target.closest('button, .nav-btn, .bento-card, .btn-action, .theme-item, .skill-node, .archive-post-card, a');
             if (target) {
                 cursor.classList.add('c-hover');
             } else {
                 cursor.classList.remove('c-hover');
             }
         });
+        
+        console.log('Курсор инициализирован');
     }
 
     initializeAudio() {
@@ -997,6 +971,7 @@ if(cursor) {
 
     startUptimeEngine() {
         const display = document.getElementById('uptime-clock');
+        if(!display) return;
         setInterval(() => {
             const delta = Math.floor((Date.now() - this.bootTime) / 1000);
             const hours = Math.floor(delta / 3600).toString().padStart(2, '0');
@@ -1008,6 +983,7 @@ if(cursor) {
 
     generateAsciiTexture() {
         const layer = document.getElementById('ascii-layer');
+        if(!layer) return;
         const characters = "01$#!@%&*ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let grid = "";
         for(let row = 0; row < 60; row++) {
@@ -1036,16 +1012,18 @@ if(cursor) {
         const uiWrappers = [document.getElementById('player-0'), document.getElementById('player-1')];
         
         if(this.activeRadio === index) {
-            players[index].pause();
-            uiWrappers[index].classList.remove('playing');
+            if(players[index]) players[index].pause();
+            if(uiWrappers[index]) uiWrappers[index].classList.remove('playing');
             this.activeRadio = null;
         } else {
             players.forEach((p, i) => {
                 if(p) p.pause();
                 if(uiWrappers[i]) uiWrappers[i].classList.remove('playing');
             });
-            players[index].play().catch(e => console.log('Stream error:', e));
-            uiWrappers[index].classList.add('playing');
+            if(players[index]) {
+                players[index].play().catch(e => console.log('Stream error:', e));
+                if(uiWrappers[index]) uiWrappers[index].classList.add('playing');
+            }
             this.activeRadio = index;
         }
         this.soundBank.click.play().catch(e => console.log('Audio error:', e));
@@ -1065,7 +1043,7 @@ if(cursor) {
             const card = document.createElement('div');
             card.className = 'theme-item';
             card.innerText = theme.id;
-            card. = () => {
+            card.onclick = () => {
                 const root = document.documentElement.style;
                 root.setProperty('--accent', theme.primary);
                 root.setProperty('--bg', theme.bg);
@@ -1139,10 +1117,12 @@ if(cursor) {
     }
 
     attemptUnlock() {
-        const pass = document.getElementById('vault-input').value;
+        const pass = document.getElementById('vault-input')?.value;
         if(pass === '1337') {
-            document.getElementById('vault-lock-ui').style.display = 'none';
-            document.getElementById('vault-data-ui').style.display = 'block';
+            const lockUi = document.getElementById('vault-lock-ui');
+            const dataUi = document.getElementById('vault-data-ui');
+            if(lockUi) lockUi.style.display = 'none';
+            if(dataUi) dataUi.style.display = 'block';
             this.sendNotification("AUTH_SUCCESS", "Vault encryption layers bypassed.");
         } else {
             this.soundBank.denied.play().catch(e => console.log('Audio error:', e));
@@ -1151,24 +1131,27 @@ if(cursor) {
     }
 
     lockVault() {
-        document.getElementById('vault-lock-ui').style.display = 'flex';
-        document.getElementById('vault-data-ui').style.display = 'none';
-        document.getElementById('vault-input').value = "";
+        const lockUi = document.getElementById('vault-lock-ui');
+        const dataUi = document.getElementById('vault-data-ui');
+        const input = document.getElementById('vault-input');
+        if(lockUi) lockUi.style.display = 'flex';
+        if(dataUi) dataUi.style.display = 'none';
+        if(input) input.value = "";
         this.soundBank.click.play().catch(e => console.log('Audio error:', e));
     }
 
     async uploadToSupabase() {
         const btn = document.getElementById('up-trigger');
-        const name = document.getElementById('up-name').value;
-        const body = document.getElementById('up-body').value;
+        const name = document.getElementById('up-name')?.value;
+        const body = document.getElementById('up-body')?.value;
         
         if(!name || !body) {
             this.sendNotification("UPLINK_ERROR", "Name and body are required");
             return;
         }
         
-        btn.disabled = true;
-        btn.innerText = "UPLOADING_PACKET...";
+        if(btn) btn.disabled = true;
+        if(btn) btn.innerText = "UPLOADING_PACKET...";
         
         try {
             const { error } = await this.supabase.from('guestbook').insert([{ name: name, message: body }]);
@@ -1178,15 +1161,19 @@ if(cursor) {
             } else {
                 this.sendNotification("UPLINK_SUCCESS", "Object verified and pushed to remote node.");
                 this.toggleWin(false);
-                document.getElementById('up-name').value = "";
-                document.getElementById('up-body').value = "";
+                const nameInput = document.getElementById('up-name');
+                const bodyInput = document.getElementById('up-body');
+                if(nameInput) nameInput.value = "";
+                if(bodyInput) bodyInput.value = "";
                 this.fetchDataArchive();
             }
         } catch(e) {
             this.sendNotification("UPLINK_ERROR", e.message);
         } finally {
-            btn.disabled = false;
-            btn.innerText = "EXECUTE_PUSH";
+            if(btn) {
+                btn.disabled = false;
+                btn.innerText = "EXECUTE_PUSH";
+            }
         }
     }
 
@@ -1213,11 +1200,11 @@ if(cursor) {
                     const shortDesc = descText.length > 180 ? descText.slice(0, 180) + "..." : descText;
                     
                     return `
-                        <div class="archive-post-card" style="cursor:pointer;" onclick="core.openModal(${index})">
+                        <div class="archive-post-card" style="cursor:pointer;" onclick="window.core.openModal(${index})">
                             <div class="post-layout" style="pointer-events:none;">
                                 ${item.image_url ? `
                                     <div class="post-image-wrapper">
-                                        <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+                                        <img src="${item.image_url}" alt="${this.escapeHtml(item.name)}" loading="lazy">
                                     </div>
                                 ` : ''}
                                 <div class="post-content">
@@ -1255,6 +1242,8 @@ if(cursor) {
 
         const modal = document.getElementById('project-modal');
         const content = document.getElementById('modal-content');
+        
+        if(!modal || !content) return;
         
         content.innerHTML = `
             <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--accent); line-height: 1.1;">
@@ -1332,7 +1321,6 @@ if(cursor) {
         }
     }
     
-    // --- ЧАТ ---
     getChatNick() {
         const nick = document.getElementById('chat-nick')?.value?.trim();
         return nick || 'anon';
@@ -1462,7 +1450,6 @@ if(cursor) {
         flow.scrollTop = flow.scrollHeight;
     }
 
-    // --- АВТОРИЗАЦИЯ ---
     async registerUser() {
         const email = document.getElementById('reg-email')?.value?.trim();
         const password = document.getElementById('reg-pass')?.value?.trim();
@@ -1489,8 +1476,10 @@ if(cursor) {
             }
 
             this.sendNotification("REG_SUCCESS", `Проверьте почту ${email} для подтверждения`);
-            document.getElementById('reg-email').value = "";
-            document.getElementById('reg-pass').value = "";
+            const regEmail = document.getElementById('reg-email');
+            const regPass = document.getElementById('reg-pass');
+            if(regEmail) regEmail.value = "";
+            if(regPass) regPass.value = "";
         } catch(e) {
             this.sendNotification("REG_ERROR", e.message);
         }
@@ -1523,8 +1512,10 @@ if(cursor) {
                 this.listenToChat();
             }
 
-            document.getElementById('login-email').value = "";
-            document.getElementById('login-pass').value = "";
+            const loginEmail = document.getElementById('login-email');
+            const loginPass = document.getElementById('login-pass');
+            if(loginEmail) loginEmail.value = "";
+            if(loginPass) loginPass.value = "";
         } catch(e) {
             this.sendNotification("LOGIN_ERROR", e.message);
         }
@@ -1535,11 +1526,10 @@ if(cursor) {
         return data.user;
     }
 }
-  document.addEventListener('DOMContentLoaded', function() {
-        window.core = new FerumKernel();
-        console.log('Core создан!', window.core);
-    });
-const core = new FerumKernel();
+
+
+window.core = new FerumKernel();
+console.log('Core создан!', window.core);
 </script>
 </body>
 </html>
