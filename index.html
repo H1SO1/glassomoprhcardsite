@@ -860,11 +860,7 @@
 
 <script>
 class FerumKernel {
-    constructor() {
-        this.supabase = supabase.createClient(
-            'https://ibybgkugoumvjftgxxii.supabase.co', 
-            'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'
-        );
+   constructor() {
         this.bootTime = Date.now();
         this.activeRadio = null;
         this.isAudioStarted = false;
@@ -872,6 +868,11 @@ class FerumKernel {
         this.chatChannel = null;
         this.currentChannel = 'public';
         this.currentRecipient = null;
+        
+        this.CONFIG = {
+            SB_URL: 'https://ibybgkugoumvjftgxxii.supabase.co',
+            SB_KEY: 'sb_publishable_B8DzBzbaTDAWG9fEfytZSA_Fp4Svs7F'
+        };
         
         this.themeLibrary = [
             { id: 'CRIMSON', primary: '#ff0055', bg: '#030303', card: '#0e0e11' },
@@ -920,20 +921,36 @@ class FerumKernel {
             audio.load();
         });
 
-        this.initialize();
+        this.initializeUI();
+
+       this.connectToDatabase();
     }
 
-    initialize() {
+  initializeUI() {
         this.runCursorEngine();
         this.startUptimeEngine();
         this.generateAsciiTexture();
         this.buildThemeGrid();
         this.runKernelLogging();
-        this.startNotificationDaemon();
         
         document.body.addEventListener('click', () => this.initializeAudio(), { once: true });
-        
-        console.info("%c FERUM.OS: CORE_RECOVERY_COMPLETE ", "background: #ff0055; color: #fff; font-weight: bold;");
+        console.info("%c FERUM.OS: UI_KERNEL_LOADED ", "background: #ff0055; color: #fff; font-weight: bold;");
+    }
+
+    connectToDatabase() {
+        if (typeof supabase !== 'undefined') {
+            try {
+                this.supabase = supabase.createClient(this.CONFIG.SB_URL, this.CONFIG.SB_KEY);
+                console.log('FERUM.OS: DATABASE_CONNECTED');
+                // Только после этого запускаем демоны, зависящие от БД
+                this.startNotificationDaemon();
+            } catch (e) {
+                console.error('DATABASE_INIT_ERROR:', e);
+            }
+        } else {
+            // Если библиотеки еще нет, пробуем снова через 100мс
+            setTimeout(() => this.connectToDatabase(), 100);
+        }
     }
 
    runCursorEngine() {
@@ -1185,7 +1202,11 @@ class FerumKernel {
                 grid.innerHTML = '<div style="text-align:center; opacity:0.5; font-family:var(--font-mono); padding: 40px;">[ SYNC_FAILED ]</div>';
                 return;
             }
-            
+            if (!this.supabase) {
+        grid.innerHTML = '<div style="text-align:center; opacity:0.5; font-family:var(--font-mono); padding: 40px;">[ ESTABLISHING_DATABASE_UPLINK... ]</div>';
+        setTimeout(() => this.fetchDataArchive(), 500);
+        return;
+    }
             if(data && data.length > 0) {
                 window.storedArchiveData = data;
                 
