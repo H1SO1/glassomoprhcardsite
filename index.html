@@ -1513,7 +1513,7 @@ const core = new FerumKernel();
 </script>
 <script>
 (function() {
-    // Удаляем старый если есть
+    // Удаляем старый курсор
     const oldCursor = document.getElementById('c-cursor');
     if(oldCursor) oldCursor.remove();
     
@@ -1530,42 +1530,42 @@ const core = new FerumKernel();
         top: 0;
         pointer-events: none;
         z-index: 999999;
-        background: rgba(255,0,85,0);
-        transition: transform 0.1s, background 0.1s;
+        background: transparent;
+        transition: transform 0.15s, background 0.15s, border-color 0.15s;
+        mix-blend-mode: difference;
     `;
     document.body.appendChild(cursor);
     
     // Двигаем за мышкой
+    let mouseX = 0, mouseY = 0;
+    
     document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
     });
     
-    // Эффект при наведении (кнопки остаются кликабельными)
+    // Эффект при наведении на кнопки
     document.addEventListener('mouseover', (e) => {
-        if(e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node')) {
-            cursor.style.transform = 'scale(3)';
-            cursor.style.backgroundColor = 'rgba(255,0,85,0.3)';
+        const target = e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node, .archive-post-card');
+        if(target) {
+            cursor.style.transform = 'scale(4)';
+            cursor.style.background = '#ff0055';
+            cursor.style.borderColor = 'transparent';
         }
     });
     
     document.addEventListener('mouseout', (e) => {
-        if(e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node')) {
+        const target = e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node, .archive-post-card');
+        if(target) {
             cursor.style.transform = 'scale(1)';
-            cursor.style.backgroundColor = 'rgba(255,0,85,0)';
+            cursor.style.background = 'transparent';
+            cursor.style.borderColor = '#ff0055';
         }
     });
     
-    // Эффект клика
-    document.addEventListener('mousedown', () => {
-        cursor.style.transform = 'scale(0.8)';
-    });
-    
-    document.addEventListener('mouseup', () => {
-        cursor.style.transform = 'scale(1)';
-    });
-    
-    console.log('Курсор создан, кнопки кликабельны');
+    console.log('Курсор загружен, проверь консоль');
 })();
 </script>
 </body>
