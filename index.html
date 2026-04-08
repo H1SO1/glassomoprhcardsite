@@ -1535,72 +1535,11 @@ if(cursor) {
         return data.user;
     }
 }
-
-// Инициализация
-const core = new FerumKernel();
-</script>
-<script>
-(function() {
-    // Удаляем старый курсор
-    const oldCursor = document.getElementById('c-cursor');
-    if(oldCursor) oldCursor.remove();
-    
-    // Создаём новый курсор
-    const cursor = document.createElement('div');
-    cursor.id = 'c-cursor';
-    cursor.style.cssText = `
-        width: 20px;
-        height: 20px;
-        border: 2px solid #ff0055;
-        border-radius: 50%;
-        position: fixed;
-        left: 0;
-        top: 0;
-        pointer-events: none;
-        z-index: 999999;
-        background: transparent;
-        transition: transform 0.15s, background 0.15s, border-color 0.15s;
-        mix-blend-mode: difference;
-    `;
-    document.body.appendChild(cursor);
-    
-    // Двигаем за мышкой
-    let mouseX = 0, mouseY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-    });
-    
-    // Эффект при наведении на кнопки
-    document.addEventListener('mouseover', (e) => {
-        const target = e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node, .archive-post-card');
-        if(target) {
-            cursor.style.transform = 'scale(4)';
-            cursor.style.background = '#ff0055';
-            cursor.style.borderColor = 'transparent';
-        }
-    });
-    
-    document.addEventListener('mouseout', (e) => {
-        const target = e.target.closest('button, .nav-btn, .bento-card, a, .btn-action, .theme-item, .skill-node, .archive-post-card');
-        if(target) {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.background = 'transparent';
-            cursor.style.borderColor = '#ff0055';
-        }
-    });
-    
-    console.log('Курсор загружен, проверь консоль');
-})();
-</script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
         window.core = new FerumKernel();
         console.log('Core создан!', window.core);
     });
+const core = new FerumKernel();
 </script>
 </body>
 </html>
