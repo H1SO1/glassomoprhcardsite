@@ -50,29 +50,24 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
-
-        /* КОРРЕКТНЫЙ КУРСОР */
-        #c-cursor {
-            width: 12px;
-            height: 12px;
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 100000;
-            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
-            mix-blend-mode: difference;
-            will-change: transform;
-            transform: translate(-50%, -50%);
-        }
-
-        .c-hover {
-            transform: translate(-50%, -50%) scale(4);
-            background-color: var(--accent);
-            border-color: transparent;
-        }
-        
-        /* Элементы, на которых курсор увеличивается */
+   #c-cursor {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    position: fixed; 
+    pointer-events: none;
+    z-index: 100000;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+    mix-blend-mode: difference;
+    will-change: left, top;
+    display: block;
+}
+       .c-hover {
+    transform: scale(4);
+    background-color: var(--accent);
+    border-color: transparent;
+}
         button, .nav-btn, .bento-card, .chat-msg, input, a, 
         .theme-item, .skill-node, .archive-post-card, .btn-action {
             cursor: none;
