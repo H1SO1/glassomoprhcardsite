@@ -621,22 +621,22 @@
 <div id="toast-container"></div>
 
 <nav>
-    <button class="nav-btn active" onclick="core.switchTab('home', this)">
+    <button class="nav-btn active" onclick="window.core.switchTab('home', this)">
         <span class="icon">⬢</span><span>System</span>
     </button>
-    <button class="nav-btn" onclick="core.switchTab('archive', this)">
+    <button class="nav-btn" onclick="window.core.switchTab('archive', this)">
         <span class="icon">⬣</span><span>Archive</span>
     </button>
-    <button class="nav-btn" onclick="core.switchTab('terminal', this)">
+    <button class="nav-btn" onclick="window.core.switchTab('terminal', this)">
         <span class="icon">⬧</span><span>Terminal</span>
     </button>
-    <button class="nav-btn" onclick="core.switchTab('secret', this)">
+    <button class="nav-btn" onclick="window.core.switchTab('secret', this)">
         <span class="icon">◈</span><span>Vault</span>
     </button>
-    <button class="nav-btn" onclick="core.switchTab('settings', this)">
+    <button class="nav-btn" onclick="window.core.switchTab('settings', this)">
         <span class="icon">⌬</span><span>Themes</span>
     </button>
-    <button class="nav-btn" onclick="core.switchTab('chat', this)">
+    <button class="nav-btn" onclick="window.core.switchTab('chat', this)">
         <span class="icon">⌬</span><span>Network</span>
     </button>
 </nav>
@@ -1595,6 +1595,12 @@ const core = new FerumKernel();
     
     console.log('Курсор загружен, проверь консоль');
 })();
+</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.core = new FerumKernel();
+        console.log('Core создан!', window.core);
+    });
 </script>
 </body>
 </html>
