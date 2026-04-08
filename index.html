@@ -41,24 +41,28 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        #c-cursor {
+     #c-cursor {
     width: 20px;
     height: 20px;
-    border: 2px solid #ff0055;
+    border: 2px solid var(--accent);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 99999;
-    transition: transform 0.15s, background 0.15s;
+    /* Убираем transition для transform, чтобы не было задержки при движении */
+    transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
     mix-blend-mode: difference;
+    /* Центрируем относительно координат */
+    transform: translate(-50%, -50%);
+    display: none; /* Проявим его через JS, когда он будет готов */
 }
 
 .c-hover {
-    transform: scale(4);
-    background-color: #ff0055;
+    width: 60px; /* Вместо масштаба меняем размер, так приятнее */
+    height: 60px;
+    background-color: var(--accent);
     border-color: transparent;
 }
-
         body {
             background-color: var(--bg);
             color: var(--text-main);
@@ -932,36 +936,25 @@ class FerumKernel {
         console.info("%c FERUM.OS: CORE_RECOVERY_COMPLETE ", "background: #ff0055; color: #fff; font-weight: bold;");
     }
 
-    runCursorEngine() {
-        const cursor = document.getElementById('c-cursor');
-        if (!cursor) {
-            console.error('Курсор не найден!');
-            return;
-        }
+   runCursorEngine() {
+    const cursor = document.getElementById('c-cursor');
+    if (!cursor) return;
 
-        cursor.style.display = 'block';
-        cursor.style.position = 'fixed';
-        cursor.style.left = '0px';
-        cursor.style.top = '0px';
-        
-        // Движение курсора
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        
-        // Эффект при наведении
-        document.addEventListener('mouseover', (e) => {
-            const target = e.target.closest('button, .nav-btn, .bento-card, .btn-action, .theme-item, .skill-node, .archive-post-card, a');
-            if (target) {
-                cursor.classList.add('c-hover');
-            } else {
-                cursor.classList.remove('c-hover');
-            }
-        });
-        
-        console.log('Курсор инициализирован');
-    }
+    cursor.style.display = 'block';
+    
+    window.addEventListener('mousemove', (e) => {
+        cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+    });
+    
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('button, .nav-btn, .bento-card, .btn-action, .theme-item, .skill-node, .archive-post-card, a, input');
+        if (target) {
+            cursor.classList.add('c-hover');
+        } else {
+            cursor.classList.remove('c-hover');
+        }
+    });
+}
 
     initializeAudio() {
         if(!this.isAudioStarted) {
@@ -1527,17 +1520,24 @@ class FerumKernel {
         return data.user;
     }
 }
-function waitForSupabase() {
-    if (typeof supabase !== 'undefined') {
-        window.core = new FerumKernel();
-        console.log('Core создан!', window.core);
-    } else {
-        console.log('Ожидание Supabase...');
-        setTimeout(waitForSupabase, 100);
-    }
+function initCore() {
+    window.core = new FerumKernel();
+    console.log('FERUM.OS: KERNEL_LOADED');
 }
 
-waitForSupabase();
+document.addEventListener('DOMContentLoaded', () => {
+
+    initCore(); 
+});
+
+function checkDatabase() {
+    if (typeof supabase === 'undefined') {
+        setTimeout(checkDatabase, 100);
+    } else {
+        console.log('SUPABASE: CONNECTED');
+    }
+}
+checkDatabase();
 </script>
 </body>
 </html>
